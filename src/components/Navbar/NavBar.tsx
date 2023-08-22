@@ -1,6 +1,6 @@
 import React from 'react'
-import Button from '..//Button'
-import useStore from '../../store/useStore'
+import Button from '../Button'
+import useStore from '~/store/useStore'
 import { format, sub, add } from 'date-fns'
 import ArrowButton from './ArrowButton'
 import DropDown from './DropDown'
@@ -41,23 +41,29 @@ const NavBar = () => {
       <div className="relative w-24">
         <p className="text-lg font-bold tracking-wide text-gray-900">Fasti</p>
       </div>
-      <div className="flex flex-row items-center justify-center gap-4">
-        <Button onClick={handleSetToday}>Today</Button>
-        <div className="flex items-center">
-          <ArrowButton onClick={() => goPrev()} direction="left" />
-          <ArrowButton onClick={() => goNext()} direction="right" />
-        </div>
+      {currentCalendarView !== 'None' && (
+        <div className="relative flex flex-row gap-6">
+          <div className="flex flex-row items-center justify-center gap-4">
+            <Button onClick={handleSetToday}>Today</Button>
+            <div className="flex items-center">
+              <ArrowButton onClick={() => goPrev()} direction="left" />
+              <ArrowButton onClick={() => goNext()} direction="right" />
+            </div>
 
-        <p className="text-lg">
-          {currentCalendarView === 'Year' && format(currentDate, 'yyyy')}
-          {currentCalendarView === 'Month' && format(currentDate, 'LLLL yyyy')}
-          {currentCalendarView === 'Week' && format(currentDate, 'LLLL yyyy')}
-          {currentCalendarView === 'Day' && format(currentDate, 'dd LLLL yyyy')}
-        </p>
-      </div>
-      <div>
-        <DropDown />
-      </div>
+            <p className="text-lg">
+              {currentCalendarView === 'Year' && format(currentDate, 'yyyy')}
+              {currentCalendarView === 'Month' &&
+                format(currentDate, 'LLLL yyyy')}
+              {currentCalendarView === 'Week' &&
+                format(currentDate, 'LLLL yyyy')}
+              {currentCalendarView === 'Day' &&
+                format(currentDate, 'dd LLLL yyyy')}
+            </p>
+          </div>
+
+          <DropDown />
+        </div>
+      )}
     </div>
   )
 }
