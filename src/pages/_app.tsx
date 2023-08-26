@@ -10,7 +10,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <div className="relative flex h-screen w-screen flex-col overflow-hidden">
+    <div className="relative flex h-screen w-screen flex-col overflow-hidden text-gray-800">
       <SessionProvider session={session}>
         <NavBar />
         <Component {...pageProps} />

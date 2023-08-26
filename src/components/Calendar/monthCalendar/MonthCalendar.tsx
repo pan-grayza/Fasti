@@ -43,13 +43,13 @@ const MonthCalendar = () => {
         {days.map((day) => (
           <Cell
             key={day}
-            className="h-8 text-xs font-bold uppercase text-gray-900/50"
+            className="h-6 text-xs font-bold uppercase text-gray-900/50"
           >
             {day}
           </Cell>
         ))}
       </div>
-      <div className="relative grid h-full auto-rows-fr grid-cols-7 text-center">
+      <div className="relative -mt-2 grid h-full auto-rows-fr grid-cols-7 text-center">
         {Array.from({ length: prefixDays })
           .map((_, index) => {
             const date = setDate(prevMonth, lastDayOfPervMonth - index)

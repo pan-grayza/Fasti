@@ -18,7 +18,7 @@ type Action = {
 const useStore = create<State & Action>((set) => ({
   currentDate: startOfDay(new Date()),
   setCurrentDate: (state: Date) => set(() => ({ currentDate: state })),
-  currentCalendarView: 'Month',
+  currentCalendarView: 'None',
   setCurrentCalendarView: (state: State['currentCalendarView']) => {
     set(() => ({ currentCalendarView: state }))
   },
