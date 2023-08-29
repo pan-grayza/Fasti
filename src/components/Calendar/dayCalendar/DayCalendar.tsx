@@ -18,19 +18,8 @@ const DayCalendar = () => {
   return (
     <div className="relative flex h-full w-full flex-col">
       <div className="relative flex w-fit flex-col items-center justify-center px-16 py-4">
-        <p className="font-semibold uppercase text-blue-600">
-          {format(currentDate, 'E')}
-        </p>
-        <DayCell date={currentDate} size="md" />
+        <DayCell date={currentDate} size="md" dayAbr />
       </div>
-      {/* <div className="relative flex flex-col items-center justify-center w-full gap-y-1 h-12 bg-slate-500">
-                {events.map((event, index) => (
-                    <DayEvent
-                        key={event.id}
-                        onDelete={() => deleteDayEvent(event.id)}
-                    />
-                ))}
-            </div> */}
       <Schedule date={currentDate} />
     </div>
   )

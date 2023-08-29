@@ -51,30 +51,29 @@ const NavBar = () => {
         <p className="text-lg font-bold tracking-wide text-gray-900">Fasti</p>
       </div>
 
-      {currentCalendarView !== 'None' &&
-        currentCalendarView !== 'CreateNewCalendar' && (
-          <div className="relative flex h-full w-full flex-row gap-6">
-            <div className="flex flex-row items-center justify-center gap-4">
-              <Button onClick={handleSetToday}>Today</Button>
-              <div className="flex items-center">
-                <ArrowButton onClick={() => goPrev()} direction="left" />
-                <ArrowButton onClick={() => goNext()} direction="right" />
-              </div>
-
-              <p className="text-lg">
-                {currentCalendarView === 'Year' && format(currentDate, 'yyyy')}
-                {currentCalendarView === 'Month' &&
-                  format(currentDate, 'LLLL yyyy')}
-                {currentCalendarView === 'Week' &&
-                  format(currentDate, 'LLLL yyyy')}
-                {currentCalendarView === 'Day' &&
-                  format(currentDate, 'dd LLLL yyyy')}
-              </p>
+      {currentCalendarView !== 'None' && (
+        <div className="relative flex h-full w-full flex-row gap-6">
+          <div className="flex flex-row items-center justify-center gap-4">
+            <Button onClick={handleSetToday}>Today</Button>
+            <div className="flex items-center">
+              <ArrowButton onClick={() => goPrev()} direction="left" />
+              <ArrowButton onClick={() => goNext()} direction="right" />
             </div>
 
-            <DropDown />
+            <p className="text-lg">
+              {currentCalendarView === 'Year' && format(currentDate, 'yyyy')}
+              {currentCalendarView === 'Month' &&
+                format(currentDate, 'LLLL yyyy')}
+              {currentCalendarView === 'Week' &&
+                format(currentDate, 'LLLL yyyy')}
+              {currentCalendarView === 'Day' &&
+                format(currentDate, 'dd LLLL yyyy')}
+            </p>
           </div>
-        )}
+
+          <DropDown />
+        </div>
+      )}
 
       {currentCalendarView === 'None' && !session && (
         <div className="relative flex h-full w-full flex-row items-center justify-end gap-4">

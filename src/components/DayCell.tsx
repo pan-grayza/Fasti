@@ -7,6 +7,7 @@ interface Props extends React.PropsWithChildren {
   className?: string
   date: Date
   size?: 'sm' | 'md' | 'lg'
+  dayAbr?: boolean
   onClick?: () => void
 }
 
@@ -15,6 +16,7 @@ const DayCell: React.FC<Props> = ({
   className,
   date,
   size = 'sm',
+  dayAbr = false,
   onClick,
 }) => {
   const [currentDate, setCurrentDate] = useStore((state) => [
@@ -26,34 +28,45 @@ const DayCell: React.FC<Props> = ({
   const isToday =
     format(date, 'dd MM yyyy') === format(new Date(), 'dd MM yyyy')
   return (
-    <div
-      className={clsx(
-        'relative flex min-h-min min-w-min cursor-pointer items-center justify-center',
-        {
-          'h-8 w-8': size === 'sm',
-          'h-12 w-12': size === 'md',
-          'h-16 w-16': size === 'lg',
-        },
-        className
+    <div className="relative flex w-fit flex-col items-center justify-center gap-1">
+      {dayAbr && (
+        <p
+          className={clsx('text-xs font-bold uppercase', {
+            'text-blue-600': isToday,
+            'text-gray-500': !isToday,
+          })}
+        >
+          {format(date, 'E')}
+        </p>
       )}
-    >
       <div
-        onClick={() => setCurrentDate(date)}
         className={clsx(
-          'relative  flex cursor-pointer select-none items-center justify-center rounded-full transition-colors',
+          'relative flex min-h-min min-w-min cursor-pointer items-center justify-center',
           {
-            'bg-blue-300/50 text-blue-700': isCurrentDate && !isToday,
-            'bg-blue-600 text-white': isToday,
-            'hover:bg-gray-300/50': !isCurrentDate && !isToday,
-            'h-8 w-8 text-sm': size === 'sm',
-            'h-12 w-12 text-xl': size === 'md',
-            'h-16 w-16 text-2xl font-semibold': size === 'lg',
-          }
+            'h-8 w-8': size === 'sm',
+            'h-12 w-12': size === 'md',
+            'h-16 w-16': size === 'lg',
+          },
+          className
         )}
       >
-        {format(date, 'dd')}
+        <div
+          onClick={() => setCurrentDate(date)}
+          className={clsx(
+            'relative  flex cursor-pointer select-none items-center justify-center rounded-full transition-colors',
+            {
+              'bg-blue-300/50 text-blue-700': isCurrentDate && !isToday,
+              'bg-blue-600 text-white': isToday,
+              'hover:bg-gray-300/50': !isCurrentDate && !isToday,
+              'h-8 w-8 text-sm': size === 'sm',
+              'h-12 w-12 text-xl': size === 'md',
+              'h-16 w-16 text-2xl font-semibold': size === 'lg',
+            }
+          )}
+        >
+          {format(date, 'dd')}
+        </div>
       </div>
-      <div className="absolute"></div>
     </div>
   )
 }

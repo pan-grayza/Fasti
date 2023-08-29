@@ -41,7 +41,7 @@ const DropDown = () => {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className={clsx('h-5 w-5', isDropDown && 'rotate-180')}
+          className={clsx('h-5 w-5 transition', isDropDown && 'rotate-180')}
         >
           <path
             strokeLinecap="round"

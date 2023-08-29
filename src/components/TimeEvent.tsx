@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { add } from 'date-fns'
+import { add, startOfWeek } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Rnd } from 'react-rnd'
 import useStore from '~/store/useStore'
@@ -7,20 +7,53 @@ import useStore from '~/store/useStore'
 interface Props extends React.PropsWithChildren {
   className?: string
   date: Date
+  parentWidth: number
+  type?: 'week' | 'day'
 }
 
-const TimeEvent: React.FC<Props> = ({ children, className, date }) => {
+const TimeEvent: React.FC<Props> = ({
+  children,
+  className,
+  date,
+  parentWidth = 90,
+  type = 'day',
+}) => {
   useEffect(() => {
     setRenamingEventNow(true)
   }, [])
+
+  const [size, setSize] = useState({
+    width: type === 'week' ? parentWidth / 7 : parentWidth + 'px',
+    height: '30px',
+  })
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [colIndex, setColIndex] = useState(0)
+  const getColX = () => {
+    if (type === 'week') {
+      return (parentWidth / 7) * colIndex
+    } else {
+      return colIndex
+    }
+  }
+  if (type === 'week') {
+    date = add(startOfWeek(date), { days: colIndex })
+  }
+  useEffect(() => {
+    setSize({
+      ...size,
+      width: type === 'week' ? parentWidth / 7 : parentWidth + 'px',
+    })
+    setPosition({ ...position, x: getColX() })
+  }, [parentWidth])
+
+  const [isRenaming, setIsRenaming] = useState(true)
+  const [name, setName] = useState('')
+
   const [renamingEventNow, setRenamingEventNow] = useStore((state) => [
     state.renamingEventNow,
     state.setRenamingEventNow,
   ])
-  const [size, setSize] = useState({ width: '256px', height: '30px' })
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [isRenaming, setIsRenaming] = useState(true)
-  const [name, setName] = useState('')
+
   const finishRenaming = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     if (name === '') setName('New Event')
@@ -48,6 +81,13 @@ const TimeEvent: React.FC<Props> = ({ children, className, date }) => {
       position={{ x: position.x, y: position.y }}
       onDragStop={(e, d) => {
         setPosition({ x: d.x, y: d.y })
+        if (type === 'week') {
+          Array.from({ length: 7 }).map((col, index) => {
+            if ((parentWidth / 7) * index === d.x) {
+              setColIndex(index)
+            }
+          })
+        }
       }}
       onResizeStop={(e, direction, ref, delta, position) => {
         setSize({
@@ -57,7 +97,7 @@ const TimeEvent: React.FC<Props> = ({ children, className, date }) => {
         })
       }}
       resizeGrid={[15, 15]}
-      dragGrid={[15, 15]}
+      dragGrid={[type === 'week' ? parentWidth / 7 : parentWidth, 15]}
       enableResizing={{
         top: true,
         right: false,
@@ -68,9 +108,12 @@ const TimeEvent: React.FC<Props> = ({ children, className, date }) => {
         bottomLeft: false,
         topLeft: false,
       }}
-      dragAxis="y"
+      dragAxis={type === 'week' ? 'both' : 'y'}
       bounds="parent"
-      className={clsx('rounded bg-slate-400 px-2 py-1', className)}
+      className={clsx(
+        'relative cursor-pointer rounded bg-slate-400 px-2 py-1',
+        className
+      )}
     >
       <div className="h-full w-full">{durationM}</div>
     </Rnd>

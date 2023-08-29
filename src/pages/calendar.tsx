@@ -23,36 +23,35 @@ const Calendar = () => {
   )
 
   const { data: sessionData } = useSession()
-
   const { data: calendars, refetch: refetchCalendars } =
     api.calendar.getAll.useQuery(undefined, {
       enabled: sessionData?.user !== undefined,
       onSuccess: (data) => {
         setSelectedCalendar(selectedCalendar ?? data[0] ?? null)
       },
+      onError: (err) => {
+        console.log(err)
+      },
     })
   const createCalendar = api.calendar.create.useMutation({
     onSuccess: () => {
       void refetchCalendars()
-      if (currentCalendarView === 'None') setCurrentCalendarView('Month')
     },
   })
+  useEffect(() => {
+    if (sessionData && calendars && calendars.length === 0) {
+      createCalendar.mutate({ title: sessionData.user.name! })
+    }
+  }, [calendars]) /*It needs to be like that*/
+
   if (
-    sessionData &&
-    currentCalendarView === 'None' &&
-    calendars &&
-    calendars.length === 0
-  ) {
-    createCalendar.mutate({ title: sessionData.user.name! })
-  } else if (
     sessionData &&
     currentCalendarView === 'None' &&
     calendars &&
     calendars.length > 0
   ) {
-    // setCurrentCalendarView('Month')
+    setCurrentCalendarView('Month')
   }
-
   console.log('Calendars: ', calendars)
 
   const { data: dayEvents, refetch: refetchDayEvents } =
@@ -76,7 +75,7 @@ const Calendar = () => {
       void refetchDayEvents()
     },
   })
-  console.log('dayEvents: ', calendars)
+  console.log('dayEvents: ', dayEvents)
 
   const { data: timeEvents, refetch: refetchTimeEvents } =
     api.timeEvent.getAll.useQuery(
@@ -100,7 +99,7 @@ const Calendar = () => {
     },
   })
 
-  console.log('timeEvents: ', calendars)
+  console.log('timeEvents: ', timeEvents)
 
   return (
     <div className="relative flex h-full w-full flex-col items-center overflow-hidden">

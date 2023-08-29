@@ -1,5 +1,5 @@
-import React from 'react'
-import TimeEvent from './TimeEvent'
+import React, { useEffect, useRef, useState } from 'react'
+import TimeEvent from '~/components/TimeEvent'
 import { add, format, startOfDay } from 'date-fns'
 import clsx from 'clsx'
 
@@ -9,7 +9,23 @@ interface Props extends React.PropsWithChildren {
 }
 
 const Schedule: React.FC<Props> = ({ className, date }) => {
+  const [dimensions, setDimensions] = useState({ height: 0, width: 0 })
+  const parentGrid = useRef<HTMLDivElement | null>(null)
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((event) => {
+      setDimensions({
+        height: event[0].contentBoxSize[0].blockSize,
+        width: event[0].contentBoxSize[0].inlineSize,
+      })
+    })
+
+    if (parentGrid.current) {
+      resizeObserver.observe(parentGrid.current)
+    }
+  }, [parentGrid, dimensions])
+
   const startOfCurrentDay = startOfDay(date)
+
   return (
     <div
       className={clsx(
@@ -33,11 +49,8 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
           )
         })}
       </div>
-      <div className="relative h-full w-full">
-        <div className="relative h-full w-full">
-          <TimeEvent date={date} />
-        </div>
-        <div className="grid-rows-auto absolute inset-0 z-[-1] grid h-max w-full auto-rows-fr grid-cols-1">
+      <div ref={parentGrid} className="relative h-full w-full">
+        <div className="relative z-[-1] grid h-max w-full auto-rows-fr grid-cols-1">
           {Array.from({ length: 24 }).map((_, index) => {
             const time = format(
               add(startOfCurrentDay, { hours: index + 1 }),
@@ -51,6 +64,7 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
             )
           })}
         </div>
+        <TimeEvent date={date} parentWidth={dimensions.width} />
       </div>
     </div>
   )
