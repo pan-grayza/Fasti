@@ -4,6 +4,7 @@ import { useState } from 'react'
 import useStore from '~/store/useStore'
 import { v4 as uuidv4 } from 'uuid'
 import DayCell from '~/components/DayCell'
+import { format } from 'date-fns'
 
 interface Props extends React.PropsWithChildren {
   className?: string
@@ -44,9 +45,13 @@ const EventCell: React.FC<Props> = ({ children, className, date }) => {
       <DayCell date={date}>{children}</DayCell>
 
       <div className="h-22 relative flex w-full flex-col items-center justify-center gap-y-1">
-        {events.map((event, index) => (
-          <DayEvent key={event.id} onDelete={() => deleteEvent(event.id)} />
-        ))}
+        {events.map((event, index) => {
+          if (format(event.date, 'dd MM yyyy') === format(date, 'dd MM yyyy')) {
+            return (
+              <DayEvent key={event.id} onDelete={() => deleteEvent(event.id)} />
+            )
+          }
+        })}
       </div>
       <div
         onClick={() => createEvent()}

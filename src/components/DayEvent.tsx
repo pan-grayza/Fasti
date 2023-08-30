@@ -14,10 +14,6 @@ const Event: React.FC<Props> = ({
   onDelete,
   children,
 }) => {
-  useEffect(() => {
-    setRenamingEventNow(true)
-  }, [])
-
   const [renamingEventNow, setRenamingEventNow] = useStore((state) => [
     state.renamingEventNow,
     state.setRenamingEventNow,
