@@ -36,7 +36,7 @@ const TimeEvent: React.FC<Props> = ({
     }
   }
   if (type === 'week') {
-    date = add(startOfWeek(date), { days: colIndex })
+    date = add(startOfWeek(date), { days: colIndex, minutes: position.y })
   }
   useEffect(() => {
     setSize({
@@ -83,13 +83,18 @@ const TimeEvent: React.FC<Props> = ({
         setPosition({ x: d.x, y: d.y })
         if (type === 'week') {
           Array.from({ length: 7 }).map((col, index) => {
-            if ((parentWidth / 7) * index === d.x) {
+            if (d.x === 0) setColIndex(0)
+            else if (
+              0.8 < ((parentWidth / 7) * index) / d.x &&
+              ((parentWidth / 7) * index) / d.x < 1.2
+            ) {
               setColIndex(index)
             }
           })
         }
       }}
       onResizeStop={(e, direction, ref, delta, position) => {
+        setPosition({ ...position })
         setSize({
           width: ref.style.width,
           height: ref.style.height,
