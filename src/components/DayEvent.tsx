@@ -1,17 +1,22 @@
 import clsx from 'clsx'
 import { useState, useEffect } from 'react'
 import useStore from '~/store/useStore'
+import type { dayEvent } from '@prisma/client'
 
 interface Props extends React.PropsWithChildren {
   className?: string
   onClick?: (id: string) => void
-  onDelete?: () => void
+  onDelete: () => void
+  onRenameSubmit: (name: string) => void
+  eventProps: { id: string; date: Date; name: string; calendarId: string }
 }
 
 const Event: React.FC<Props> = ({
   className,
   onClick = () => null,
   onDelete,
+  onRenameSubmit,
+  eventProps,
   children,
 }) => {
   const [renamingEventNow, setRenamingEventNow] = useStore((state) => [
@@ -27,6 +32,7 @@ const Event: React.FC<Props> = ({
     if (name === '') setName('New Event')
     setIsRenaming(false)
     setRenamingEventNow(false)
+    onRenameSubmit(name)
   }
   if (renamingEventNow === false && isRenaming) {
     setIsRenaming(false)
@@ -46,7 +52,7 @@ const Event: React.FC<Props> = ({
         { 'z-20': isRenaming }
       )}
     >
-      {name}
+      {eventProps.name}
       {isRenaming && (
         <form
           onSubmit={finishRenaming}

@@ -12,14 +12,27 @@ import EventCell from './EventCell'
 import DateCell from './DateCell'
 
 import useStore from '~/store/useStore'
+import { api } from '~/utils/api'
+import type { dayEvent } from '@prisma/client'
+import clsx from 'clsx'
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+interface Props {
+  className?: string
+  dayEvents: dayEvent[] | undefined
+  refetchDayEvents: () => unknown
+}
 
-const MonthCalendar = () => {
+const MonthCalendar: React.FC<Props> = ({
+  className,
+  dayEvents,
+  refetchDayEvents,
+}) => {
   const [currentDate, setCurrentDate] = useStore((state) => [
     state.currentDate,
     state.setCurrentDate,
   ])
+  console.log(dayEvents)
 
   const startDate = startOfMonth(currentDate)
   const endDate = endOfMonth(currentDate)
@@ -38,7 +51,12 @@ const MonthCalendar = () => {
   }
 
   return (
-    <div className="flex h-full w-full flex-col">
+    <div
+      className={clsx(
+        'relative flex h-full w-full flex-col transition',
+        className
+      )}
+    >
       <div className="relative grid grid-cols-7 items-center justify-center text-center">
         {days.map((day) => (
           <Cell
@@ -65,9 +83,18 @@ const MonthCalendar = () => {
           const numOfDay = index + 1
           const isCurrentDate =
             format(date, 'dd MM yyyy') === format(currentDate, 'dd MM yyyy')
-
+          const dayEventsProps = dayEvents?.filter(
+            (dayEvent) =>
+              format(dayEvent.date, 'dd MMMM yyyy') ===
+              format(date, 'dd MMMM yyyy')
+          )
           return (
-            <EventCell key={numOfDay} date={date}>
+            <EventCell
+              refetchDayEvents={refetchDayEvents}
+              dayEvents={dayEventsProps}
+              key={index}
+              date={date}
+            >
               {numOfDay}
             </EventCell>
           )

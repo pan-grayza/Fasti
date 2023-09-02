@@ -7,7 +7,7 @@ import useStore from '~/store/useStore'
 interface Props extends React.PropsWithChildren {
   className?: string
   date: Date
-  parentWidth: number
+  parentWidth: number | undefined
   type?: 'week' | 'day'
 }
 

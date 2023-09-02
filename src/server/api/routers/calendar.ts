@@ -19,4 +19,14 @@ export const calendarRouter = createTRPCRouter({
         },
       })
     }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.calendar.delete({
+        where: {
+          id: input.id,
+          hostId: ctx.session.user.id,
+        },
+      })
+    }),
 })

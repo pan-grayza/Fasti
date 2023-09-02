@@ -4,15 +4,17 @@ import useStore from '~/store/useStore'
 import DayEvent from '../../DayEvent'
 import { format } from 'date-fns'
 import DayCell from '../../DayCell'
+import type { dayEvent } from '@prisma/client'
+interface Props {
+  dayEvents: dayEvent[] | undefined
+}
 
-const DayCalendar = () => {
+const DayCalendar: React.FC<Props> = ({ dayEvents }) => {
   const [currentDate, setRenamingEventNow] = useStore((state) => [
     state.currentDate,
     state.setRenamingEventNow,
   ])
-  const [events, setEvents] = useState([] as { id: string; date: Date }[])
   const deleteDayEvent = (id: string) => {
-    setEvents(events.filter((event) => event.id !== id))
     setRenamingEventNow(false)
   }
   return (

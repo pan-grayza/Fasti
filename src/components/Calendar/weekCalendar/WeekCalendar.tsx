@@ -1,27 +1,31 @@
 import { add, format, startOfWeek } from 'date-fns'
 import React, { useEffect, useRef, useState } from 'react'
+
 import useStore from '~/store/useStore'
 import DayColSchedule from './DayColSchedule'
 import DayCol from './DayCol'
 import TimeEvent from '~/components/TimeEvent'
-import clsx from 'clsx'
 
-interface Props extends React.PropsWithChildren {
-  className?: string
+import type { dayEvent } from '@prisma/client'
+
+interface Props {
+  dayEvents: dayEvent[] | undefined
 }
 
-const WeekCalendar: React.FC<Props> = ({ className }) => {
-  const [currentDate, setRenamingEventNow] = useStore((state) => [
-    state.currentDate,
-    state.setRenamingEventNow,
-  ])
-  const [dimensions, setDimensions] = useState({ height: 0, width: 0 })
+const WeekCalendar: React.FC<Props> = ({ dayEvents }) => {
+  const [currentDate] = useStore((state) => [state.currentDate])
+  const startOfCurrentWeek = startOfWeek(currentDate)
+  // Size and position stuff
+  const [dimensions, setDimensions] = useState<{
+    height: number | undefined
+    width: number | undefined
+  }>({ height: 0, width: 0 })
   const parentGrid = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     const resizeObserver = new ResizeObserver((event) => {
       setDimensions({
-        height: event[0].contentBoxSize[0].blockSize,
-        width: event[0].contentBoxSize[0].inlineSize,
+        height: event[0]?.contentBoxSize[0]?.blockSize,
+        width: event[0]?.contentBoxSize[0]?.inlineSize,
       })
     })
 
@@ -30,15 +34,17 @@ const WeekCalendar: React.FC<Props> = ({ className }) => {
     }
   }, [parentGrid, dimensions])
 
-  const startOfCurrentWeek = startOfWeek(currentDate)
-  const createEvent = (e: React.MouseEvent) => {
+  //API stuff
+
+  //DayEvents
+  const createDayEvent = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect()
     const x = e.clientX - rect.left //x position within the element.
     const y = e.clientY - rect.top //y position within the element.
   }
 
   return (
-    <div className={clsx('relative flex h-full w-full flex-row', className)}>
+    <div className="relative flex h-full w-full flex-row">
       <div className="relative flex h-full w-full flex-col">
         <div className="relative grid h-24 w-full grid-cols-7 pl-16">
           {Array.from({ length: 7 }).map((_, index) => {
@@ -68,7 +74,6 @@ const WeekCalendar: React.FC<Props> = ({ className }) => {
             className="relative grid h-full w-full grid-cols-7"
             onClick={(e) => {
               e.preventDefault()
-              createEvent(e)
             }}
           >
             {Array.from({ length: 7 }).map((_, index) => {

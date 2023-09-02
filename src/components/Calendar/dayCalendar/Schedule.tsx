@@ -9,13 +9,20 @@ interface Props extends React.PropsWithChildren {
 }
 
 const Schedule: React.FC<Props> = ({ className, date }) => {
-  const [dimensions, setDimensions] = useState({ height: 0, width: 0 })
+  //Size and position stuff
+  const [dimensions, setDimensions] = useState<{
+    height: number | undefined
+    width: number | undefined
+  }>({
+    height: 0,
+    width: 0,
+  })
   const parentGrid = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     const resizeObserver = new ResizeObserver((event) => {
       setDimensions({
-        height: event[0].contentBoxSize[0].blockSize,
-        width: event[0].contentBoxSize[0].inlineSize,
+        height: event[0]?.contentBoxSize[0]?.blockSize,
+        width: event[0]?.contentBoxSize[0]?.inlineSize,
       })
     })
 
