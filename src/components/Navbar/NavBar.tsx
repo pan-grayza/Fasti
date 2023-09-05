@@ -48,7 +48,7 @@ const NavBar = () => {
   }
 
   return (
-    <div className="relative flex h-14 w-full flex-row items-center gap-6 border-b p-4">
+    <div className="relative z-10 flex h-14 w-full flex-row items-center gap-6 border-b p-4">
       <div
         onClick={() => setSidebar(!sidebar)}
         className="relative flex cursor-pointer items-center justify-center p-1"

@@ -10,11 +10,11 @@ export const calendarRouter = createTRPCRouter({
     })
   }),
   create: protectedProcedure
-    .input(z.object({ title: z.string() }))
+    .input(z.object({ name: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.calendar.create({
         data: {
-          calendarName: input.title,
+          calendarName: input.name,
           hostId: ctx.session.user.id,
         },
       })

@@ -21,7 +21,6 @@ const Calendar = () => {
     setCurrentCalendarView,
     selectedCalendar,
     setSelectedCalendar,
-    sidebar,
   ] = useStore((state) => [
     state.currentCalendarView,
     state.setCurrentCalendarView,
@@ -41,64 +40,26 @@ const Calendar = () => {
         console.log(err)
       },
     })
-  const createCalendar = api.calendar.create.useMutation({
-    onSuccess: () => {
-      void refetchCalendars()
-    },
-  })
+
   useEffect(() => {
-    if (sessionData && calendars && calendars.length === 0) {
-      createCalendar.mutate({ title: sessionData.user.name! })
+    if (
+      sessionData &&
+      currentCalendarView === 'None' &&
+      calendars &&
+      calendars.length > 0
+    ) {
+      setCurrentCalendarView('Month')
     }
-  }, [calendars, createCalendar, sessionData]) /*It needs to be like that*/
-
-  if (
-    sessionData &&
-    currentCalendarView === 'None' &&
-    calendars &&
-    calendars.length > 0
-  ) {
-    setCurrentCalendarView('Month')
-  }
-  console.log('Calendars: ', calendars)
-
-  const { data: dayEvents, refetch: refetchDayEvents } =
-    api.dayEvent.getAll.useQuery(
-      {
-        calendarId: selectedCalendar?.id ?? '',
-      },
-      {
-        enabled: sessionData?.user !== undefined && selectedCalendar !== null,
-      }
-    )
-
-  console.log('dayEvents: ', dayEvents)
-
-  // const { data: timeEvents, refetch: refetchTimeEvents } =
-  //   api.timeEvent.getAll.useQuery(
-  //     {
-  //       calendarId: selectedCalendar?.id ?? '',
-  //     },
-  //     {
-  //       enabled: sessionData?.user !== undefined && selectedCalendar !== null,
-  //     }
-  //   )
+  })
 
   return (
     <div className="relative flex h-full w-full flex-row overflow-hidden">
       <Sidebar />
       <div className={clsx('relative flex h-full w-full')}>
         {currentCalendarView === 'Year' && <YearCalendar />}
-        {currentCalendarView === 'Month' && (
-          <MonthCalendar
-            dayEvents={dayEvents}
-            refetchDayEvents={refetchDayEvents}
-          />
-        )}
-        {currentCalendarView === 'Week' && (
-          <WeekCalendar dayEvents={dayEvents} />
-        )}
-        {currentCalendarView === 'Day' && <DayCalendar dayEvents={dayEvents} />}
+        {currentCalendarView === 'Month' && <MonthCalendar />}
+        {currentCalendarView === 'Week' && <WeekCalendar />}
+        {currentCalendarView === 'Day' && <DayCalendar />}
       </div>
     </div>
   )

@@ -19,20 +19,13 @@ import clsx from 'clsx'
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 interface Props {
   className?: string
-  dayEvents: dayEvent[] | undefined
-  refetchDayEvents: () => unknown
 }
 
-const MonthCalendar: React.FC<Props> = ({
-  className,
-  dayEvents,
-  refetchDayEvents,
-}) => {
+const MonthCalendar: React.FC<Props> = ({ className }) => {
   const [currentDate, setCurrentDate] = useStore((state) => [
     state.currentDate,
     state.setCurrentDate,
   ])
-  console.log(dayEvents)
 
   const startDate = startOfMonth(currentDate)
   const endDate = endOfMonth(currentDate)
@@ -83,18 +76,8 @@ const MonthCalendar: React.FC<Props> = ({
           const numOfDay = index + 1
           const isCurrentDate =
             format(date, 'dd MM yyyy') === format(currentDate, 'dd MM yyyy')
-          const dayEventsProps = dayEvents?.filter(
-            (dayEvent) =>
-              format(dayEvent.date, 'dd MMMM yyyy') ===
-              format(date, 'dd MMMM yyyy')
-          )
           return (
-            <EventCell
-              refetchDayEvents={refetchDayEvents}
-              dayEvents={dayEventsProps}
-              key={index}
-              date={date}
-            >
+            <EventCell key={index} date={date}>
               {numOfDay}
             </EventCell>
           )

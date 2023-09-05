@@ -1,12 +1,15 @@
 import clsx from 'clsx'
-import { add, startOfWeek } from 'date-fns'
+import { add, format, startOfDay, startOfWeek } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Rnd } from 'react-rnd'
 import useStore from '~/store/useStore'
 
+import type { timeEvent } from '@prisma/client'
+import { api } from '~/utils/api'
+
 interface Props extends React.PropsWithChildren {
   className?: string
-  date: Date
+  eventProps: timeEvent
   parentWidth: number | undefined
   type?: 'week' | 'day'
 }
@@ -14,20 +17,45 @@ interface Props extends React.PropsWithChildren {
 const TimeEvent: React.FC<Props> = ({
   children,
   className,
-  date,
+  eventProps,
   parentWidth = 90,
   type = 'day',
 }) => {
-  useEffect(() => {
-    setRenamingEventNow(true)
-  }, [])
+  //Other states
+  const [renamingEventNow, setRenamingEventNow] = useStore((state) => [
+    state.renamingEventNow,
+    state.setRenamingEventNow,
+    state.selectedCalendar,
+  ])
+  const [onMouseDownStart, setOnMouseDownStart] = useState(0)
 
-  const [size, setSize] = useState({
-    width: type === 'week' ? parentWidth / 7 : parentWidth + 'px',
-    height: '30px',
+  //API stuff
+  const { data: timeEvents, refetch: refetchTimeEvents } =
+    api.timeEvent.getAll.useQuery(
+      { calendarId: eventProps.calendarId },
+      {
+        onError: (err) => {
+          console.log(err)
+        },
+      }
+    )
+  const updateTimeEvent = api.timeEvent.update.useMutation({
+    onSuccess: () => {
+      void refetchTimeEvents()
+    },
   })
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [colIndex, setColIndex] = useState(0)
+
+  const deleteTimeEvent = api.timeEvent.delete.useMutation({
+    onSuccess: () => {
+      console.log('deleted')
+      void refetchTimeEvents()
+    },
+  })
+
+  //Position stuff
+  const [colIndex, setColIndex] = useState(
+    type === 'week' ? parseInt(format(eventProps.startTime, 'e')) : 0
+  )
   const getColX = () => {
     if (type === 'week') {
       return (parentWidth / 7) * colIndex
@@ -35,45 +63,69 @@ const TimeEvent: React.FC<Props> = ({
       return colIndex
     }
   }
-  if (type === 'week') {
-    date = add(startOfWeek(date), { days: colIndex, minutes: position.y })
+  const startingPosition = {
+    x: type === 'week' ? getColX() : 0,
+    y:
+      parseInt(format(eventProps.startTime, 'm')) +
+      parseInt(format(eventProps.startTime, 'H')) * 60,
   }
+
+  const [size, setSize] = useState({
+    width: type === 'week' ? parentWidth / 7 + 'px' : parentWidth + 'px',
+    height: eventProps.durationM + 'px',
+  })
+  const [position, setPosition] = useState(startingPosition)
+  let dateFromPosition: Date
+  if (type === 'week') {
+    dateFromPosition = add(startOfWeek(eventProps.startTime), {
+      days: colIndex,
+      minutes: position.y,
+    })
+  } else {
+    dateFromPosition = add(startOfDay(eventProps.startTime), {
+      minutes: position.y,
+    })
+  }
+
   useEffect(() => {
     setSize({
       ...size,
-      width: type === 'week' ? parentWidth / 7 : parentWidth + 'px',
+      width: type === 'week' ? parentWidth / 7 + 'px' : parentWidth + 'px',
     })
     setPosition({ ...position, x: getColX() })
   }, [parentWidth])
 
+  //Editing Event
+  //Renaming
+  useEffect(() => {
+    finishUpdating()
+  }, [position, size])
   const [isRenaming, setIsRenaming] = useState(true)
-  const [name, setName] = useState('')
+  const [name, setName] = useState(eventProps.name)
 
-  const [renamingEventNow, setRenamingEventNow] = useStore((state) => [
-    state.renamingEventNow,
-    state.setRenamingEventNow,
-  ])
-
-  const finishRenaming = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    if (name === '') setName('New Event')
+  const finishUpdating = () => {
+    if (name === '') setName('Event')
     setIsRenaming(false)
     setRenamingEventNow(false)
+    updateTimeEvent.mutate({
+      id: eventProps.id,
+      calendarId: eventProps.calendarId,
+      newName: name,
+      newStartTime: dateFromPosition,
+      newDurationM: parseInt(size.height),
+    })
+    console.log(dateFromPosition)
+    console.log('Updated')
   }
-  if (renamingEventNow === false && isRenaming) {
+
+  if (!renamingEventNow && isRenaming) {
     setIsRenaming(false)
-    if (name === '') setName('New Event')
   }
 
   const onRename = () => {
     setRenamingEventNow(true)
     setIsRenaming(true)
   }
-
-  const durationM = parseInt(size.height)
-  const startTime = add(date, { minutes: position.y })
-  const endTime = add(startTime, { minutes: durationM })
-  const timeEventObject = { startTime: startTime, endTime: endTime }
 
   return (
     <Rnd
@@ -98,7 +150,6 @@ const TimeEvent: React.FC<Props> = ({
         setSize({
           width: ref.style.width,
           height: ref.style.height,
-          ...position,
         })
       }}
       resizeGrid={[15, 15]}
@@ -113,14 +164,107 @@ const TimeEvent: React.FC<Props> = ({
         bottomLeft: false,
         topLeft: false,
       }}
+      maxWidth={256}
       dragAxis={type === 'week' ? 'both' : 'y'}
       bounds="parent"
       className={clsx(
-        'relative cursor-pointer rounded bg-slate-400 px-2 py-1',
+        'relative cursor-pointer rounded bg-blue-400 px-2 py-1',
         className
       )}
     >
-      <div className="h-full w-full">{durationM}</div>
+      <div
+        onMouseDown={() =>
+          setOnMouseDownStart(
+            parseInt(
+              format(new Date(), 'm') +
+                format(new Date(), 's') +
+                format(new Date(), 'SSS')
+            )
+          )
+        }
+        onClick={() =>
+          onMouseDownStart + 300 >
+            parseInt(
+              format(new Date(), 'm') +
+                format(new Date(), 's') +
+                format(new Date(), 'SSS')
+            ) && onRename()
+        }
+        className="h-full w-full text-gray-50"
+      >
+        {parseInt(size.height)} {name}
+      </div>
+      {isRenaming && (
+        <div
+          className={clsx(
+            'absolute inset-0 z-10 flex h-full w-full items-start',
+            {
+              'ml-4 translate-x-full justify-start': colIndex < 4,
+              'mr-4 -translate-x-full justify-end': colIndex > 3,
+            }
+          )}
+        >
+          <div className="relative flex flex-col gap-1 rounded bg-gray-100 p-1">
+            <div className="relative flex h-fit w-full items-center justify-end gap-1">
+              <button
+                onClick={() => {
+                  deleteTimeEvent.mutate({
+                    id: eventProps.id,
+                    calendarId: eventProps.calendarId,
+                  })
+                }}
+                className="relative flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-5 w-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={() => finishUpdating()}
+                className="relative flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <input
+              type="text"
+              autoFocus
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  finishUpdating()
+                }
+              }}
+              className="relative w-48 p-1 focus:outline-none"
+            />
+          </div>
+        </div>
+      )}
     </Rnd>
   )
 }

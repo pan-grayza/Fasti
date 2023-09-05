@@ -6,13 +6,7 @@ import DayColSchedule from './DayColSchedule'
 import DayCol from './DayCol'
 import TimeEvent from '~/components/TimeEvent'
 
-import type { dayEvent } from '@prisma/client'
-
-interface Props {
-  dayEvents: dayEvent[] | undefined
-}
-
-const WeekCalendar: React.FC<Props> = ({ dayEvents }) => {
+const WeekCalendar = () => {
   const [currentDate] = useStore((state) => [state.currentDate])
   const startOfCurrentWeek = startOfWeek(currentDate)
   // Size and position stuff
@@ -82,11 +76,11 @@ const WeekCalendar: React.FC<Props> = ({ dayEvents }) => {
                 <DayColSchedule className="border-l" key={index} date={date} />
               )
             })}
-            <TimeEvent
+            {/* <TimeEvent
               date={currentDate}
               type="week"
               parentWidth={dimensions.width}
-            />
+            /> */}
           </div>
         </div>
       </div>

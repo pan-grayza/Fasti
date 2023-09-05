@@ -1,5 +1,6 @@
 import clsx from 'clsx'
-import React, { useState } from 'react'
+import { useSession } from 'next-auth/react'
+import React, { useEffect, useState } from 'react'
 import useStore from '~/store/useStore'
 import { api } from '~/utils/api'
 interface Props {
@@ -7,12 +8,13 @@ interface Props {
 }
 
 const Sidebar: React.FC<Props> = ({ className }) => {
+  const { data: sessionData } = useSession()
   const [selectedCalendar, setSelectedCalendar, sidebar] = useStore((state) => [
     state.selectedCalendar,
     state.setSelectedCalendar,
     state.sidebar,
   ])
-  const [isNamingCalendar, setIsNamingCalendar] = useState(false)
+  const [isCreatingCalendar, setIsCreatingCalendar] = useState(false)
   const { data: calendars, refetch: refetchCalendars } =
     api.calendar.getAll.useQuery(undefined, {
       onSuccess: (data) => {
@@ -41,7 +43,7 @@ const Sidebar: React.FC<Props> = ({ className }) => {
     >
       <div
         className={clsx(
-          'absolute -left-40 top-0 flex h-full w-48 flex-col gap-1 p-2 transition',
+          'absolute -left-40 top-0 flex h-full w-48 flex-col gap-1 overflow-y-auto border-r p-2 transition',
           { 'translate-x-40': sidebar, 'translate-x-0': !sidebar },
           className
         )}
@@ -70,7 +72,8 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                 }}
                 className={clsx('invisible transition ', {
                   'hover:text-red-500 group-hover:visible':
-                    selectedCalendar !== calendar,
+                    selectedCalendar !== calendar &&
+                    calendar.calendarName !== sessionData?.user.name,
                 })}
               >
                 <svg
@@ -93,12 +96,12 @@ const Sidebar: React.FC<Props> = ({ className }) => {
         })}
         <div className="relative flex h-8 w-full flex-col">
           <div
-            onClick={() => setIsNamingCalendar(true)}
+            onClick={() => setIsCreatingCalendar(true)}
             className="relative flex h-8 w-full cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed border-gray-600 px-2 py-1 text-gray-700 transition hover:bg-gray-50"
           >
             <div className="text-gray relative mb-1 text-lg">+</div>
           </div>
-          {isNamingCalendar && (
+          {isCreatingCalendar && (
             <div
               className={clsx(
                 'absolute flex h-full w-full flex-row items-center justify-center transition',
@@ -116,10 +119,10 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     createCalendar.mutate({
-                      title: e.currentTarget.value,
+                      name: e.currentTarget.value,
                     })
                     e.currentTarget.value = ''
-                    setIsNamingCalendar(false)
+                    setIsCreatingCalendar(false)
                   }
                 }}
               />
@@ -130,10 +133,10 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                       'newCalendarInput'
                     ) as HTMLInputElement
                     createCalendar.mutate({
-                      title: input.value,
+                      name: input.value,
                     })
                     input.value = ''
-                    setIsNamingCalendar(false)
+                    setIsCreatingCalendar(false)
                   }}
                   className="relative rounded bg-blue-400 px-3 py-1 text-sm font-semibold text-gray-800 transition active:bg-blue-500"
                 >
@@ -145,8 +148,7 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                       'newCalendarInput'
                     ) as HTMLInputElement
                     input.value = ''
-                    setIsNamingCalendar(false)
-                    console.log(isNamingCalendar)
+                    setIsCreatingCalendar(false)
                   }}
                   className="rounded bg-red-400 px-3 py-1 text-sm font-semibold text-gray-800 transition active:bg-red-500"
                 >

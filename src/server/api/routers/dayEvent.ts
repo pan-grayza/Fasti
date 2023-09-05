@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc'
+import { v4 as uuidv4 } from 'uuid'
 
 export const dayEventRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -11,6 +12,16 @@ export const dayEventRouter = createTRPCRouter({
         },
       })
     }),
+  getAllFilteredByDate: protectedProcedure
+    .input(z.object({ calendarId: z.string(), date: z.date() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.dayEvent.findMany({
+        where: {
+          calendarId: input.calendarId,
+          date: input.date,
+        },
+      })
+    }),
 
   create: protectedProcedure
     .input(
@@ -19,7 +30,7 @@ export const dayEventRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.dayEvent.create({
         data: {
-          id: '1',
+          id: uuidv4(),
           name: input.name,
           date: input.date,
           calendarId: input.calendarId,

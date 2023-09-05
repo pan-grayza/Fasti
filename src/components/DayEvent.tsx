@@ -7,8 +7,8 @@ interface Props extends React.PropsWithChildren {
   className?: string
   onClick?: (id: string) => void
   onDelete: () => void
-  onRenameSubmit: (name: string) => void
-  eventProps: { id: string; date: Date; name: string; calendarId: string }
+  onRenameSubmit: (newName: string) => void
+  eventProps: dayEvent
 }
 
 const Event: React.FC<Props> = ({
@@ -25,18 +25,16 @@ const Event: React.FC<Props> = ({
   ])
 
   const [isRenaming, setIsRenaming] = useState(true)
-  const [name, setName] = useState('')
+  const [name, setName] = useState(eventProps.name)
 
-  const finishRenaming = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (name === '') setName('New Event')
+  const finishRenaming = () => {
+    if (name === '') setName('Event')
     setIsRenaming(false)
     setRenamingEventNow(false)
     onRenameSubmit(name)
   }
-  if (renamingEventNow === false && isRenaming) {
+  if (!renamingEventNow && isRenaming) {
     setIsRenaming(false)
-    if (name === '') setName('New Event')
   }
 
   const onRename = () => {
@@ -45,58 +43,52 @@ const Event: React.FC<Props> = ({
   }
   return (
     <div
-      onClick={onRename}
-      className={clsx(
-        'relative h-8 w-full flex-col items-center justify-center rounded bg-green-400',
-        className,
-        { 'z-20': isRenaming }
-      )}
+      className={clsx('relative flex h-6 w-full items-center text-gray-50', {
+        'z-20': isRenaming,
+      })}
     >
-      {eventProps.name}
+      <div
+        onClick={onRename}
+        className={clsx(
+          'relative flex h-6 w-full items-center rounded bg-sky-500 px-2',
+          className
+        )}
+      >
+        <p>{eventProps.name}</p>
+
+        {children}
+      </div>
       {isRenaming && (
-        <form
-          onSubmit={finishRenaming}
-          className="absolute inset-0 h-full w-full flex-col text-white"
-        >
+        <div className="absolute inset-0 z-10 h-full w-full flex-col">
           <input
+            id="renameDayEventInput"
             autoFocus
-            className="relative h-full w-full rounded bg-green-400 focus:outline-none"
+            className="relative h-full w-full rounded bg-sky-500 px-2 py-1 focus:outline-none"
             type="text"
             onChange={(e) => setName(e.target.value)}
             value={name}
-          ></input>
-          <div className="relative mt-1 flex h-10 flex-row items-center justify-center gap-x-4 rounded bg-gray-100 p-2 drop-shadow">
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                finishRenaming()
+              }
+            }}
+          />
+          <div className="absolute left-0 top-full z-10 mt-2 flex w-full flex-row items-center gap-2">
             <button
-              type="submit"
-              className="relative h-8 w-20 rounded bg-blue-300 text-black"
+              onClick={() => finishRenaming()}
+              className="relative w-16 rounded bg-blue-400 px-3 py-1 text-sm font-semibold text-gray-800 transition active:bg-blue-500"
             >
-              Done
+              Save
             </button>
             <button
               onClick={onDelete}
-              type="reset"
-              className="relative flex h-8 w-8 items-center justify-center rounded bg-red-400"
+              className="rounded bg-red-400 px-3 py-1 text-sm font-semibold text-gray-800 transition active:bg-red-500"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-6 w-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                />
-              </svg>
+              Delete
             </button>
           </div>
-        </form>
+        </div>
       )}
-
-      {children}
     </div>
   )
 }

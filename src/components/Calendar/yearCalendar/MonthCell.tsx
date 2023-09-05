@@ -29,7 +29,7 @@ const MonthCell: React.FC<Props> = ({ monthDate }) => {
   const lastDayOfPervMonth = parseInt(format(endOfMonth(prevMonth), 'dd'))
 
   return (
-    <div className="relative flex h-fit w-fit flex-col items-center justify-center p-2">
+    <div className="relative flex h-fit w-max flex-col items-center justify-center">
       <p>{format(monthDate, 'MMMM')}</p>
       <div className="relative grid w-full grid-cols-7">
         {days.map((day, index) => (

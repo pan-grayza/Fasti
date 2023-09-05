@@ -5,11 +5,8 @@ import DayEvent from '../../DayEvent'
 import { format } from 'date-fns'
 import DayCell from '../../DayCell'
 import type { dayEvent } from '@prisma/client'
-interface Props {
-  dayEvents: dayEvent[] | undefined
-}
 
-const DayCalendar: React.FC<Props> = ({ dayEvents }) => {
+const DayCalendar = () => {
   const [currentDate, setRenamingEventNow] = useStore((state) => [
     state.currentDate,
     state.setRenamingEventNow,
