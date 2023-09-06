@@ -7,7 +7,7 @@ import useStore from '~/store/useStore'
 import type { timeEvent } from '@prisma/client'
 import { api } from '~/utils/api'
 
-interface Props extends React.PropsWithChildren {
+interface Props {
   className?: string
   eventProps: timeEvent
   parentWidth: number | undefined
@@ -15,7 +15,6 @@ interface Props extends React.PropsWithChildren {
 }
 
 const TimeEvent: React.FC<Props> = ({
-  children,
   className,
   eventProps,
   parentWidth = 90,
@@ -46,15 +45,17 @@ const TimeEvent: React.FC<Props> = ({
   })
 
   const deleteTimeEvent = api.timeEvent.delete.useMutation({
+    onError: (err) => {
+      console.log(err)
+    },
     onSuccess: () => {
-      console.log('deleted')
       void refetchTimeEvents()
     },
   })
 
   //Position stuff
   const [colIndex, setColIndex] = useState(
-    type === 'week' ? parseInt(format(eventProps.startTime, 'e')) : 0
+    type === 'week' ? parseInt(format(eventProps.startTime, 'e')) - 1 : 0
   )
   const getColX = () => {
     if (type === 'week') {
@@ -98,8 +99,9 @@ const TimeEvent: React.FC<Props> = ({
   //Editing Event
   //Renaming
   useEffect(() => {
+    console.log(position)
     finishUpdating()
-  }, [position, size])
+  }, [size, position.x, position.y]) // Needs to be like that, for delete functionality
   const [isRenaming, setIsRenaming] = useState(true)
   const [name, setName] = useState(eventProps.name)
 
@@ -114,8 +116,6 @@ const TimeEvent: React.FC<Props> = ({
       newStartTime: dateFromPosition,
       newDurationM: parseInt(size.height),
     })
-    console.log(dateFromPosition)
-    console.log('Updated')
   }
 
   if (!renamingEventNow && isRenaming) {
@@ -192,7 +192,7 @@ const TimeEvent: React.FC<Props> = ({
         }
         className="h-full w-full text-gray-50"
       >
-        {parseInt(size.height)} {name}
+        {name}
       </div>
       {isRenaming && (
         <div
@@ -207,12 +207,12 @@ const TimeEvent: React.FC<Props> = ({
           <div className="relative flex flex-col gap-1 rounded bg-gray-100 p-1">
             <div className="relative flex h-fit w-full items-center justify-end gap-1">
               <button
-                onClick={() => {
+                onClick={() =>
                   deleteTimeEvent.mutate({
                     id: eventProps.id,
                     calendarId: eventProps.calendarId,
                   })
-                }}
+                }
                 className="relative flex items-center justify-center"
               >
                 <svg

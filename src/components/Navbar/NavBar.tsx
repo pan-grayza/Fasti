@@ -3,7 +3,7 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 import Button from '../Button'
 import useStore from '~/store/useStore'
 import { format, sub, add, startOfDay } from 'date-fns'
-import ArrowButton from './ArrowButton'
+import ArrowButton from '../ArrowButton'
 import DropDown from './DropDown'
 
 const NavBar = () => {
@@ -49,25 +49,28 @@ const NavBar = () => {
 
   return (
     <div className="relative z-10 flex h-14 w-full flex-row items-center gap-6 border-b p-4">
-      <div
-        onClick={() => setSidebar(!sidebar)}
-        className="relative flex cursor-pointer items-center justify-center p-1"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="h-7 w-7"
+      {currentCalendarView !== 'None' && (
+        <div
+          onClick={() => setSidebar(!sidebar)}
+          className="relative flex cursor-pointer items-center justify-center p-1"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-          />
-        </svg>
-      </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-7 w-7"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+        </div>
+      )}
+
       <div className="relative w-24">
         <p className="text-lg font-bold tracking-wide text-gray-900">Fasti</p>
       </div>

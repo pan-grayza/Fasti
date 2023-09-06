@@ -6,7 +6,7 @@ import clsx from 'clsx'
 interface Props extends React.PropsWithChildren {
   className?: string
   date: Date
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   dayAbr?: boolean
   onClick?: () => void
 }
@@ -28,7 +28,10 @@ const DayCell: React.FC<Props> = ({
   const isToday =
     format(date, 'dd MM yyyy') === format(new Date(), 'dd MM yyyy')
   return (
-    <div className="relative flex w-fit flex-col items-center justify-center gap-1">
+    <div
+      onClick={() => setCurrentDate(date)}
+      className="relative flex w-fit cursor-pointer flex-col items-center justify-center"
+    >
       {dayAbr && (
         <p
           className={clsx('text-xs font-bold uppercase', {
@@ -41,8 +44,9 @@ const DayCell: React.FC<Props> = ({
       )}
       <div
         className={clsx(
-          'relative flex min-h-min min-w-min cursor-pointer items-center justify-center',
+          'relative flex min-h-min min-w-min items-center justify-center',
           {
+            'h-6 w-6': size === 'xs',
             'h-8 w-8': size === 'sm',
             'h-12 w-12': size === 'md',
             'h-16 w-16': size === 'lg',
@@ -51,20 +55,20 @@ const DayCell: React.FC<Props> = ({
         )}
       >
         <div
-          onClick={() => setCurrentDate(date)}
           className={clsx(
-            'relative  flex cursor-pointer select-none items-center justify-center rounded-full transition-colors',
+            'relative  flex select-none items-center justify-center rounded-full transition-colors',
             {
               'bg-blue-300/50 text-blue-700': isCurrentDate && !isToday,
               'bg-blue-600 text-white': isToday,
               'hover:bg-gray-300/50': !isCurrentDate && !isToday,
+              'h-7 w-7 text-xs': size === 'xs',
               'h-8 w-8 text-sm': size === 'sm',
               'h-12 w-12 text-xl': size === 'md',
               'h-16 w-16 text-2xl font-semibold': size === 'lg',
             }
           )}
         >
-          {format(date, 'dd')}
+          {format(date, 'd')}
         </div>
       </div>
     </div>

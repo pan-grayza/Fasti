@@ -5,9 +5,21 @@ import useStore from '~/store/useStore'
 import DayColSchedule from './DayColSchedule'
 import DayCol from './DayCol'
 import TimeEvent from '~/components/TimeEvent'
+import TimeEventCreator from '~/components/TimeEventCreator'
+import { api } from '~/utils/api'
 
 const WeekCalendar = () => {
-  const [currentDate] = useStore((state) => [state.currentDate])
+  const [
+    currentDate,
+    selectedCalendar,
+    creatingTimeEventNow,
+    setCreatingTimeEventNow,
+  ] = useStore((state) => [
+    state.currentDate,
+    state.selectedCalendar,
+    state.creatingTimeEventNow,
+    state.setCreatingTimeEventNow,
+  ])
   const startOfCurrentWeek = startOfWeek(currentDate)
   // Size and position stuff
   const [dimensions, setDimensions] = useState<{
@@ -29,13 +41,22 @@ const WeekCalendar = () => {
   }, [parentGrid, dimensions])
 
   //API stuff
+  const { data: timeEvents, refetch: refetchTimeEvents } =
+    api.timeEvent.getAll.useQuery(
+      { calendarId: selectedCalendar?.id ?? '' },
+      {
+        onError: (err) => {
+          console.log(err)
+        },
+      }
+    )
 
-  //DayEvents
-  const createDayEvent = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - rect.left //x position within the element.
-    const y = e.clientY - rect.top //y position within the element.
-  }
+  // Creating Event stuff
+  const [createTimeEventProps, setCreatingTimeEventProps] = useState<{
+    x: number
+    y: number
+    calendarId: string
+  }>({ x: 0, y: 0, calendarId: selectedCalendar?.id ?? '' })
 
   return (
     <div className="relative flex h-full w-full flex-row">
@@ -76,11 +97,42 @@ const WeekCalendar = () => {
                 <DayColSchedule className="border-l" key={index} date={date} />
               )
             })}
-            {/* <TimeEvent
-              date={currentDate}
-              type="week"
-              parentWidth={dimensions.width}
-            /> */}
+            <div
+              onClick={(e) => {
+                if (!creatingTimeEventNow) {
+                  const bounds = e.currentTarget.getBoundingClientRect()
+                  setCreatingTimeEventProps({
+                    ...createTimeEventProps,
+                    x: e.clientX - bounds.left,
+                    y:
+                      e.clientY - bounds.top < 1410
+                        ? Math.round((e.clientY - bounds.top) / 15) * 15
+                        : 1410,
+                  })
+                  setCreatingTimeEventNow(true)
+                } else {
+                  setCreatingTimeEventNow(false)
+                }
+              }}
+              className="absolute inset-0 h-full w-full cursor-pointer"
+            />
+            {creatingTimeEventNow && (
+              <TimeEventCreator
+                type="week"
+                createEventProps={createTimeEventProps}
+                parentWidth={dimensions.width}
+              />
+            )}
+            {timeEvents?.map((event) => {
+              return (
+                <TimeEvent
+                  type="week"
+                  key={event.id}
+                  eventProps={event}
+                  parentWidth={dimensions.width}
+                />
+              )
+            })}
           </div>
         </div>
       </div>

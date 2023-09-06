@@ -41,7 +41,7 @@ const useStore = create<State & Action>((set) => ({
   selectedCalendar: null,
   setSelectedCalendar: (state: Calendar | null) =>
     set(() => ({ selectedCalendar: state })),
-  sidebar: false,
+  sidebar: true,
   setSidebar: (state: boolean) => set(() => ({ sidebar: state })),
 }))
 

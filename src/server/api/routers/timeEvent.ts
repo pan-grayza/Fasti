@@ -80,7 +80,6 @@ export const timeEventRouter = createTRPCRouter({
       return ctx.prisma.timeEvent.delete({
         where: {
           id: input.id,
-          calendarId: input.calendarId,
         },
       })
     }),

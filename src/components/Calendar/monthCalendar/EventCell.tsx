@@ -5,14 +5,21 @@ import useStore from '~/store/useStore'
 import DayCell from '~/components/DayCell'
 import type { dayEvent } from '@prisma/client'
 import { api } from '~/utils/api'
-import { format } from 'date-fns'
 
 interface Props extends React.PropsWithChildren {
   className?: string
   date: Date
+  filteredDayEvents: dayEvent[] | undefined
+  refetchDayEvents: () => unknown
 }
 
-const EventCell: React.FC<Props> = ({ children, className, date }) => {
+const EventCell: React.FC<Props> = ({
+  children,
+  className,
+  date,
+  filteredDayEvents,
+  refetchDayEvents,
+}) => {
   //States
   const [
     currentDate,
@@ -27,9 +34,6 @@ const EventCell: React.FC<Props> = ({ children, className, date }) => {
     state.setRenamingEventNow,
     state.selectedCalendar,
   ])
-  const [events, setEvents] = useState(
-    [] as { id: string; date: Date; name: string }[]
-  )
   const [isCreatingDayEvent, setIsCreatingDayEvent] = useState(false)
 
   if (renamingEventNow === false && isCreatingDayEvent) {
@@ -39,24 +43,8 @@ const EventCell: React.FC<Props> = ({ children, className, date }) => {
     ) as HTMLInputElement
     input.value = ''
   }
-  const [updatedEvent, setUpdatedEvent] = useState<{
-    id: string
-    date: Date
-    name: string
-  } | null>(null)
 
   //API stuff
-  const { data: dayEvents, refetch: refetchDayEvents } =
-    api.dayEvent.getAll.useQuery(
-      {
-        calendarId: selectedCalendar?.id ?? '',
-      },
-      {
-        onError: (err) => {
-          console.log(err)
-        },
-      }
-    )
   //Throwing error
   // api.dayEvent.getAllFilteredByDate.useQuery(
   //   {
@@ -70,10 +58,6 @@ const EventCell: React.FC<Props> = ({ children, className, date }) => {
   //     },
   //   }
   // )
-  const filteredDayEvents = dayEvents?.filter(
-    (dayEvent) =>
-      format(dayEvent.date, 'dd MMMM yyyy') === format(date, 'dd MMMM yyyy')
-  )
 
   const createDayEvent = api.dayEvent.create.useMutation({
     onSuccess: () => {

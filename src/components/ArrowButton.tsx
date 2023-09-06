@@ -5,6 +5,8 @@ interface Props extends React.PropsWithChildren {
   className?: string
   onClick?: () => void
   direction: 'right' | 'left' | 'top' | 'bottom'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
+
   disabled?: boolean
 }
 
@@ -12,17 +14,17 @@ const ArrowButton: React.FC<Props> = ({
   className,
   onClick = () => null,
   direction,
+  size = 'sm',
   disabled,
 }) => {
-  className = clsx(
-    'flex items-center justify-center rounded-full bg-gray-200/0 p-2 transition hover:bg-gray-200/50',
-    className
-  )
   return (
     <div>
       <button
         disabled={disabled}
-        className={className}
+        className={clsx(
+          'flex items-center justify-center rounded-full bg-gray-200/0 p-1 transition hover:bg-gray-200/50',
+          className
+        )}
         onClick={() => onClick()}
       >
         <svg
@@ -31,12 +33,16 @@ const ArrowButton: React.FC<Props> = ({
           viewBox="0 0 24 24"
           strokeWidth={1.75}
           stroke="currentColor"
-          className={clsx(
-            'h-5 w-5',
-            direction === 'right' && 'rotate-180',
-            direction === 'bottom' && 'rotate-90',
-            direction === 'top' && 'rotate-270'
-          )}
+          className={clsx('flex items-center justify-center', {
+            '-translate-x-[5%] rotate-0': direction === 'left',
+            'translate-x-[5%] rotate-180': direction === 'right',
+            'translate-y-[5%] rotate-90': direction === 'bottom',
+            'rotate-270 -translate-y-[5%]': direction === 'top',
+            'h-4 w-4': size === 'xs',
+            'h-5 w-5': size === 'sm',
+            'h-8 w-8': size === 'md',
+            'h-10 w-10': size === 'lg',
+          })}
         >
           <path
             strokeLinecap="round"

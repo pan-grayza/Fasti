@@ -22,9 +22,10 @@ interface Props {
 }
 
 const MonthCalendar: React.FC<Props> = ({ className }) => {
-  const [currentDate, setCurrentDate] = useStore((state) => [
+  const [currentDate, setCurrentDate, selectedCalendar] = useStore((state) => [
     state.currentDate,
     state.setCurrentDate,
+    state.selectedCalendar,
   ])
 
   const startDate = startOfMonth(currentDate)
@@ -42,6 +43,19 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
     const date = setDate(currentDate, index)
     setCurrentDate(date)
   }
+
+  //API stuff
+  const { data: dayEvents, refetch: refetchDayEvents } =
+    api.dayEvent.getAll.useQuery(
+      {
+        calendarId: selectedCalendar?.id ?? '',
+      },
+      {
+        onError: (err) => {
+          console.log(err)
+        },
+      }
+    )
 
   return (
     <div
@@ -73,11 +87,19 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
           .reverse()}
         {Array.from({ length: numOfDays }).map((_, index) => {
           const date = add(startDate, { days: index })
+          const filteredDayEvents = dayEvents?.filter(
+            (dayEvent) =>
+              format(dayEvent.date, 'dd MMMM yyyy') ===
+              format(date, 'dd MMMM yyyy')
+          )
           const numOfDay = index + 1
-          const isCurrentDate =
-            format(date, 'dd MM yyyy') === format(currentDate, 'dd MM yyyy')
           return (
-            <EventCell key={index} date={date}>
+            <EventCell
+              key={index}
+              filteredDayEvents={filteredDayEvents}
+              refetchDayEvents={() => refetchDayEvents()}
+              date={date}
+            >
               {numOfDay}
             </EventCell>
           )

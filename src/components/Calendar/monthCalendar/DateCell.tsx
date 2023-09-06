@@ -13,7 +13,7 @@ const DateCell: React.FC<Props> = ({ children, className, date }) => {
     <div
       onClick={() => setCurrentDate(date)}
       className={clsx(
-        'relative flex cursor-pointer select-none flex-col items-center border-b border-l transition-colors',
+        'relative flex cursor-pointer select-none flex-col items-center border-b border-l  p-1 transition-colors',
         className
       )}
     >
