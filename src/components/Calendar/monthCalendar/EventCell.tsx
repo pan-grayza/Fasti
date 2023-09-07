@@ -64,13 +64,13 @@ const EventCell: React.FC<Props> = ({
       void refetchDayEvents()
     },
   })
-  const renameDayEvent = api.dayEvent.rename.useMutation({
+  const updateDayEvent = api.dayEvent.update.useMutation({
     onSuccess: () => {
       void refetchDayEvents()
     },
   })
   const onRenameDayEvent = (id: string, name: string) => {
-    renameDayEvent.mutate({
+    updateDayEvent.mutate({
       id: id,
       newName: name,
       calendarId: selectedCalendar?.id ?? '',
@@ -98,75 +98,10 @@ const EventCell: React.FC<Props> = ({
             <DayEvent
               key={index}
               eventProps={event}
-              onRenameSubmit={(newName: string) =>
-                onRenameDayEvent(event.id, newName)
-              }
-              onDelete={() =>
-                deleteDayEvent.mutate({
-                  id: event.id,
-                  calendarId: event.calendarId,
-                })
-              }
+              refetchDayEvents={() => refetchDayEvents}
             />
           )
         })}
-        {isCreatingDayEvent && (
-          <div className="relative flex items-center">
-            <input
-              id="newDayEventInput"
-              autoFocus
-              className="relative flex h-6 w-full items-center rounded bg-sky-500 px-2 focus:outline-none"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  createDayEvent.mutate({
-                    name:
-                      e.currentTarget.value === ''
-                        ? 'Event'
-                        : e.currentTarget.value,
-                    date: currentDate,
-                    calendarId: selectedCalendar?.id ?? '',
-                  })
-                  e.currentTarget.value = ''
-                  setIsCreatingDayEvent(false)
-                  setRenamingEventNow(false)
-                }
-              }}
-            />
-            <div className="absolute left-0 top-full z-10 mt-2 flex w-full flex-row items-center gap-2">
-              <button
-                onClick={() => {
-                  const input = document.getElementById(
-                    'newDayEventInput'
-                  ) as HTMLInputElement
-                  createDayEvent.mutate({
-                    date: currentDate,
-                    name: input.value === '' ? 'Event' : input.value,
-                    calendarId: selectedCalendar?.id ?? '',
-                  })
-                  input.value = ''
-                  setIsCreatingDayEvent(false)
-                  setRenamingEventNow(false)
-                }}
-                className="relative rounded bg-blue-400 px-3 py-1 text-sm font-semibold text-gray-800 transition active:bg-blue-500"
-              >
-                Create
-              </button>
-              <button
-                onClick={() => {
-                  const input = document.getElementById(
-                    'newDayEventInput'
-                  ) as HTMLInputElement
-                  input.value = ''
-                  setIsCreatingDayEvent(false)
-                  setRenamingEventNow(false)
-                }}
-                className="rounded bg-red-400 px-3 py-1 text-sm font-semibold text-gray-800 transition active:bg-red-500"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
       </div>
       <div
         onClick={() => {

@@ -54,6 +54,10 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
         },
       }
     )
+  const filteredTimeEvents = timeEvents?.filter(
+    (event) =>
+      format(event.startTime, 'dd MMMM yyyy') === format(date, 'dd MMMM yyyy')
+  )
 
   // Creating Event stuff
   const [createEventProps, setCreatingEventProps] = useState<{
@@ -114,10 +118,6 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
         )}
         <div className="relative z-[-1] grid h-max w-full auto-rows-fr grid-cols-1">
           {Array.from({ length: 24 }).map((_, index) => {
-            const time = format(
-              add(startOfCurrentDay, { hours: index + 1 }),
-              'hh aa'
-            )
             return (
               <div
                 className="relative h-[60px] w-full border-b bg-slate-50"
@@ -126,12 +126,14 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
             )
           })}
         </div>
-        {timeEvents?.map((event) => {
+        {filteredTimeEvents?.map((event) => {
+          console.log(event)
           return (
             <TimeEvent
               key={event.id}
               eventProps={event}
               parentWidth={dimensions.width}
+              refetchTimeEvents={refetchTimeEvents}
             />
           )
         })}

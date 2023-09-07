@@ -12,6 +12,7 @@ interface Props {
   eventProps: timeEvent
   parentWidth: number | undefined
   type?: 'week' | 'day'
+  refetchTimeEvents: () => unknown
 }
 
 const TimeEvent: React.FC<Props> = ({
@@ -19,6 +20,7 @@ const TimeEvent: React.FC<Props> = ({
   eventProps,
   parentWidth = 90,
   type = 'day',
+  refetchTimeEvents,
 }) => {
   //Other states
   const [renamingEventNow, setRenamingEventNow] = useStore((state) => [
@@ -29,15 +31,6 @@ const TimeEvent: React.FC<Props> = ({
   const [onMouseDownStart, setOnMouseDownStart] = useState(0)
 
   //API stuff
-  const { data: timeEvents, refetch: refetchTimeEvents } =
-    api.timeEvent.getAll.useQuery(
-      { calendarId: eventProps.calendarId },
-      {
-        onError: (err) => {
-          console.log(err)
-        },
-      }
-    )
   const updateTimeEvent = api.timeEvent.update.useMutation({
     onSuccess: () => {
       void refetchTimeEvents()
@@ -190,21 +183,21 @@ const TimeEvent: React.FC<Props> = ({
                 format(new Date(), 'SSS')
             ) && onRename()
         }
-        className="h-full w-full text-gray-50"
+        className="h-full w-full text-lightText"
       >
         {name}
       </div>
       {isRenaming && (
         <div
           className={clsx(
-            'absolute inset-0 z-10 flex h-full w-full items-start',
+            'absolute inset-0 z-10 flex h-full w-full items-start text-darkText',
             {
               'ml-4 translate-x-full justify-start': colIndex < 4,
               'mr-4 -translate-x-full justify-end': colIndex > 3,
             }
           )}
         >
-          <div className="relative flex flex-col gap-1 rounded bg-gray-100 p-1">
+          <div className="relative flex flex-col gap-1 rounded bg-gray-50 p-1 ">
             <div className="relative flex h-fit w-full items-center justify-end gap-1">
               <button
                 onClick={() =>

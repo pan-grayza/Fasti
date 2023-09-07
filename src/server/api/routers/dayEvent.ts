@@ -37,7 +37,7 @@ export const dayEventRouter = createTRPCRouter({
         },
       })
     }),
-  rename: protectedProcedure
+  update: protectedProcedure
     .input(
       z.object({ id: z.string(), calendarId: z.string(), newName: z.string() })
     )

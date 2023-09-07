@@ -4,6 +4,10 @@ export default {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      colors: {
+        lightText: '#f9fafb',
+        darkText: '#1f2937',
+      },
       animation: {
         appearFromTopLeft: 'appearFromTopLeftKeyframes 50ms ease-in-out',
         sidebarShrinking: 'sidebarShrinkingKeyframes 150ms ease-in-out',

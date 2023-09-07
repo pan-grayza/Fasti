@@ -50,6 +50,11 @@ const WeekCalendar = () => {
         },
       }
     )
+  const filteredTimeEvents = timeEvents?.filter(
+    (event) =>
+      format(startOfWeek(event.startTime), 'dd MMMM yyyy') ===
+      format(startOfWeek(currentDate), 'dd MMMM yyyy')
+  )
 
   // Creating Event stuff
   const [createTimeEventProps, setCreatingTimeEventProps] = useState<{
@@ -123,13 +128,14 @@ const WeekCalendar = () => {
                 parentWidth={dimensions.width}
               />
             )}
-            {timeEvents?.map((event) => {
+            {filteredTimeEvents?.map((event) => {
               return (
                 <TimeEvent
                   type="week"
                   key={event.id}
                   eventProps={event}
                   parentWidth={dimensions.width}
+                  refetchTimeEvents={refetchTimeEvents}
                 />
               )
             })}

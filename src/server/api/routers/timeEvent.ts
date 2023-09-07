@@ -33,22 +33,6 @@ export const timeEventRouter = createTRPCRouter({
         },
       })
     }),
-  rename: protectedProcedure
-    .input(
-      z.object({ id: z.string(), calendarId: z.string(), newName: z.string() })
-    )
-    .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.timeEvent.update({
-        where: {
-          id: input.id,
-          calendarId: input.calendarId,
-        },
-
-        data: {
-          name: input.newName,
-        },
-      })
-    }),
   update: protectedProcedure
     .input(
       z.object({
