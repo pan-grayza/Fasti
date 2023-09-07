@@ -1,19 +1,21 @@
 import clsx from 'clsx'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import useStore from '~/store/useStore'
 import type { dayEvent } from '@prisma/client'
 import { api } from '~/utils/api'
+import { getDay } from 'date-fns'
 
 interface Props {
   className?: string
   eventProps: dayEvent
-  refetchDayEvents: () => unknown
   type?: 'day' | 'week' | 'month'
+  refetchDayEvents: () => unknown
 }
 
 const Event: React.FC<Props> = ({
   className,
   eventProps,
+  type = 'month',
   refetchDayEvents,
 }) => {
   const [renamingEventNow, setRenamingEventNow] = useStore((state) => [
@@ -39,7 +41,10 @@ const Event: React.FC<Props> = ({
   })
 
   //Position stuff
-  const [colIndex, setColIndex] = useState(0)
+  const [colIndex, setColIndex] = useState(
+    type === 'day' ? 0 : getDay(eventProps.date)
+  )
+  console.log(colIndex)
 
   //Updating event
 
@@ -66,14 +71,14 @@ const Event: React.FC<Props> = ({
   }
   return (
     <div
-      className={clsx('relative flex h-6 w-full items-center text-lightText', {
+      className={clsx('relative flex h-6 w-full text-lightText', {
         'z-20': isRenaming,
       })}
     >
       <div
         onClick={onRename}
         className={clsx(
-          'relative flex h-6 w-full items-center rounded bg-sky-500 px-2',
+          'relative flex h-6 w-full items-center rounded bg-blue-400 px-2',
           className
         )}
       >
@@ -84,8 +89,8 @@ const Event: React.FC<Props> = ({
           className={clsx(
             'absolute inset-0 z-10 flex h-full w-full items-start',
             {
-              'ml-4 translate-x-full justify-start': colIndex < 4,
-              'mr-4 -translate-x-full justify-end': colIndex > 3,
+              'ml-1 translate-x-full justify-start': colIndex < 4,
+              '-ml-1 -translate-x-full justify-end': colIndex > 3,
             }
           )}
         >

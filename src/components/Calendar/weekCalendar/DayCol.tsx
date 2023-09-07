@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { add, format, startOfDay } from 'date-fns'
+
 import React from 'react'
 import DayCell from '~/components/DayCell'
 
@@ -9,7 +9,6 @@ interface Props extends React.PropsWithChildren {
 }
 
 const DayCol: React.FC<Props> = ({ className, date }) => {
-  const startOfCurrentDay = startOfDay(date)
   return (
     <div
       className={clsx('relative flex items-center justify-center', className)}

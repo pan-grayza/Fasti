@@ -13,7 +13,6 @@ import DateCell from './DateCell'
 
 import useStore from '~/store/useStore'
 import { api } from '~/utils/api'
-import type { dayEvent } from '@prisma/client'
 import clsx from 'clsx'
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -22,9 +21,8 @@ interface Props {
 }
 
 const MonthCalendar: React.FC<Props> = ({ className }) => {
-  const [currentDate, setCurrentDate, selectedCalendar] = useStore((state) => [
+  const [currentDate, selectedCalendar] = useStore((state) => [
     state.currentDate,
-    state.setCurrentDate,
     state.selectedCalendar,
   ])
 
@@ -38,11 +36,6 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
   const prevMonth = sub(currentDate, { months: 1 })
   const nextMonth = add(currentDate, { months: 1 })
   const lastDayOfPervMonth = parseInt(format(endOfMonth(prevMonth), 'dd'))
-
-  const handleClickDate = (index: number) => {
-    const date = setDate(currentDate, index)
-    setCurrentDate(date)
-  }
 
   //API stuff
   const { data: dayEvents, refetch: refetchDayEvents } =

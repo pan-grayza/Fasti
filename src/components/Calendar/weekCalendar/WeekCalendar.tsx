@@ -9,17 +9,13 @@ import TimeEventCreator from '~/components/TimeEventCreator'
 import { api } from '~/utils/api'
 
 const WeekCalendar = () => {
-  const [
-    currentDate,
-    selectedCalendar,
-    creatingTimeEventNow,
-    setCreatingTimeEventNow,
-  ] = useStore((state) => [
-    state.currentDate,
-    state.selectedCalendar,
-    state.creatingTimeEventNow,
-    state.setCreatingTimeEventNow,
-  ])
+  const [currentDate, selectedCalendar, creatingEventNow, setCreatingEventNow] =
+    useStore((state) => [
+      state.currentDate,
+      state.selectedCalendar,
+      state.creatingEventNow,
+      state.setCreatingEventNow,
+    ])
   const startOfCurrentWeek = startOfWeek(currentDate)
   // Size and position stuff
   const [dimensions, setDimensions] = useState<{
@@ -97,14 +93,11 @@ const WeekCalendar = () => {
             }}
           >
             {Array.from({ length: 7 }).map((_, index) => {
-              const date = add(startOfCurrentWeek, { days: index })
-              return (
-                <DayColSchedule className="border-l" key={index} date={date} />
-              )
+              return <DayColSchedule className="border-l" key={index} />
             })}
             <div
               onClick={(e) => {
-                if (!creatingTimeEventNow) {
+                if (!creatingEventNow) {
                   const bounds = e.currentTarget.getBoundingClientRect()
                   setCreatingTimeEventProps({
                     ...createTimeEventProps,
@@ -114,14 +107,14 @@ const WeekCalendar = () => {
                         ? Math.round((e.clientY - bounds.top) / 15) * 15
                         : 1410,
                   })
-                  setCreatingTimeEventNow(true)
+                  setCreatingEventNow(true)
                 } else {
-                  setCreatingTimeEventNow(false)
+                  setCreatingEventNow(false)
                 }
               }}
               className="absolute inset-0 h-full w-full cursor-pointer"
             />
-            {creatingTimeEventNow && (
+            {creatingEventNow && (
               <TimeEventCreator
                 type="week"
                 createEventProps={createTimeEventProps}

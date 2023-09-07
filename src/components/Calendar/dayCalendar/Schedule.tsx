@@ -37,12 +37,13 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
   const startOfCurrentDay = startOfDay(date)
 
   //Other states
-  const [selectedCalendar, creatingTimeEventNow, setCreatingTimeEventNow] =
-    useStore((state) => [
+  const [selectedCalendar, creatingEventNow, setCreatingEventNow] = useStore(
+    (state) => [
       state.selectedCalendar,
-      state.creatingTimeEventNow,
-      state.setCreatingTimeEventNow,
-    ])
+      state.creatingEventNow,
+      state.setCreatingEventNow,
+    ]
+  )
 
   //API stuff
   const { data: timeEvents, refetch: refetchTimeEvents } =
@@ -92,7 +93,7 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
       <div ref={parentGrid} className="relative h-fit w-full">
         <div
           onClick={(e) => {
-            if (!creatingTimeEventNow) {
+            if (!creatingEventNow) {
               const bounds = e.currentTarget.getBoundingClientRect()
               setCreatingEventProps({
                 ...createEventProps,
@@ -102,15 +103,15 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
                     ? Math.round((e.clientY - bounds.top) / 15) * 15
                     : 1410,
               })
-              setCreatingTimeEventNow(true)
+              setCreatingEventNow(true)
             } else {
-              setCreatingTimeEventNow(false)
+              setCreatingEventNow(false)
             }
           }}
           className="absolute inset-0 h-full w-full cursor-pointer"
         />
 
-        {creatingTimeEventNow && (
+        {creatingEventNow && (
           <TimeEventCreator
             createEventProps={createEventProps}
             parentWidth={dimensions.width}

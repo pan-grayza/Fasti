@@ -24,13 +24,13 @@ const TimeEventCreator: React.FC<Props> = ({
     setRenamingEventNow,
     currentDate,
     selectedCalendar,
-    setCreatingTimeEventNow,
+    setCreatingEventNow,
   ] = useStore((state) => [
     state.renamingEventNow,
     state.setRenamingEventNow,
     state.currentDate,
     state.selectedCalendar,
-    state.setCreatingTimeEventNow,
+    state.setCreatingEventNow,
   ])
   useEffect(() => {
     setRenamingEventNow(true)
@@ -104,7 +104,7 @@ const TimeEventCreator: React.FC<Props> = ({
       width: type === 'week' ? parentWidth / 7 + 'px' : parentWidth + 'px',
     })
     setPosition({ ...position, x: getColX() })
-  }, [parentWidth])
+  }, [parentWidth]) // Needs to be like that
 
   //Editing Event
   //Renaming
@@ -121,7 +121,7 @@ const TimeEventCreator: React.FC<Props> = ({
       startTime: getDateFromPosition(),
       durationM: parseInt(size.height),
     })
-    setCreatingTimeEventNow(false)
+    setCreatingEventNow(false)
   }
 
   if (!renamingEventNow && isRenaming) {
@@ -191,7 +191,7 @@ const TimeEventCreator: React.FC<Props> = ({
             <button
               onClick={() => {
                 setName('')
-                setCreatingTimeEventNow(false)
+                setCreatingEventNow(false)
               }}
               className="relative flex items-center justify-center"
             >

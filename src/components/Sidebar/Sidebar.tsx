@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import useStore from '~/store/useStore'
 import { api } from '~/utils/api'
 import MonthCell from '../Calendar/yearCalendar/MonthCell'

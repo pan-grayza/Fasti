@@ -1,110 +1,54 @@
 import clsx from 'clsx'
-import { add, startOfDay, startOfWeek } from 'date-fns'
+import { add, getDay, startOfDay, startOfWeek } from 'date-fns'
 import { useEffect, useState } from 'react'
-import { Rnd } from 'react-rnd'
 import useStore from '~/store/useStore'
 
 import { api } from '~/utils/api'
 
 interface Props {
   className?: string
-  createEventProps: { x: number; y: number; calendarId: string }
-  parentWidth: number | undefined
-  type?: 'week' | 'day'
+  date: Date
+  type?: 'week' | 'day' | 'month'
 }
 
 const DayEventCreator: React.FC<Props> = ({
   className,
-  createEventProps,
-  parentWidth = 90,
-  type = 'day',
+  date,
+  type = 'month',
 }) => {
   const [
     renamingEventNow,
     setRenamingEventNow,
-    currentDate,
     selectedCalendar,
-    setCreatingTimeEventNow,
+    setCreatingEventNow,
   ] = useStore((state) => [
     state.renamingEventNow,
     state.setRenamingEventNow,
-    state.currentDate,
     state.selectedCalendar,
-    state.setCreatingTimeEventNow,
+    state.setCreatingEventNow,
   ])
   useEffect(() => {
     setRenamingEventNow(true)
+    setCreatingEventNow(true)
   }, [])
+  const [colIndex, setColIndex] = useState(type === 'day' ? 0 : getDay(date))
   //API stuff
-  const { data: timeEvents, refetch: refetchTimeEvents } =
-    api.timeEvent.getAll.useQuery(
-      { calendarId: createEventProps.calendarId },
+  const { data: dayEvents, refetch: refetchDayEvents } =
+    api.dayEvent.getAll.useQuery(
+      { calendarId: selectedCalendar?.id ?? '' },
       {
         onError: (err) => {
           console.log(err)
         },
       }
     )
-  const createTimeEvent = api.timeEvent.create.useMutation({
+  const createDayEvent = api.dayEvent.create.useMutation({
     onSuccess: () => {
-      void refetchTimeEvents()
+      void refetchDayEvents()
     },
   })
 
   //Position stuff
-  const startingColIndex = () => {
-    let number = 0
-    Array.from({ length: 7 }).map((col, index) => {
-      if (
-        createEventProps.x >= (parentWidth / 7) * index &&
-        createEventProps.x <= (parentWidth / 7) * (index + 1)
-      ) {
-        number = index
-      }
-    })
-    return number
-  }
-  const [colIndex, setColIndex] = useState(
-    type === 'week' ? startingColIndex() : 0
-  )
-  const getColX = () => {
-    if (type === 'week') {
-      return (parentWidth / 7) * colIndex
-    } else {
-      return colIndex
-    }
-  }
-
-  const [size, setSize] = useState({
-    width: type === 'week' ? parentWidth / 7 + 'px' : parentWidth + 'px',
-    height: '30px',
-  })
-  const [position, setPosition] = useState({
-    x: createEventProps.x,
-    y: createEventProps.y,
-  })
-  const getDateFromPosition = () => {
-    let date: Date
-    if (type === 'week') {
-      date = add(startOfWeek(currentDate), {
-        days: colIndex,
-        minutes: position.y,
-      })
-    } else {
-      date = add(startOfDay(currentDate), {
-        minutes: position.y,
-      })
-    }
-    return date
-  }
-
-  useEffect(() => {
-    setSize({
-      ...size,
-      width: type === 'week' ? parentWidth / 7 + 'px' : parentWidth + 'px',
-    })
-    setPosition({ ...position, x: getColX() })
-  }, [parentWidth])
 
   //Editing Event
   //Renaming
@@ -115,13 +59,12 @@ const DayEventCreator: React.FC<Props> = ({
     if (name === '') setName('Event')
     setIsRenaming(false)
     setRenamingEventNow(false)
-    createTimeEvent.mutate({
+    createDayEvent.mutate({
+      date: date,
       calendarId: selectedCalendar?.id ?? '',
       name: name,
-      startTime: getDateFromPosition(),
-      durationM: parseInt(size.height),
     })
-    setCreatingTimeEventNow(false)
+    setCreatingEventNow(false)
   }
 
   if (!renamingEventNow && isRenaming) {
@@ -129,60 +72,21 @@ const DayEventCreator: React.FC<Props> = ({
   }
 
   return (
-    <Rnd
-      size={{ width: size.width, height: size.height }}
-      position={{ x: position.x, y: position.y }}
-      onDragStop={(e, d) => {
-        setPosition({ x: d.x, y: d.y })
-        if (type === 'week') {
-          Array.from({ length: 7 }).map((col, index) => {
-            if (d.x === 0) setColIndex(0)
-            else if (
-              0.8 < ((parentWidth / 7) * index) / d.x &&
-              ((parentWidth / 7) * index) / d.x < 1.2
-            ) {
-              setColIndex(index)
-            }
-          })
-        }
-      }}
-      onResizeStop={(e, direction, ref, delta, position) => {
-        setPosition({ ...position })
-        setSize({
-          width: ref.style.width,
-          height: ref.style.height,
-          ...position,
-        })
-      }}
-      resizeGrid={[15, 15]}
-      dragGrid={[type === 'week' ? parentWidth / 7 : parentWidth, 15]}
-      enableResizing={{
-        top: true,
-        right: false,
-        bottom: true,
-        left: false,
-        topRight: false,
-        bottomRight: false,
-        bottomLeft: false,
-        topLeft: false,
-      }}
-      maxWidth={256}
-      dragAxis={type === 'week' ? 'both' : 'y'}
-      bounds="parent"
+    <div
       className={clsx(
-        'relative z-10 cursor-pointer rounded bg-blue-400',
+        'relative z-10 h-6 w-full cursor-pointer rounded bg-blue-400',
         className
       )}
     >
-      <div className="relative flex items-center px-2">
+      <div className="relative flex h-6 items-center px-2 text-lightText">
         <p>{name}</p>
       </div>
       <div
         className={clsx(
           'absolute inset-0 z-10 flex h-full w-full items-start',
           {
-            'ml-4 translate-x-full justify-start': colIndex < 4,
-            'mr-4 -translate-x-full justify-end': colIndex > 3,
+            'ml-1 translate-x-full justify-start': colIndex < 4,
+            '-ml-1 -translate-x-full justify-end': colIndex > 3,
           }
         )}
       >
@@ -191,7 +95,7 @@ const DayEventCreator: React.FC<Props> = ({
             <button
               onClick={() => {
                 setName('')
-                setCreatingTimeEventNow(false)
+                setCreatingEventNow(false)
               }}
               className="relative flex items-center justify-center"
             >
@@ -225,7 +129,7 @@ const DayEventCreator: React.FC<Props> = ({
           />
         </div>
       </div>
-    </Rnd>
+    </div>
   )
 }
 

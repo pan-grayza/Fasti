@@ -1,4 +1,3 @@
-import { startOfDay } from 'date-fns'
 import { create } from 'zustand'
 import { type RouterOutputs } from '~/utils/api'
 type Calendar = RouterOutputs['calendar']['getAll'][0]
@@ -7,7 +6,7 @@ type State = {
   currentDate: Date
   currentCalendarView: 'Day' | 'Week' | 'Month' | 'Year' | 'None'
   renamingEventNow: boolean
-  creatingTimeEventNow: boolean
+  creatingEventNow: boolean
   selectedCalendar: Calendar | null
   sidebar: boolean
 }
@@ -18,9 +17,7 @@ type Action = {
     currentCalendarView: State['currentCalendarView']
   ) => void
   setRenamingEventNow: (renamingEventNow: State['renamingEventNow']) => void
-  setCreatingTimeEventNow: (
-    creatingTimeEventNow: State['creatingTimeEventNow']
-  ) => void
+  setCreatingEventNow: (creatingEventNow: State['creatingEventNow']) => void
   setSelectedCalendar: (selectedCalendar: State['selectedCalendar']) => void
   setSidebar: (sidebar: State['sidebar']) => void
 }
@@ -35,9 +32,9 @@ const useStore = create<State & Action>((set) => ({
   renamingEventNow: false,
   setRenamingEventNow: (state: boolean) =>
     set(() => ({ renamingEventNow: state })),
-  creatingTimeEventNow: false,
-  setCreatingTimeEventNow: (state: boolean) =>
-    set(() => ({ creatingTimeEventNow: state })),
+  creatingEventNow: false,
+  setCreatingEventNow: (state: boolean) =>
+    set(() => ({ creatingEventNow: state })),
   selectedCalendar: null,
   setSelectedCalendar: (state: Calendar | null) =>
     set(() => ({ selectedCalendar: state })),

@@ -3,7 +3,7 @@ import useStore from '~/store/useStore'
 import { format } from 'date-fns'
 import clsx from 'clsx'
 
-interface Props extends React.PropsWithChildren {
+interface Props {
   className?: string
   date: Date
   size?: 'xs' | 'sm' | 'md' | 'lg'
@@ -12,12 +12,10 @@ interface Props extends React.PropsWithChildren {
 }
 
 const DayCell: React.FC<Props> = ({
-  children,
   className,
   date,
   size = 'sm',
   dayAbr = false,
-  onClick,
 }) => {
   const [currentDate, setCurrentDate] = useStore((state) => [
     state.currentDate,
