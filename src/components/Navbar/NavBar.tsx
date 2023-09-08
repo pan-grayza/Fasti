@@ -5,6 +5,7 @@ import useStore from '~/store/useStore'
 import { format, sub, add, startOfDay } from 'date-fns'
 import ArrowButton from '../ArrowButton'
 import DropDown from './DropDown'
+import clsx from 'clsx'
 
 const NavBar = () => {
   const [
@@ -52,7 +53,7 @@ const NavBar = () => {
   }
 
   return (
-    <div className="relative z-10 flex h-14 w-full flex-row items-center gap-6 border-b p-4">
+    <div className="relative flex h-14 w-full flex-row items-center gap-6 border-b p-4">
       {currentCalendarView !== 'None' && (
         <div
           onClick={() => setSidebar(!sidebar)}
@@ -80,7 +81,7 @@ const NavBar = () => {
       </div>
 
       {currentCalendarView !== 'None' && (
-        <div className="relative flex h-full w-full flex-row gap-6">
+        <div className="relative z-10 flex h-full w-full flex-row gap-6">
           <div className="flex flex-row items-center justify-center gap-4">
             <Button onClick={handleSetToday}>Today</Button>
             <div className="flex items-center">
@@ -104,16 +105,23 @@ const NavBar = () => {
       )}
       <button
         onClick={() => setIsDarkTheme(!isDarkTheme)}
-        className="relative flex items-center justify-center"
+        className="relative flex h-8 w-8 items-center justify-center"
       >
+        <div
+          className={clsx(
+            '-left absolute z-[-9999] h-8 w-8 rounded-full bg-gray-800 transition',
+            { 'scale-[10000%]': isDarkTheme }
+          )}
+        />
         {isDarkTheme ? (
+          // Sun
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="h-6 w-6"
+            className="h-6 w-6 text-yellow-100"
           >
             <path
               strokeLinecap="round"
@@ -122,13 +130,14 @@ const NavBar = () => {
             />
           </svg>
         ) : (
+          // Moon
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="h-6 w-6"
+            className="h-6 w-6 text-yellow-100"
           >
             <path
               strokeLinecap="round"
