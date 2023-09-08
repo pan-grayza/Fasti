@@ -2,12 +2,12 @@ import clsx from 'clsx'
 import DayCell from '~/components/DayCell'
 import useStore from '~/store/useStore'
 
-interface Props extends React.PropsWithChildren {
+interface Props {
   className?: string
   date: Date
 }
 
-const DateCell: React.FC<Props> = ({ children, className, date }) => {
+const DateCell: React.FC<Props> = ({ className, date }) => {
   const [setCurrentDate] = useStore((state) => [state.setCurrentDate])
   return (
     <div
@@ -17,9 +17,7 @@ const DateCell: React.FC<Props> = ({ children, className, date }) => {
         className
       )}
     >
-      <DayCell className="opacity-50" date={date}>
-        {children}
-      </DayCell>
+      <DayCell className="opacity-50" date={date} />
     </div>
   )
 }

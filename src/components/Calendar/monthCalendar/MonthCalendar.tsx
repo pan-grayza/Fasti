@@ -71,11 +71,7 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
         {Array.from({ length: prefixDays })
           .map((_, index) => {
             const date = setDate(prevMonth, lastDayOfPervMonth - index)
-            return (
-              <DateCell date={date} key={index}>
-                {lastDayOfPervMonth - index}
-              </DateCell>
-            )
+            return <DateCell date={date} key={index} />
           })
           .reverse()}
         {Array.from({ length: numOfDays }).map((_, index) => {
@@ -92,18 +88,12 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
               filteredDayEvents={filteredDayEvents}
               refetchDayEvents={() => refetchDayEvents()}
               date={date}
-            >
-              {numOfDay}
-            </EventCell>
+            />
           )
         })}
         {Array.from({ length: suffixDays }).map((_, index) => {
           const date = setDate(nextMonth, index + 1)
-          return (
-            <DateCell key={index} date={date}>
-              {index + 1}
-            </DateCell>
-          )
+          return <DateCell key={index} date={date} />
         })}
       </div>
     </div>
