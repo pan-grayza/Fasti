@@ -107,11 +107,7 @@ const MonthCell: React.FC<Props> = ({
           const date = add(startDate, { days: index })
           const numOfDay = index + 1
 
-          return (
-            <DayCell size={size} key={numOfDay} date={date}>
-              {numOfDay}
-            </DayCell>
-          )
+          return <DayCell size={size} key={numOfDay} date={date} />
         })}
         {Array.from({ length: suffixDays }).map((_, index) => {
           const date = setDate(nextMonth, index + 1)
