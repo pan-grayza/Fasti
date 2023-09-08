@@ -4,7 +4,6 @@ import { type AppType } from 'next/app'
 import { api } from '~/utils/api'
 import '~/styles/globals.css'
 import NavBar from '~/components/Navbar/NavBar'
-import Sidebar from '~/components/Sidebar/Sidebar'
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
