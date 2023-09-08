@@ -9,6 +9,7 @@ type State = {
   creatingEventNow: boolean
   selectedCalendar: Calendar | null
   sidebar: boolean
+  isDarkTheme: boolean
 }
 
 type Action = {
@@ -20,6 +21,7 @@ type Action = {
   setCreatingEventNow: (creatingEventNow: State['creatingEventNow']) => void
   setSelectedCalendar: (selectedCalendar: State['selectedCalendar']) => void
   setSidebar: (sidebar: State['sidebar']) => void
+  setIsDarkTheme: (sidebar: State['isDarkTheme']) => void
 }
 
 const useStore = create<State & Action>((set) => ({
@@ -40,6 +42,8 @@ const useStore = create<State & Action>((set) => ({
     set(() => ({ selectedCalendar: state })),
   sidebar: true,
   setSidebar: (state: boolean) => set(() => ({ sidebar: state })),
+  isDarkTheme: false,
+  setIsDarkTheme: (state: boolean) => set(() => ({ isDarkTheme: state })),
 }))
 
 export default useStore
