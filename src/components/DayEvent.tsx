@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useStore from '~/store/useStore'
 import type { dayEvent } from '@prisma/client'
 import { api } from '~/utils/api'
@@ -18,10 +18,13 @@ const Event: React.FC<Props> = ({
   type = 'month',
   refetchDayEvents,
 }) => {
-  const [renamingEventNow, setRenamingEventNow] = useStore((state) => [
-    state.renamingEventNow,
-    state.setRenamingEventNow,
-  ])
+  const [renamingEventNow, setRenamingEventNow, isDarkTheme] = useStore(
+    (state) => [
+      state.renamingEventNow,
+      state.setRenamingEventNow,
+      state.isDarkTheme,
+    ]
+  )
 
   //API stuff
 
@@ -44,12 +47,17 @@ const Event: React.FC<Props> = ({
   const [colIndex, setColIndex] = useState(
     type === 'day' ? 0 : getDay(eventProps.date)
   )
-  console.log(colIndex)
 
   //Updating event
 
   const [isRenaming, setIsRenaming] = useState(true)
   const [name, setName] = useState(eventProps.name)
+
+  useEffect(() => {
+    if (renamingEventNow) {
+      setIsRenaming(false)
+    }
+  }, [renamingEventNow])
 
   const finishUpdating = () => {
     if (name === '') setName('Event')
@@ -94,7 +102,12 @@ const Event: React.FC<Props> = ({
             }
           )}
         >
-          <div className="relative flex flex-col gap-1 rounded bg-gray-50 p-1 text-darkText">
+          <div
+            className={clsx('relative flex flex-col gap-1 rounded p-1', {
+              'bg-lightBG': !isDarkTheme,
+              'bg-gray-800': isDarkTheme,
+            })}
+          >
             <div className="relative flex h-fit w-full items-center justify-end gap-1">
               <button
                 onClick={() =>
@@ -150,7 +163,10 @@ const Event: React.FC<Props> = ({
                   finishUpdating()
                 }
               }}
-              className="relative w-48 p-1 focus:outline-none"
+              className={clsx('relative w-48 rounded p-1 focus:outline-none', {
+                'bg-white': !isDarkTheme,
+                'bg-darkBG': isDarkTheme,
+              })}
             />
           </div>
         </div>

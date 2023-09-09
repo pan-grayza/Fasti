@@ -37,13 +37,21 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
   const startOfCurrentDay = startOfDay(date)
 
   //Other states
-  const [selectedCalendar, creatingEventNow, setCreatingEventNow] = useStore(
-    (state) => [
-      state.selectedCalendar,
-      state.creatingEventNow,
-      state.setCreatingEventNow,
-    ]
-  )
+  const [
+    selectedCalendar,
+    creatingEventNow,
+    setCreatingEventNow,
+    renamingEventNow,
+    setRenamingEventNow,
+    isDarkTheme,
+  ] = useStore((state) => [
+    state.selectedCalendar,
+    state.creatingEventNow,
+    state.setCreatingEventNow,
+    state.renamingEventNow,
+    state.setRenamingEventNow,
+    state.isDarkTheme,
+  ])
 
   //API stuff
   const { data: timeEvents, refetch: refetchTimeEvents } =
@@ -61,7 +69,7 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
   )
 
   // Creating Event stuff
-  const [createEventProps, setCreatingEventProps] = useState<{
+  const [createTimeEventProps, setCreatingTimeEventProps] = useState<{
     x: number
     y: number
     calendarId: string
@@ -93,10 +101,13 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
       <div ref={parentGrid} className="relative h-fit w-full">
         <div
           onClick={(e) => {
-            if (!creatingEventNow) {
+            if (renamingEventNow || creatingEventNow) {
+              setRenamingEventNow(false)
+              setCreatingEventNow(false)
+            } else {
               const bounds = e.currentTarget.getBoundingClientRect()
-              setCreatingEventProps({
-                ...createEventProps,
+              setCreatingTimeEventProps({
+                ...createTimeEventProps,
                 x: e.clientX - bounds.left,
                 y:
                   e.clientY - bounds.top < 1410
@@ -104,8 +115,7 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
                     : 1410,
               })
               setCreatingEventNow(true)
-            } else {
-              setCreatingEventNow(false)
+              setRenamingEventNow(true)
             }
           }}
           className="absolute inset-0 h-full w-full cursor-pointer"
@@ -113,7 +123,7 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
 
         {creatingEventNow && (
           <TimeEventCreator
-            createEventProps={createEventProps}
+            createEventProps={createTimeEventProps}
             parentWidth={dimensions.width}
           />
         )}
@@ -121,14 +131,16 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
           {Array.from({ length: 24 }).map((_, index) => {
             return (
               <div
-                className="relative h-[60px] w-full border-b bg-slate-50"
+                className={clsx('relative h-[60px] w-full border-b', {
+                  'border-lightBorder bg-lightBG': !isDarkTheme,
+                  'border-darkBorder bg-darkBG/10': isDarkTheme,
+                })}
                 key={index}
               ></div>
             )
           })}
         </div>
         {filteredTimeEvents?.map((event) => {
-          console.log(event)
           return (
             <TimeEvent
               key={event.id}

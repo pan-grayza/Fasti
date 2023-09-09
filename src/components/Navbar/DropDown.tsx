@@ -2,36 +2,50 @@ import { useState } from 'react'
 import useStore from '~/store/useStore'
 import clsx from 'clsx'
 
+interface DropDownProps {
+  className?: string
+}
 interface DropDownButtonProps extends React.PropsWithChildren {
   onClick?: () => void
+  className?: string
 }
 
 const DropDownButton: React.FC<DropDownButtonProps> = ({
   onClick = () => null,
   children,
+  className,
 }) => {
   return (
     <button
       onClick={() => onClick()}
-      className="flex h-8 w-full bg-gray-200/0 p-1 hover:bg-gray-200/50"
+      className={clsx('flex h-8 w-full bg-gray-200/0 p-1', className)}
     >
       {children}
     </button>
   )
 }
 
-const DropDown = () => {
-  const [currentCalendarView, setCurrentCalendarView] = useStore((state) => [
-    state.currentCalendarView,
-    state.setCurrentCalendarView,
-  ])
+const DropDown: React.FC<DropDownProps> = ({ className }) => {
+  const [currentCalendarView, setCurrentCalendarView, isDarkTheme] = useStore(
+    (state) => [
+      state.currentCalendarView,
+      state.setCurrentCalendarView,
+      state.isDarkTheme,
+    ]
+  )
 
   const [isDropDown, setIsDropDown] = useState(false)
 
   return (
     <div className="relative flex items-center justify-center">
       <div
-        className="flex w-24 cursor-pointer select-none flex-row items-center justify-between gap-2 rounded border-2 border-gray-100 p-2 transition active:bg-gray-200/50"
+        className={clsx(
+          'flex w-24 cursor-pointer select-none flex-row items-center justify-between gap-2 rounded border-2 p-2 transition',
+          {
+            'border-lightBorder': !isDarkTheme,
+            'border-darkBorder': isDarkTheme,
+          }
+        )}
         onClick={() => setIsDropDown(!isDropDown)}
       >
         {currentCalendarView}
@@ -52,12 +66,24 @@ const DropDown = () => {
       </div>
       <div className="absolute left-0 top-12">
         {isDropDown && (
-          <div className="absolute inset-0 flex h-max w-32 animate-appearFromTopLeft flex-col rounded bg-white py-1 drop-shadow-xl">
+          <div
+            className={clsx(
+              'absolute inset-0 flex h-max w-32 animate-appearFromTopLeft flex-col rounded py-1 drop-shadow-xl',
+              {
+                'bg-lightBG': !isDarkTheme,
+                'bg-darkBG': isDarkTheme,
+              }
+            )}
+          >
             <DropDownButton
               onClick={() => {
                 setCurrentCalendarView('Day')
                 setIsDropDown(false)
               }}
+              className={clsx({
+                'hover:bg-lightHover': !isDarkTheme,
+                'hover:bg-darkHover': isDarkTheme,
+              })}
             >
               Day
             </DropDownButton>
@@ -66,6 +92,10 @@ const DropDown = () => {
                 setCurrentCalendarView('Week')
                 setIsDropDown(false)
               }}
+              className={clsx({
+                'hover:bg-lightHover': !isDarkTheme,
+                'hover:bg-darkHover': isDarkTheme,
+              })}
             >
               Week
             </DropDownButton>
@@ -74,6 +104,10 @@ const DropDown = () => {
                 setCurrentCalendarView('Month')
                 setIsDropDown(false)
               }}
+              className={clsx({
+                'hover:bg-lightHover': !isDarkTheme,
+                'hover:bg-darkHover': isDarkTheme,
+              })}
             >
               Month
             </DropDownButton>
@@ -82,6 +116,10 @@ const DropDown = () => {
                 setCurrentCalendarView('Year')
                 setIsDropDown(false)
               }}
+              className={clsx({
+                'hover:bg-lightHover': !isDarkTheme,
+                'hover:bg-darkHover': isDarkTheme,
+              })}
             >
               Year
             </DropDownButton>

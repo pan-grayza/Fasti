@@ -1,21 +1,21 @@
 import clsx from 'clsx'
 
 interface Props extends React.PropsWithChildren {
-    className?: string
+  className?: string
 }
 
 const Cell: React.FC<Props> = ({ children, className }) => {
-    return (
-        <div
-            className={clsx(
-                'border-l flex items-center justify-center select-none transition-colors',
+  return (
+    <div
+      className={clsx(
+        'flex select-none items-center justify-center border-l transition-colors',
 
-                className
-            )}
-        >
-            {children}
-        </div>
-    )
+        className
+      )}
+    >
+      <p className="opacity-50">{children}</p>
+    </div>
+  )
 }
 
 export default Cell

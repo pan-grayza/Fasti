@@ -16,7 +16,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <div
       className={clsx(
-        'relative flex h-screen w-screen flex-col overflow-hidden text-darkText',
+        'relative flex h-screen w-screen flex-col overflow-hidden text-darkText transition-colors',
         {
           'text-darkText': !isDarkTheme,
           'text-lightText': isDarkTheme,

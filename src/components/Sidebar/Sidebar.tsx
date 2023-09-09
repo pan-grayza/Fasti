@@ -10,13 +10,19 @@ interface Props {
 
 const Sidebar: React.FC<Props> = ({ className }) => {
   const { data: sessionData } = useSession()
-  const [currentDate, selectedCalendar, setSelectedCalendar, sidebar] =
-    useStore((state) => [
-      state.currentDate,
-      state.selectedCalendar,
-      state.setSelectedCalendar,
-      state.sidebar,
-    ])
+  const [
+    currentDate,
+    selectedCalendar,
+    setSelectedCalendar,
+    sidebar,
+    isDarkTheme,
+  ] = useStore((state) => [
+    state.currentDate,
+    state.selectedCalendar,
+    state.setSelectedCalendar,
+    state.sidebar,
+    state.isDarkTheme,
+  ])
   const [isCreatingCalendar, setIsCreatingCalendar] = useState(false)
   const { data: calendars, refetch: refetchCalendars } =
     api.calendar.getAll.useQuery(undefined, {
@@ -61,10 +67,17 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                   {
                     'bg-blue-300/50 text-blue-700':
                       JSON.stringify(selectedCalendar) ===
-                      JSON.stringify(calendar),
+                        JSON.stringify(calendar) && !isDarkTheme,
                     'hover:bg-gray-100':
                       JSON.stringify(selectedCalendar) !==
-                      JSON.stringify(calendar),
+                        JSON.stringify(calendar) && !isDarkTheme,
+
+                    'bg-blue-400/25 text-blue-100':
+                      JSON.stringify(selectedCalendar) ===
+                        JSON.stringify(calendar) && isDarkTheme,
+                    'hover:bg-lightHover':
+                      JSON.stringify(selectedCalendar) !==
+                        JSON.stringify(calendar) && isDarkTheme,
                   }
                 )}
                 key={index}
@@ -109,7 +122,13 @@ const Sidebar: React.FC<Props> = ({ className }) => {
         <div className="relative flex h-8 w-full flex-col">
           <div
             onClick={() => setIsCreatingCalendar(true)}
-            className="relative flex h-8 w-full cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed border-gray-600 px-2 py-1 text-gray-700 transition hover:bg-gray-50"
+            className={clsx(
+              'relative flex h-8 w-full cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed  px-2 py-1  transition ',
+              {
+                'hover:lightHover border-gray-700 text-gray-700': !isDarkTheme,
+                'hover:darkHover border-gray-300 text-gray-300': isDarkTheme,
+              }
+            )}
           >
             <div className="text-gray relative mb-1 text-lg">+</div>
           </div>
@@ -125,7 +144,15 @@ const Sidebar: React.FC<Props> = ({ className }) => {
               <input
                 autoFocus
                 id="newCalendarInput"
-                className="absolute inset-0 h-full w-full rounded px-1 py-2 outline-2 outline-blue-300 focus:outline-blue-300"
+                className={clsx(
+                  'absolute inset-0 h-full w-full rounded px-1 py-2 outline-2 focus:outline',
+                  {
+                    'border-gray-700 bg-lightBG text-gray-700 focus:outline-blue-600':
+                      !isDarkTheme,
+                    'border-none border-gray-300 bg-darkBG text-gray-300 focus:outline-blue-500':
+                      isDarkTheme,
+                  }
+                )}
                 type="text"
                 placeholder="New calendar"
                 onKeyDown={(e) => {

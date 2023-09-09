@@ -7,6 +7,12 @@ export default {
       colors: {
         lightText: '#f9fafb',
         darkText: '#1f2937',
+        lightBorder: '#e5e7eb',
+        darkBorder: '#374151',
+        lightBG: '#f9fafb',
+        darkBG: '#374151',
+        lightHover: '#f3f4f6',
+        darkHover: '#4b5563',
       },
       animation: {
         appearFromTopLeft: 'appearFromTopLeftKeyframes 50ms ease-in-out',

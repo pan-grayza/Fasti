@@ -17,9 +17,10 @@ const DayCell: React.FC<Props> = ({
   size = 'sm',
   dayAbr = false,
 }) => {
-  const [currentDate, setCurrentDate] = useStore((state) => [
+  const [currentDate, setCurrentDate, isDarkTheme] = useStore((state) => [
     state.currentDate,
     state.setCurrentDate,
+    state.isDarkTheme,
   ])
   const isCurrentDate =
     format(date, 'dd MM yyyy') === format(currentDate, 'dd MM yyyy')
@@ -34,7 +35,8 @@ const DayCell: React.FC<Props> = ({
         <p
           className={clsx('text-xs font-bold uppercase', {
             'text-blue-600': isToday,
-            'text-gray-500': !isToday,
+            'text-darkText/75': !isToday && !isDarkTheme,
+            'text-lightText/75': !isToday && isDarkTheme,
           })}
         >
           {format(date, 'E')}
@@ -56,9 +58,14 @@ const DayCell: React.FC<Props> = ({
           className={clsx(
             'relative  flex select-none items-center justify-center rounded-full transition-colors',
             {
-              'bg-blue-300/50 text-blue-700': isCurrentDate && !isToday,
+              'bg-blue-300/50 text-blue-700':
+                isCurrentDate && !isToday && !isDarkTheme,
+              'bg-blue-400/25 text-blue-100':
+                isCurrentDate && !isToday && isDarkTheme,
               'bg-blue-600 text-white': isToday,
-              'hover:bg-gray-300/50': !isCurrentDate && !isToday,
+              'hover:bg-lightHover': !isCurrentDate && !isToday && !isDarkTheme,
+              'hover:bg-darkHover/50':
+                !isCurrentDate && !isToday && isDarkTheme,
               'h-7 w-7 text-xs': size === 'xs',
               'h-8 w-8 text-sm': size === 'sm',
               'h-12 w-12 text-xl': size === 'md',

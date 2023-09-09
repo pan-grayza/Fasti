@@ -21,11 +21,13 @@ const DayEventCreator: React.FC<Props> = ({
     setRenamingEventNow,
     selectedCalendar,
     setCreatingEventNow,
+    isDarkTheme,
   ] = useStore((state) => [
     state.renamingEventNow,
     state.setRenamingEventNow,
     state.selectedCalendar,
     state.setCreatingEventNow,
+    state.isDarkTheme,
   ])
   useEffect(() => {
     setRenamingEventNow(true)
@@ -83,14 +85,19 @@ const DayEventCreator: React.FC<Props> = ({
       </div>
       <div
         className={clsx(
-          'absolute inset-0 z-10 flex h-full w-full items-start',
+          'absolute inset-0 z-10 flex h-full w-full items-start drop-shadow',
           {
             'ml-1 translate-x-full justify-start': colIndex < 4,
             '-ml-1 -translate-x-full justify-end': colIndex > 3,
           }
         )}
       >
-        <div className="relative flex flex-col gap-1 rounded bg-gray-100 p-1">
+        <div
+          className={clsx('relative flex flex-col gap-1 rounded p-1', {
+            'bg-lightBG': !isDarkTheme,
+            'bg-gray-800': isDarkTheme,
+          })}
+        >
           <div className="relative flex h-fit w-full items-center justify-end gap-1">
             <button
               onClick={() => {
@@ -125,7 +132,10 @@ const DayEventCreator: React.FC<Props> = ({
                 finishCreating()
               }
             }}
-            className="relative w-48 p-1 focus:outline-none"
+            className={clsx('relative w-48 rounded p-1 focus:outline-none', {
+              'bg-white': !isDarkTheme,
+              'bg-darkBG': isDarkTheme,
+            })}
           />
         </div>
       </div>

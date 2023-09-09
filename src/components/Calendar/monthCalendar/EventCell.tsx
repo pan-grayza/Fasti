@@ -61,7 +61,12 @@ const EventCell: React.FC<Props> = ({
       )}
     >
       <DayCell date={date}></DayCell>
-      <div className="h-22 relative flex w-full flex-col items-center justify-center gap-y-1">
+      <div
+        className={clsx('flex w-full flex-col items-center justify-center ', {
+          'absolute -top-1': (filteredDayEvents?.length ?? 0) < 1,
+          'relative gap-y-1': (filteredDayEvents?.length ?? -1) > 0,
+        })}
+      >
         {filteredDayEvents?.map((event, index) => {
           return (
             <DayEvent

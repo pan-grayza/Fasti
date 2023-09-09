@@ -23,10 +23,18 @@ const TimeEvent: React.FC<Props> = ({
   refetchTimeEvents,
 }) => {
   //Other states
-  const [renamingEventNow, setRenamingEventNow] = useStore((state) => [
+  const [
+    renamingEventNow,
+    setRenamingEventNow,
+    creatingEventNow,
+    setCreatingEventNow,
+    isDarkTheme,
+  ] = useStore((state) => [
     state.renamingEventNow,
     state.setRenamingEventNow,
-    state.selectedCalendar,
+    state.creatingEventNow,
+    state.setCreatingEventNow,
+    state.isDarkTheme,
   ])
   const [onMouseDownStart, setOnMouseDownStart] = useState(0)
 
@@ -92,7 +100,6 @@ const TimeEvent: React.FC<Props> = ({
   //Editing Event
   //Renaming
   useEffect(() => {
-    console.log(position)
     finishUpdating()
   }, [size, position.x, position.y]) // Needs to be like that, for delete functionality
   const [isRenaming, setIsRenaming] = useState(true)
@@ -116,6 +123,7 @@ const TimeEvent: React.FC<Props> = ({
   }
 
   const onRename = () => {
+    if (creatingEventNow) setCreatingEventNow(false)
     setRenamingEventNow(true)
     setIsRenaming(true)
   }
@@ -190,14 +198,19 @@ const TimeEvent: React.FC<Props> = ({
       {isRenaming && (
         <div
           className={clsx(
-            'absolute inset-0 z-10 flex h-full w-full items-start text-darkText',
+            'absolute inset-0 z-10 flex h-full w-full items-start',
             {
               'ml-4 translate-x-full justify-start': colIndex < 4,
               'mr-4 -translate-x-full justify-end': colIndex > 3,
             }
           )}
         >
-          <div className="relative flex flex-col gap-1 rounded bg-gray-50 p-1 ">
+          <div
+            className={clsx('relative flex flex-col gap-1 rounded  p-1', {
+              'bg-lightBG': !isDarkTheme,
+              'bg-gray-800': isDarkTheme,
+            })}
+          >
             <div className="relative flex h-fit w-full items-center justify-end gap-1">
               <button
                 onClick={() =>
@@ -253,7 +266,10 @@ const TimeEvent: React.FC<Props> = ({
                   finishUpdating()
                 }
               }}
-              className="relative w-48 p-1 focus:outline-none"
+              className={clsx('relative w-48 rounded p-1 focus:outline-none', {
+                'bg-white': !isDarkTheme,
+                'bg-darkBG': isDarkTheme,
+              })}
             />
           </div>
         </div>

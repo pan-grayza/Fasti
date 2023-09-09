@@ -21,9 +21,10 @@ interface Props {
 }
 
 const MonthCalendar: React.FC<Props> = ({ className }) => {
-  const [currentDate, selectedCalendar] = useStore((state) => [
+  const [currentDate, selectedCalendar, isDarkTheme] = useStore((state) => [
     state.currentDate,
     state.selectedCalendar,
+    state.isDarkTheme,
   ])
 
   const startDate = startOfMonth(currentDate)
@@ -61,7 +62,10 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
         {days.map((day) => (
           <Cell
             key={day}
-            className="h-6 text-xs font-bold uppercase text-gray-900/50"
+            className={clsx('h-6 text-xs font-bold uppercase', {
+              'border-lightBorder': !isDarkTheme,
+              'border-darkBorder': isDarkTheme,
+            })}
           >
             {day}
           </Cell>
@@ -71,7 +75,16 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
         {Array.from({ length: prefixDays })
           .map((_, index) => {
             const date = setDate(prevMonth, lastDayOfPervMonth - index)
-            return <DateCell date={date} key={index} />
+            return (
+              <DateCell
+                className={clsx('', {
+                  'border-lightBorder': !isDarkTheme,
+                  'border-darkBorder': isDarkTheme,
+                })}
+                date={date}
+                key={index}
+              />
+            )
           })
           .reverse()}
         {Array.from({ length: numOfDays }).map((_, index) => {
@@ -88,12 +101,25 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
               filteredDayEvents={filteredDayEvents}
               refetchDayEvents={() => refetchDayEvents()}
               date={date}
+              className={clsx('', {
+                'border-lightBorder': !isDarkTheme,
+                'border-darkBorder': isDarkTheme,
+              })}
             />
           )
         })}
         {Array.from({ length: suffixDays }).map((_, index) => {
           const date = setDate(nextMonth, index + 1)
-          return <DateCell key={index} date={date} />
+          return (
+            <DateCell
+              key={index}
+              className={clsx('', {
+                'border-lightBorder': !isDarkTheme,
+                'border-darkBorder': isDarkTheme,
+              })}
+              date={date}
+            />
+          )
         })}
       </div>
     </div>

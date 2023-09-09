@@ -9,13 +9,21 @@ import TimeEventCreator from '~/components/TimeEventCreator'
 import { api } from '~/utils/api'
 
 const WeekCalendar = () => {
-  const [currentDate, selectedCalendar, creatingEventNow, setCreatingEventNow] =
-    useStore((state) => [
-      state.currentDate,
-      state.selectedCalendar,
-      state.creatingEventNow,
-      state.setCreatingEventNow,
-    ])
+  const [
+    currentDate,
+    selectedCalendar,
+    creatingEventNow,
+    setCreatingEventNow,
+    renamingEventNow,
+    setRenamingEventNow,
+  ] = useStore((state) => [
+    state.currentDate,
+    state.selectedCalendar,
+    state.creatingEventNow,
+    state.setCreatingEventNow,
+    state.renamingEventNow,
+    state.setRenamingEventNow,
+  ])
   const startOfCurrentWeek = startOfWeek(currentDate)
   // Size and position stuff
   const [dimensions, setDimensions] = useState<{
@@ -93,11 +101,14 @@ const WeekCalendar = () => {
             }}
           >
             {Array.from({ length: 7 }).map((_, index) => {
-              return <DayColSchedule className="border-l" key={index} />
+              return <DayColSchedule key={index} />
             })}
             <div
               onClick={(e) => {
-                if (!creatingEventNow) {
+                if (renamingEventNow || creatingEventNow) {
+                  setRenamingEventNow(false)
+                  setCreatingEventNow(false)
+                } else {
                   const bounds = e.currentTarget.getBoundingClientRect()
                   setCreatingTimeEventProps({
                     ...createTimeEventProps,
@@ -108,9 +119,23 @@ const WeekCalendar = () => {
                         : 1410,
                   })
                   setCreatingEventNow(true)
-                } else {
-                  setCreatingEventNow(false)
+                  setRenamingEventNow(true)
                 }
+
+                // if (!creatingEventNow) {
+                //   const bounds = e.currentTarget.getBoundingClientRect()
+                //   setCreatingTimeEventProps({
+                //     ...createTimeEventProps,
+                //     x: e.clientX - bounds.left,
+                //     y:
+                //       e.clientY - bounds.top < 1410
+                //         ? Math.round((e.clientY - bounds.top) / 15) * 15
+                //         : 1410,
+                //   })
+                //   setCreatingEventNow(true)
+                // } else {
+                //   setCreatingEventNow(false)
+                // }
               }}
               className="absolute inset-0 h-full w-full cursor-pointer"
             />
