@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { add, format, startOfDay, startOfWeek } from 'date-fns'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Rnd } from 'react-rnd'
 import useStore from '~/store/useStore'
 
@@ -11,6 +11,7 @@ interface Props {
   className?: string
   eventProps: timeEvent
   parentWidth: number | undefined
+
   type?: 'week' | 'day'
   refetchTimeEvents: () => unknown
 }

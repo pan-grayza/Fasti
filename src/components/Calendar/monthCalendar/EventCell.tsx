@@ -37,20 +37,6 @@ const EventCell: React.FC<Props> = ({
   if (!creatingEventNow && isCreatingDayEvent) {
     setIsCreatingDayEvent(false)
   }
-  //API stuff
-  //Throwing error
-  // api.dayEvent.getAllFilteredByDate.useQuery(
-  //   {
-  //     date: date,
-  //     calendarId: selectedCalendar?.id ?? '',
-  //   },
-  //   {
-  //     enabled: date !== undefined && date !== null,
-  //     onError: (err) => {
-  //       console.log(err)
-  //     },
-  //   }
-  // )
 
   return (
     <div

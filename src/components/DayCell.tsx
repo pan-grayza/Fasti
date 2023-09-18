@@ -60,7 +60,7 @@ const DayCell: React.FC<Props> = ({
             {
               'bg-blue-300/50 text-blue-700':
                 isCurrentDate && !isToday && !isDarkTheme,
-              'bg-blue-400/25 text-blue-100':
+              'bg-blue-500/25 text-blue-100':
                 isCurrentDate && !isToday && isDarkTheme,
               'bg-blue-600 text-white': isToday,
               'hover:bg-lightHover': !isCurrentDate && !isToday && !isDarkTheme,

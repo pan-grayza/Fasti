@@ -18,8 +18,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
       className={clsx(
         'relative flex h-screen w-screen flex-col overflow-hidden text-darkText transition-colors',
         {
-          'text-darkText': !isDarkTheme,
-          'text-lightText': isDarkTheme,
+          'bg-white text-darkText': !isDarkTheme,
+          'bg-gray-800 text-lightText': isDarkTheme,
         }
       )}
     >

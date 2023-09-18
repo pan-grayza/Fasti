@@ -127,7 +127,7 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
             parentWidth={dimensions.width}
           />
         )}
-        <div className="relative z-[-1] grid h-max w-full auto-rows-fr grid-cols-1">
+        <div className="relative grid h-max w-full auto-rows-fr grid-cols-1">
           {Array.from({ length: 24 }).map((_, index) => {
             return (
               <div

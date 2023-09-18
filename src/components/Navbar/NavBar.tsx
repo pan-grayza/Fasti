@@ -122,17 +122,6 @@ const NavBar = () => {
         onClick={() => setIsDarkTheme(!isDarkTheme)}
         className="relative flex h-8 w-8 items-center justify-center"
       >
-        <div
-          className={clsx(
-            '-left absolute z-[-9998] h-8 w-8 rounded-full bg-white transition',
-            { 'scale-[10000%]': !isDarkTheme }
-          )}
-        />
-        <div
-          className={clsx(
-            '-left  absolute z-[-9999] h-8 w-8 scale-[10000%] rounded-full bg-gray-800 transition'
-          )}
-        />
         {isDarkTheme ? (
           // Sun
           <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gray-50">
