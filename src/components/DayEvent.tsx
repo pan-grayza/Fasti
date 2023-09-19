@@ -86,7 +86,7 @@ const Event: React.FC<Props> = ({
       <div
         onClick={onRename}
         className={clsx(
-          'relative flex h-6 w-full items-center rounded bg-blue-400 px-2 text-lightText',
+          'relative flex h-6 w-full items-center rounded bg-blue-400 px-2 pb-1 text-lightText',
           className
         )}
       >

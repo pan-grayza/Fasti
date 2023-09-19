@@ -150,7 +150,7 @@ const TimeEvent: React.FC<Props> = ({
       onResizeStop={(e, direction, ref, delta, position) => {
         setPosition({ ...position })
         setSize({
-          width: ref.style.width,
+          ...size,
           height: ref.style.height,
         })
       }}
@@ -169,10 +169,7 @@ const TimeEvent: React.FC<Props> = ({
       maxWidth={256}
       dragAxis={type === 'week' ? 'both' : 'y'}
       bounds="parent"
-      className={clsx(
-        'relative cursor-pointer rounded bg-blue-400 px-2 py-1',
-        className
-      )}
+      className={clsx('relative cursor-pointer rounded bg-blue-400', className)}
     >
       <div
         onMouseDown={() =>
@@ -192,7 +189,9 @@ const TimeEvent: React.FC<Props> = ({
                 format(new Date(), 'SSS')
             ) && onRename()
         }
-        className="h-full w-full text-lightText"
+        className={clsx('h-full w-full px-2 pb-1 text-lightText', {
+          'items-center text-xs': parseInt(size.height) < 30,
+        })}
       >
         {name}
       </div>

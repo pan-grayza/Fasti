@@ -95,7 +95,7 @@ const WeekCalendar = () => {
           </div>
           <div
             ref={parentGrid}
-            className="relative grid h-full w-full grid-cols-7"
+            className="relative grid h-max w-full grid-cols-7"
             onClick={(e) => {
               e.preventDefault()
             }}
