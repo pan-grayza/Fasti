@@ -27,6 +27,8 @@ const Sidebar: React.FC<Props> = ({ className }) => {
   const { data: calendars, refetch: refetchCalendars } =
     api.calendar.getAll.useQuery(undefined, {
       onSuccess: (data) => {
+        if (data.length === 0 && sessionData)
+          createCalendar.mutate({ name: sessionData.user.name ?? '' })
         setSelectedCalendar(selectedCalendar ?? data[0] ?? null)
       },
       onError: (err) => {
