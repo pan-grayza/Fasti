@@ -62,7 +62,7 @@ const Sidebar: React.FC<Props> = ({ className }) => {
             )}
           >
             <MonthCell size="xs" sidebar monthDate={currentDate} />
-            <div className="relative flex h-fit w-full flex-col">
+            <div className="relative flex h-fit w-full flex-col gap-1">
               {calendars?.map((calendar, index) => {
                 return (
                   <div
@@ -93,13 +93,10 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                     <p>{calendar.calendarName}</p>
                     <button
                       onClick={() => {
-                        deleteCalendar.mutate({
-                          id: calendar.id,
-                        })
+                        deleteCalendar.mutate({ id: calendar.id })
                       }}
-                      className={clsx('invisible transition ', {
+                      className={clsx('invisible transition', {
                         'hover:text-red-500 group-hover:visible':
-                          selectedCalendar !== calendar &&
                           calendar.calendarName !== sessionData?.user.name,
                       })}
                     >
