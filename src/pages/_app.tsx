@@ -14,21 +14,21 @@ const MyApp: AppType<{ session: Session | null }> = ({
   const [isDarkTheme] = useStore((state) => [state.isDarkTheme])
 
   return (
-    <div
-      className={clsx(
-        'relative flex h-screen w-screen flex-col overflow-hidden text-darkText transition-colors',
-        {
-          'bg-white text-darkText': !isDarkTheme,
-          'bg-gray-800 text-lightText': isDarkTheme,
-        }
-      )}
-    >
-      <SessionProvider session={session}>
+    <SessionProvider session={session}>
+      <div
+        className={clsx(
+          'relative flex h-screen w-screen flex-col overflow-hidden text-darkText transition-colors',
+          {
+            'bg-white text-darkText': !isDarkTheme,
+            'bg-gray-800 text-lightText': isDarkTheme,
+          }
+        )}
+      >
         <NavBar />
 
         <Component {...pageProps} />
-      </SessionProvider>
-    </div>
+      </div>
+    </SessionProvider>
   )
 }
 

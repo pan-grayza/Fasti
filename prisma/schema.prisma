@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated/client"
 }
 
 datasource db {
@@ -75,7 +74,7 @@ model Calendar {
   timeEvents   timeEvent[]
   hostId       String
 
-  host User @relation(fields: [hostId], references: [id])
+  host User @relation(fields: [hostId], references: [id], onDelete: Cascade)
 }
 
 model timeEvent {
@@ -83,7 +82,7 @@ model timeEvent {
   name       String
   startTime  DateTime
   durationM  Int
-  calendar   Calendar @relation(fields: [calendarId], references: [id])
+  calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
   calendarId String
 }
 
@@ -91,6 +90,6 @@ model dayEvent {
   id         String   @id @default(cuid())
   name       String
   date       DateTime
-  calendar   Calendar @relation(fields: [calendarId], references: [id])
+  calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
   calendarId String
 }
