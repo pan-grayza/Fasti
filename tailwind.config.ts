@@ -5,14 +5,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        lightText: '#f9fafb',
-        darkText: '#1f2937',
-        lightBorder: '#e5e7eb',
-        darkBorder: '#374151',
-        lightBG: '#f9fafb',
-        darkBG: '#374151',
-        lightHover: '#f3f4f6',
-        darkHover: '#4b5563',
+        lightText: 'rgb(249 250 251)', // #f9fafb
+        darkText: 'rgb(31 41 55)', // #1f2937
+        lightBorder: 'rgb(229 231 235)', // #e5e7eb
+        darkBorder: 'rgb(55 65 81)', // #374151
+        lightBG: 'rgb(249 250 251)', // #f9fafb
+        darkBG: 'rgb(55 65 81)', // #374151
+        lightSelected: 'rgb(147 197 253 / 0.5)', // #93c5fd/0.5
+        darkSelected: 'rgb(59 130 246 / 0.25)', // #3b82f6/0.25
+        lightHover: 'rgb(209 213 219 / 0.5)', // #d1d5db/0.5
+        darkHover: 'rgb(100 116 139 / 0.25)', // #64748b/0.1
       },
       animation: {
         appearFromTopLeft: 'appearFromTopLeftKeyframes 50ms ease-in-out',

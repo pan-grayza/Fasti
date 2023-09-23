@@ -58,14 +58,13 @@ const DayCell: React.FC<Props> = ({
           className={clsx(
             'relative  flex select-none items-center justify-center rounded-full transition-colors',
             {
-              'bg-blue-300/50 text-blue-700':
+              'bg-lightSelected text-blue-700':
                 isCurrentDate && !isToday && !isDarkTheme,
-              'bg-blue-500/25 text-blue-100':
+              'bg-darkSelected text-blue-100':
                 isCurrentDate && !isToday && isDarkTheme,
               'bg-blue-600 text-white': isToday,
               'hover:bg-lightHover': !isCurrentDate && !isToday && !isDarkTheme,
-              'hover:bg-darkHover/50':
-                !isCurrentDate && !isToday && isDarkTheme,
+              'hover:bg-darkHover': !isCurrentDate && !isToday && isDarkTheme,
               'h-7 w-7 text-xs': size === 'xs',
               'h-8 w-8 text-sm': size === 'sm',
               'h-12 w-12 text-xl': size === 'md',

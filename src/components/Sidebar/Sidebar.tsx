@@ -69,14 +69,14 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                     className={clsx(
                       'group relative flex h-8 w-full cursor-pointer flex-row items-center justify-between rounded px-2 py-1 transition duration-300',
                       {
-                        'bg-blue-300/50 text-blue-700':
+                        'bg-lightSelected text-blue-700':
                           JSON.stringify(selectedCalendar) ===
                             JSON.stringify(calendar) && !isDarkTheme,
                         'hover:bg-gray-100':
                           JSON.stringify(selectedCalendar) !==
                             JSON.stringify(calendar) && !isDarkTheme,
 
-                        'bg-blue-400/25 text-blue-100':
+                        'bg-darkSelected text-blue-100':
                           JSON.stringify(selectedCalendar) ===
                             JSON.stringify(calendar) && isDarkTheme,
                         'hover:bg-lightHover':
