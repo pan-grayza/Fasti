@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useStore from '~/store/useStore'
 import type { dayEvent } from '@prisma/client'
 import { api } from '~/utils/api'
@@ -18,13 +18,19 @@ const Event: React.FC<Props> = ({
   type = 'month',
   refetchDayEvents,
 }) => {
-  const [renamingEventNow, setRenamingEventNow, isDarkTheme] = useStore(
-    (state) => [
-      state.renamingEventNow,
-      state.setRenamingEventNow,
-      state.isDarkTheme,
-    ]
-  )
+  const [
+    renamingEventNow,
+    setRenamingEventNow,
+    creatingEventNow,
+    setCreatingEventNow,
+    isDarkTheme,
+  ] = useStore((state) => [
+    state.renamingEventNow,
+    state.setRenamingEventNow,
+    state.creatingEventNow,
+    state.setCreatingEventNow,
+    state.isDarkTheme,
+  ])
 
   //API stuff
 
@@ -53,12 +59,6 @@ const Event: React.FC<Props> = ({
   const [isRenaming, setIsRenaming] = useState(true)
   const [name, setName] = useState(eventProps.name)
 
-  useEffect(() => {
-    if (renamingEventNow) {
-      setIsRenaming(false)
-    }
-  }, [renamingEventNow])
-
   const finishUpdating = () => {
     if (name === '') setName('Event')
     setIsRenaming(false)
@@ -74,6 +74,7 @@ const Event: React.FC<Props> = ({
   }
 
   const onRename = () => {
+    if (creatingEventNow) setCreatingEventNow(false)
     setRenamingEventNow(true)
     setIsRenaming(true)
   }

@@ -97,7 +97,7 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                       }}
                       className={clsx('invisible transition', {
                         'hover:text-red-500 group-hover:visible':
-                          calendar.calendarName !== sessionData?.user.name,
+                          calendars.length > 1,
                       })}
                     >
                       <svg
