@@ -1,6 +1,14 @@
 import Head from 'next/head'
+import { useRouter } from 'next/navigation'
+
+import { useSession } from 'next-auth/react'
 
 export default function Home() {
+  const { data: sessionData } = useSession()
+  const router = useRouter()
+  if (sessionData) {
+    router.push('/calendar')
+  }
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
   return (
     <>
