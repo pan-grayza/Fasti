@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import TimeEvent from '~/components/TimeEvent'
+import TimeEvent from '../CalendarComponents/TimeEvent'
 import { add, format, startOfDay } from 'date-fns'
 import clsx from 'clsx'
 import { api } from '~/utils/api'
 import useStore from '~/store/useStore'
-import TimeEventCreator from '~/components/TimeEventCreator'
+import TimeEventCreator from '../CalendarComponents/TimeEventCreator'
 
 interface Props extends React.PropsWithChildren {
   className?: string
@@ -132,8 +132,8 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
             return (
               <div
                 className={clsx('relative h-[60px] w-full border-b', {
-                  'border-lightBorder bg-lightBG': !isDarkTheme,
-                  'border-darkBorder bg-darkBG/10': isDarkTheme,
+                  'border-lightThemeBorder bg-lightThemeBG': !isDarkTheme,
+                  'border-darkThemeBorder bg-darkThemeBG/10': isDarkTheme,
                 })}
                 key={index}
               ></div>

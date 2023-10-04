@@ -35,8 +35,8 @@ const DayCell: React.FC<Props> = ({
         <p
           className={clsx('text-xs font-bold uppercase', {
             'text-blue-600': isToday,
-            'text-darkText/75': !isToday && !isDarkTheme,
-            'text-lightText/75': !isToday && isDarkTheme,
+            'text-lightThemeText/75': !isToday && !isDarkTheme,
+            'text-darkThemeText/75': !isToday && isDarkTheme,
           })}
         >
           {format(date, 'E')}
@@ -58,13 +58,15 @@ const DayCell: React.FC<Props> = ({
           className={clsx(
             'relative  flex select-none items-center justify-center rounded-full transition-colors',
             {
-              'bg-lightSelected text-blue-700':
+              'bg-lightThemeSelected text-blue-700':
                 isCurrentDate && !isToday && !isDarkTheme,
-              'bg-darkSelected text-blue-100':
+              'bg-darkThemeSelected text-blue-100':
                 isCurrentDate && !isToday && isDarkTheme,
               'bg-blue-600 text-white': isToday,
-              'hover:bg-lightHover': !isCurrentDate && !isToday && !isDarkTheme,
-              'hover:bg-darkHover': !isCurrentDate && !isToday && isDarkTheme,
+              'hover:bg-lightThemeHover':
+                !isCurrentDate && !isToday && !isDarkTheme,
+              'hover:bg-darkThemeHover':
+                !isCurrentDate && !isToday && isDarkTheme,
               'h-7 w-7 text-xs': size === 'xs',
               'h-8 w-8 text-sm': size === 'sm',
               'h-12 w-12 text-xl': size === 'md',

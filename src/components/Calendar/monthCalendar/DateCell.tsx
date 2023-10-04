@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import DayCell from '~/components/DayCell'
+import DayCell from '~/components/Calendar/CalendarComponents/DayCell'
 import useStore from '~/store/useStore'
 
 interface Props {

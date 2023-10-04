@@ -189,8 +189,8 @@ const TimeEventCreator: React.FC<Props> = ({
       >
         <div
           className={clsx('relative flex flex-col gap-1 rounded p-1', {
-            'bg-lightBG': !isDarkTheme,
-            'bg-gray-800': isDarkTheme,
+            'bg-lightThemeBG': !isDarkTheme,
+            'bg-darkThemeBG': isDarkTheme,
           })}
         >
           <div className="relative flex h-fit w-full items-center justify-end gap-1">

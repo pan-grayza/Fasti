@@ -42,8 +42,8 @@ const DropDown: React.FC<DropDownProps> = ({ className }) => {
         className={clsx(
           'flex w-24 cursor-pointer select-none flex-row items-center justify-between gap-2 rounded border-2 p-2 transition',
           {
-            'border-lightBorder': !isDarkTheme,
-            'border-darkBorder': isDarkTheme,
+            'border-lightThemeBorder': !isDarkTheme,
+            'border-darkThemeBorder': isDarkTheme,
           }
         )}
         onClick={() => setIsDropDown(!isDropDown)}
@@ -55,7 +55,10 @@ const DropDown: React.FC<DropDownProps> = ({ className }) => {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className={clsx('h-5 w-5 transition', isDropDown && 'rotate-180')}
+          className={clsx('h-5 w-5 transition', {
+            'rotate-x-[180deg]': isDropDown,
+            'rotate-x-[0deg]': !isDropDown,
+          })}
         >
           <path
             strokeLinecap="round"
@@ -70,59 +73,39 @@ const DropDown: React.FC<DropDownProps> = ({ className }) => {
             className={clsx(
               'absolute inset-0 flex h-max w-32 animate-appearFromTopLeft flex-col rounded py-1 drop-shadow-xl',
               {
-                'bg-lightBG': !isDarkTheme,
-                'bg-darkBG': isDarkTheme,
+                'bg-lightThemeBG': !isDarkTheme,
+                'bg-darkThemeBG': isDarkTheme,
               }
             )}
           >
-            <DropDownButton
-              onClick={() => {
-                setCurrentCalendarView('Day')
-                setIsDropDown(false)
-              }}
-              className={clsx({
-                'hover:bg-lightHover': !isDarkTheme,
-                'hover:bg-darkHover': isDarkTheme,
-              })}
-            >
-              Day
-            </DropDownButton>
-            <DropDownButton
-              onClick={() => {
-                setCurrentCalendarView('Week')
-                setIsDropDown(false)
-              }}
-              className={clsx({
-                'hover:bg-lightHover': !isDarkTheme,
-                'hover:bg-darkHover': isDarkTheme,
-              })}
-            >
-              Week
-            </DropDownButton>
-            <DropDownButton
-              onClick={() => {
-                setCurrentCalendarView('Month')
-                setIsDropDown(false)
-              }}
-              className={clsx({
-                'hover:bg-lightHover': !isDarkTheme,
-                'hover:bg-darkHover': isDarkTheme,
-              })}
-            >
-              Month
-            </DropDownButton>
-            <DropDownButton
-              onClick={() => {
-                setCurrentCalendarView('Year')
-                setIsDropDown(false)
-              }}
-              className={clsx({
-                'hover:bg-lightHover': !isDarkTheme,
-                'hover:bg-darkHover': isDarkTheme,
-              })}
-            >
-              Year
-            </DropDownButton>
+            {Array.from({ length: 4 }).map((btn, index) => {
+              let title: typeof currentCalendarView = 'Day'
+              switch (index) {
+                case 1:
+                  title = 'Week'
+                  break
+                case 2:
+                  title = 'Month'
+                  break
+                case 3:
+                  title = 'Year'
+              }
+              return (
+                <DropDownButton
+                  key={index}
+                  onClick={() => {
+                    setCurrentCalendarView(title)
+                    setIsDropDown(false)
+                  }}
+                  className={clsx({
+                    'hover:bg-lightThemeHover': !isDarkTheme,
+                    'hover:bg-darkThemeHover': isDarkTheme,
+                  })}
+                >
+                  {title}
+                </DropDownButton>
+              )
+            })}
           </div>
         )}
       </div>

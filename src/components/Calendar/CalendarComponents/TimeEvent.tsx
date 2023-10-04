@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { add, format, startOfDay, startOfWeek } from 'date-fns'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Rnd } from 'react-rnd'
 import useStore from '~/store/useStore'
 
@@ -189,7 +189,7 @@ const TimeEvent: React.FC<Props> = ({
                 format(new Date(), 'SSS')
             ) && onRename()
         }
-        className={clsx('h-full w-full px-2 pb-1 text-lightText', {
+        className={clsx('h-full w-full px-2 pb-1 text-white', {
           'items-center text-xs': parseInt(size.height) < 30,
         })}
       >
@@ -198,7 +198,7 @@ const TimeEvent: React.FC<Props> = ({
       {isRenaming && (
         <div
           className={clsx(
-            'absolute inset-0 z-10 flex h-full w-full items-start',
+            'absolute inset-0 z-10 flex h-full w-full items-start drop-shadow',
             {
               'ml-4 translate-x-full justify-start': colIndex < 4,
               'mr-4 -translate-x-full justify-end': colIndex > 3,

@@ -69,17 +69,17 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                     className={clsx(
                       'group relative flex h-8 w-full cursor-pointer flex-row items-center justify-between rounded px-2 py-1 transition duration-300',
                       {
-                        'bg-lightSelected text-blue-700':
+                        'bg-lightThemeSelected text-blue-700':
                           JSON.stringify(selectedCalendar) ===
                             JSON.stringify(calendar) && !isDarkTheme,
-                        'hover:bg-gray-100':
+                        'hover:bg-lightThemeHover':
                           JSON.stringify(selectedCalendar) !==
                             JSON.stringify(calendar) && !isDarkTheme,
 
-                        'bg-darkSelected text-blue-100':
+                        'bg-darkThemeSelected text-blue-100':
                           JSON.stringify(selectedCalendar) ===
                             JSON.stringify(calendar) && isDarkTheme,
-                        'hover:bg-lightHover':
+                        'hover:bg-darkThemeHover':
                           JSON.stringify(selectedCalendar) !==
                             JSON.stringify(calendar) && isDarkTheme,
                       }
@@ -126,9 +126,9 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                 className={clsx(
                   'relative flex h-8 w-full cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed  px-2 py-1  transition ',
                   {
-                    'hover:lightHover border-gray-700 text-gray-700':
+                    'hover:lightThemeHover border-gray-700 text-gray-700':
                       !isDarkTheme,
-                    'hover:darkHover border-gray-300 text-gray-300':
+                    'hover:darkThemeHover border-gray-300 text-gray-300':
                       isDarkTheme,
                   }
                 )}
@@ -150,9 +150,9 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                     className={clsx(
                       'absolute inset-0 h-full w-full rounded px-1 py-2 outline-2 focus:outline',
                       {
-                        'border-gray-700 bg-lightBG text-gray-700 focus:outline-blue-600':
+                        'border-gray-700 bg-lightThemeBG text-gray-700 focus:outline-blue-600':
                           !isDarkTheme,
-                        'border-none border-gray-300 bg-darkBG text-gray-300 focus:outline-blue-500':
+                        'border-none border-gray-300 bg-darkThemeBG text-gray-300 focus:outline-blue-500':
                           isDarkTheme,
                       }
                     )}

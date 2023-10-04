@@ -13,8 +13,8 @@ const DayColSchedule: React.FC<Props> = ({ className }) => {
       className={clsx(
         'grid-rows-auto relative grid h-fit w-full auto-rows-fr grid-cols-1 border-l',
         {
-          'border-lightBorder': !isDarkTheme,
-          'border-darkBorder': isDarkTheme,
+          'border-lightThemeBorder': !isDarkTheme,
+          'border-darkThemeBorder': isDarkTheme,
         },
         className
       )}
@@ -23,8 +23,8 @@ const DayColSchedule: React.FC<Props> = ({ className }) => {
         return (
           <div
             className={clsx('relative inset-0 h-[60px] w-full border-b', {
-              'border-lightBorder bg-lightBG': !isDarkTheme,
-              'border-darkBorder bg-darkBG/10': isDarkTheme,
+              'border-lightThemeBorder bg-lightThemeBG': !isDarkTheme,
+              'border-darkThemeBorder bg-darkThemeBG/10': isDarkTheme,
             })}
             key={index}
           ></div>

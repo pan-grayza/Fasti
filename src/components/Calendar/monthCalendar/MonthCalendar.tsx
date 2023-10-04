@@ -63,8 +63,8 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
           <Cell
             key={day}
             className={clsx('h-6 text-xs font-bold uppercase', {
-              'border-lightBorder': !isDarkTheme,
-              'border-darkBorder': isDarkTheme,
+              'border-lightThemeBorder': !isDarkTheme,
+              'border-darkThemeBorder': isDarkTheme,
             })}
           >
             {day}
@@ -78,8 +78,8 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
             return (
               <DateCell
                 className={clsx('', {
-                  'border-lightBorder': !isDarkTheme,
-                  'border-darkBorder': isDarkTheme,
+                  'border-lightThemeBorder': !isDarkTheme,
+                  'border-darkThemeBorder': isDarkTheme,
                 })}
                 date={date}
                 key={index}
@@ -102,8 +102,8 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
               refetchDayEvents={() => refetchDayEvents()}
               date={date}
               className={clsx('', {
-                'border-lightBorder': !isDarkTheme,
-                'border-darkBorder': isDarkTheme,
+                'border-lightThemeBorder': !isDarkTheme,
+                'border-darkThemeBorder': isDarkTheme,
               })}
             />
           )
@@ -114,8 +114,8 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
             <DateCell
               key={index}
               className={clsx('', {
-                'border-lightBorder': !isDarkTheme,
-                'border-darkBorder': isDarkTheme,
+                'border-lightThemeBorder': !isDarkTheme,
+                'border-darkThemeBorder': isDarkTheme,
               })}
               date={date}
             />

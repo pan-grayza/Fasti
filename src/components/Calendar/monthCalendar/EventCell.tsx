@@ -1,9 +1,9 @@
 import clsx from 'clsx'
-import DayEvent from '~/components/DayEvent'
+import DayEvent from '../CalendarComponents/DayEvent'
 import useStore from '~/store/useStore'
-import DayCell from '~/components/DayCell'
+import DayCell from '~/components/Calendar/CalendarComponents/DayCell'
 import type { dayEvent } from '@prisma/client'
-import DayEventCreator from '~/components/DayEventCreator'
+import DayEventCreator from '../CalendarComponents/DayEventCreator'
 import { useState } from 'react'
 
 interface Props {

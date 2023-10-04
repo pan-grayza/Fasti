@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 
 import React from 'react'
-import DayCell from '~/components/DayCell'
+import DayCell from '~/components/Calendar/CalendarComponents/DayCell'
 
 interface Props extends React.PropsWithChildren {
   className?: string

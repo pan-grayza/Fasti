@@ -57,8 +57,8 @@ const NavBar = () => {
       className={clsx(
         'relative flex h-14 w-full flex-row items-center gap-6 border-b p-4 transition-colors',
         {
-          'border-lightBorder': !isDarkTheme,
-          'border-darkBorder': isDarkTheme,
+          'border-lightThemeBorder': !isDarkTheme,
+          'border-darkThemeBorder': isDarkTheme,
         }
       )}
     >
@@ -87,8 +87,8 @@ const NavBar = () => {
       <div className="relative w-24">
         <p
           className={clsx('text-lg font-bold tracking-wide', {
-            'text-lightText': isDarkTheme,
-            'text-darkText': !isDarkTheme,
+            'text-darkThemeText': isDarkTheme,
+            'text-lightThemeText': !isDarkTheme,
           })}
         >
           Fasti

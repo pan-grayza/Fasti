@@ -17,10 +17,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <div
         className={clsx(
-          'relative flex h-screen w-screen flex-col overflow-hidden text-darkText transition-colors',
+          'relative flex h-screen w-screen flex-col overflow-hidden font-roboto transition-colors',
           {
-            'bg-white text-darkText': !isDarkTheme,
-            'bg-gray-800 text-lightText': isDarkTheme,
+            'bg-lightThemeBG text-lightThemeText': !isDarkTheme,
+            'bg-darkThemeBG text-darkThemeText': isDarkTheme,
           }
         )}
       >

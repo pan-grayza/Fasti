@@ -3,18 +3,23 @@ import { type Config } from 'tailwindcss'
 export default {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    fontFamily: {
+      roboto: 'Roboto, sans-serif',
+      kalam: 'Kalam, serif',
+    },
     extend: {
       colors: {
-        lightText: 'rgb(249 250 251)', // #f9fafb
-        darkText: 'rgb(31 41 55)', // #1f2937
-        lightBorder: 'rgb(229 231 235)', // #e5e7eb
-        darkBorder: 'rgb(55 65 81)', // #374151
-        lightBG: 'rgb(249 250 251)', // #f9fafb
-        darkBG: 'rgb(55 65 81)', // #374151
-        lightSelected: 'rgb(147 197 253 / 0.5)', // #93c5fd/0.5
-        darkSelected: 'rgb(59 130 246 / 0.25)', // #3b82f6/0.25
-        lightHover: 'rgb(209 213 219 / 0.5)', // #d1d5db/0.5
-        darkHover: 'rgb(100 116 139 / 0.25)', // #64748b/0.1
+        darkThemeText: '#f9fafb',
+        lightThemeText: '#09090B',
+        darkThemeBorder: '#3f3f46',
+        lightThemeBorder: '#e4e4e7',
+        lightThemeBG: '#f9fafb',
+        darkThemeBG: '#27272A',
+        lightThemeSelected: 'rgb(147 197 253 / 0.5)', // #93c5fd/0.5
+        darkThemeSelected: 'rgb(59 130 246 / 0.5)', // #3b82f6/0.25
+        lightThemeHover: 'rgb(212 212 216 / 0.5)', // #d4d4d8/0.5
+        darkThemeHover: 'rgb(161 161 170 / 0.25)', // #a1a1aa/0.1
+        accent: 'rgb(37 99 235)', // #2563EB
       },
       animation: {
         appearFromTopLeft: 'appearFromTopLeftKeyframes 50ms ease-in-out',
@@ -53,5 +58,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-3d')],
 } satisfies Config

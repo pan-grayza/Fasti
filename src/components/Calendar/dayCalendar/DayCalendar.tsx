@@ -1,7 +1,7 @@
 import React from 'react'
 import Schedule from './Schedule'
 import useStore from '~/store/useStore'
-import DayCell from '../../DayCell'
+import DayCell from '../CalendarComponents/DayCell'
 
 const DayCalendar = () => {
   const [currentDate] = useStore((state) => [

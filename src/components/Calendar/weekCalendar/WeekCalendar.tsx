@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import useStore from '~/store/useStore'
 import DayColSchedule from './DayColSchedule'
 import DayCol from './DayCol'
-import TimeEvent from '~/components/TimeEvent'
-import TimeEventCreator from '~/components/TimeEventCreator'
+import TimeEvent from '../CalendarComponents/TimeEvent'
+import TimeEventCreator from '../CalendarComponents/TimeEventCreator'
 import { api } from '~/utils/api'
 
 const WeekCalendar = () => {
