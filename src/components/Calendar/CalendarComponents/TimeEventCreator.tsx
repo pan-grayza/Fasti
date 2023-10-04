@@ -182,8 +182,8 @@ const TimeEventCreator: React.FC<Props> = ({
         className={clsx(
           'absolute inset-0 z-10 flex h-full w-full items-start drop-shadow',
           {
-            'ml-4 translate-x-full justify-start': colIndex < 4,
-            'mr-4 -translate-x-full justify-end': colIndex > 3,
+            'ml-4 justify-start translate-x-full': colIndex < 4,
+            'mr-4 justify-end -translate-x-full': colIndex > 3,
           }
         )}
       >
@@ -229,7 +229,7 @@ const TimeEventCreator: React.FC<Props> = ({
             }}
             className={clsx('relative w-48 rounded p-1 focus:outline-none', {
               'bg-white': !isDarkTheme,
-              'bg-darkBG': isDarkTheme,
+              'bg-darkThemeBG': isDarkTheme,
             })}
           />
         </div>

@@ -3,12 +3,11 @@ import MonthCalendar from '~/components/Calendar/monthCalendar/MonthCalendar'
 import YearCalendar from '~/components/Calendar/yearCalendar/YearCalendar'
 import WeekCalendar from '~/components/Calendar/weekCalendar/WeekCalendar'
 import DayCalendar from '~/components/Calendar/dayCalendar/DayCalendar'
-import Sidebar from '~/components/Sidebar/Sidebar'
 
 import useStore from '~/store/useStore'
 import { useSession } from 'next-auth/react'
 import { api, type RouterOutputs } from '~/utils/api'
-import clsx from 'clsx'
+import Sidebar from '~/components/Calendar/CalendarComponents/Sidebar'
 
 type Calendar = RouterOutputs['calendar']['getAll'][0]
 
@@ -21,6 +20,7 @@ const Calendar = () => {
     setCurrentCalendarView,
     selectedCalendar,
     setSelectedCalendar,
+    sidebar,
   ] = useStore((state) => [
     state.currentCalendarView,
     state.setCurrentCalendarView,
@@ -55,7 +55,7 @@ const Calendar = () => {
   return (
     <div className="relative flex h-full w-full flex-row overflow-hidden">
       <Sidebar />
-      <div className={clsx('relative flex h-full w-full')}>
+      <div className="relative flex h-full w-full transition">
         {currentCalendarView === 'Year' && <YearCalendar />}
         {currentCalendarView === 'Month' && <MonthCalendar />}
         {currentCalendarView === 'Week' && <WeekCalendar />}

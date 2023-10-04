@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import React from 'react'
+import useStore from '~/store/useStore'
 
 interface Props extends React.PropsWithChildren {
   className?: string
@@ -17,12 +18,17 @@ const ArrowButton: React.FC<Props> = ({
   size = 'sm',
   disabled,
 }) => {
+  const [isDarkTheme] = useStore((state) => [state.isDarkTheme])
   return (
     <div>
       <button
         disabled={disabled}
         className={clsx(
-          'flex items-center justify-center rounded-full bg-gray-200/0 p-1 transition hover:bg-gray-200/50',
+          'flex items-center justify-center rounded-full bg-gray-200/0 p-1 transition',
+          {
+            'hover:bg-darkThemeHover': isDarkTheme,
+            'hover:bg-lightThemeHover': !isDarkTheme,
+          },
           className
         )}
         onClick={() => onClick()}

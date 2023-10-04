@@ -87,8 +87,8 @@ const DayEventCreator: React.FC<Props> = ({
         className={clsx(
           'absolute inset-0 z-10 flex h-full w-full items-start drop-shadow',
           {
-            'ml-1 translate-x-full justify-start': colIndex < 4,
-            '-ml-1 -translate-x-full justify-end': colIndex > 3,
+            'ml-1 justify-start translate-x-full': colIndex < 4,
+            '-ml-1 justify-end -translate-x-full': colIndex > 3,
           }
         )}
       >
@@ -134,7 +134,7 @@ const DayEventCreator: React.FC<Props> = ({
             }}
             className={clsx('relative w-48 rounded p-1 focus:outline-none', {
               'bg-white': !isDarkTheme,
-              'bg-darkBG': isDarkTheme,
+              'bg-darkThemeBG': isDarkTheme,
             })}
           />
         </div>

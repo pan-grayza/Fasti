@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react'
 import React, { useState } from 'react'
 import useStore from '~/store/useStore'
 import { api } from '~/utils/api'
-import MonthCell from '../Calendar/yearCalendar/MonthCell'
+import MonthCell from './MonthCell'
 interface Props {
   className?: string
 }
@@ -15,13 +15,17 @@ const Sidebar: React.FC<Props> = ({ className }) => {
     selectedCalendar,
     setSelectedCalendar,
     sidebar,
+    setSidebar,
     isDarkTheme,
+    currentCalendarView,
   ] = useStore((state) => [
     state.currentDate,
     state.selectedCalendar,
     state.setSelectedCalendar,
     state.sidebar,
+    state.setSidebar,
     state.isDarkTheme,
+    state.currentCalendarView,
   ])
   const [isCreatingCalendar, setIsCreatingCalendar] = useState(false)
   const { data: calendars, refetch: refetchCalendars } =
@@ -49,18 +53,53 @@ const Sidebar: React.FC<Props> = ({ className }) => {
     <>
       {sessionData && (
         <div
-          className={clsx('relative z-10 flex h-full shrink-0 transition', {
+          className={clsx('relative z-10 flex h-full shrink-0', {
             'w-60 animate-sidebarExpanding': sidebar,
-            'w-0 animate-sidebarShrinking': !sidebar,
+            'w-10 animate-sidebarShrinking':
+              !sidebar && currentCalendarView === 'Month',
+            'w-0 animate-sidebarShrinking':
+              !sidebar && currentCalendarView !== 'Month',
           })}
         >
           <div
+            onClick={() => setSidebar(!sidebar)}
             className={clsx(
-              'absolute -left-60 top-0 z-50 flex h-full w-60 flex-col items-center gap-1 overflow-y-auto p-2 transition',
+              'absolute left-0 top-2 z-[99] flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-transform',
+              {
+                'translate-x-[12.5rem]': sidebar,
+                'translate-x-1': !sidebar,
+                'hover:bg-darkThemeHover': isDarkTheme,
+                'hover:bg-lightThemeHover': !isDarkTheme,
+              }
+            )}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className={clsx('h-6 w-6 transition', {
+                'rotate-y-[180deg]': !sidebar,
+                'rotate-y-[0deg]': sidebar,
+              })}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75"
+              />
+            </svg>
+          </div>
+          <div
+            className={clsx(
+              'absolute -left-60 top-0 z-50 flex h-full w-60 flex-col items-center gap-1 overflow-y-auto p-2 transition-transform duration-100',
               { 'translate-x-60': sidebar, 'translate-x-0': !sidebar },
               className
             )}
           >
+            <div className="relative h-8 w-full"></div>
+
             <MonthCell size="xs" sidebar monthDate={currentDate} />
             <div className="relative flex h-fit w-full flex-col gap-1">
               {calendars?.map((calendar, index) => {
@@ -133,7 +172,22 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                   }
                 )}
               >
-                <div className="text-gray relative mb-1 text-lg">+</div>
+                <div className="text-gray relative mb-1 flex items-center justify-center text-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    className="h-4 w-4"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                  </svg>
+                </div>
               </div>
               {isCreatingCalendar && (
                 <div

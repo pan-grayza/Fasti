@@ -1,7 +1,7 @@
 import React from 'react'
 import useStore from '~/store/useStore'
 import { startOfYear, add } from 'date-fns'
-import MonthCell from './MonthCell'
+import MonthCell from '../CalendarComponents/MonthCell'
 import clsx from 'clsx'
 
 const YearCalendar = () => {

@@ -71,7 +71,7 @@ const DropDown: React.FC<DropDownProps> = ({ className }) => {
         {isDropDown && (
           <div
             className={clsx(
-              'absolute inset-0 flex h-max w-32 animate-appearFromTopLeft flex-col rounded py-1 drop-shadow-xl',
+              'animate-appearFromTop absolute inset-0 flex h-max w-32 flex-col rounded py-1 drop-shadow-xl',
               {
                 'bg-lightThemeBG': !isDarkTheme,
                 'bg-darkThemeBG': isDarkTheme,
