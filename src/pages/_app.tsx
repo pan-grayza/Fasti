@@ -7,18 +7,22 @@ import NavBar from '~/components/Navbar/NavBar'
 
 import clsx from 'clsx'
 import useStore from '~/store/useStore'
+import Menu from '~/components/Menu/Menu'
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const [isDarkTheme] = useStore((state) => [state.isDarkTheme])
+  const [isDarkTheme, menu] = useStore((state) => [
+    state.isDarkTheme,
+    state.menu,
+  ])
 
   return (
     <SessionProvider session={session}>
       <div
         className={clsx(
-          'relative flex h-screen w-screen flex-col overflow-hidden font-roboto transition-colors',
+          'relative flex h-screen w-screen flex-col font-roboto transition-colors',
           {
             'bg-lightThemeBG text-lightThemeText': !isDarkTheme,
             'bg-darkThemeBG text-darkThemeText': isDarkTheme,
@@ -26,6 +30,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         )}
       >
         <NavBar />
+        <Menu />
 
         <Component {...pageProps} />
       </div>

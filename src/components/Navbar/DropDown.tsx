@@ -67,47 +67,47 @@ const DropDown: React.FC<DropDownProps> = ({ className }) => {
           />
         </svg>
       </div>
-      <div className="absolute left-0 top-12">
-        {isDropDown && (
-          <div
-            className={clsx(
-              'animate-appearFromTop absolute inset-0 flex h-max w-32 flex-col rounded py-1 drop-shadow-xl',
-              {
-                'bg-lightThemeBG': !isDarkTheme,
-                'bg-darkThemeBG': isDarkTheme,
-              }
-            )}
-          >
-            {Array.from({ length: 4 }).map((btn, index) => {
-              let title: typeof currentCalendarView = 'Day'
-              switch (index) {
-                case 1:
-                  title = 'Week'
-                  break
-                case 2:
-                  title = 'Month'
-                  break
-                case 3:
-                  title = 'Year'
-              }
-              return (
-                <DropDownButton
-                  key={index}
-                  onClick={() => {
-                    setCurrentCalendarView(title)
-                    setIsDropDown(false)
-                  }}
-                  className={clsx({
-                    'hover:bg-lightThemeHover': !isDarkTheme,
-                    'hover:bg-darkThemeHover': isDarkTheme,
-                  })}
-                >
-                  {title}
-                </DropDownButton>
-              )
-            })}
-          </div>
-        )}
+      <div className="absolute left-0 top-10">
+        <div
+          className={clsx(
+            'absolute inset-0 flex h-max w-32 origin-top flex-col rounded py-1 drop-shadow-xl transition-transform',
+            {
+              'bg-lightThemeBG': !isDarkTheme,
+              'bg-darkThemeBG': isDarkTheme,
+              'opacity-100 translate-y-[0] scale-y-100': isDropDown,
+              'opacity-[0] translate-y-[-10%] scale-y-[0]': !isDropDown,
+            }
+          )}
+        >
+          {Array.from({ length: 4 }).map((btn, index) => {
+            let title: typeof currentCalendarView = 'Day'
+            switch (index) {
+              case 1:
+                title = 'Week'
+                break
+              case 2:
+                title = 'Month'
+                break
+              case 3:
+                title = 'Year'
+            }
+            return (
+              <DropDownButton
+                key={index}
+                onClick={() => {
+                  setCurrentCalendarView(title)
+                  setIsDropDown(false)
+                }}
+                className={clsx({
+                  'hover:bg-lightThemeHover': !isDarkTheme,
+                  'hover:bg-darkThemeHover': isDarkTheme,
+                })}
+              >
+                {title}
+              </DropDownButton>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

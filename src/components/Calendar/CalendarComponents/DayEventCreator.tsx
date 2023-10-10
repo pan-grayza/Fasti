@@ -133,8 +133,8 @@ const DayEventCreator: React.FC<Props> = ({
               }
             }}
             className={clsx('relative w-48 rounded p-1 focus:outline-none', {
-              'bg-white': !isDarkTheme,
-              'bg-darkThemeBG': isDarkTheme,
+              'bg-lightThemeSecondaryBG': !isDarkTheme,
+              'bg-darkThemeSecondaryBG': isDarkTheme,
             })}
           />
         </div>

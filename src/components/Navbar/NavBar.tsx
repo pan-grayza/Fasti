@@ -6,28 +6,28 @@ import { format, sub, add, startOfDay } from 'date-fns'
 import ArrowButton from '../ArrowButton'
 import DropDown from './DropDown'
 import clsx from 'clsx'
+import { useRouter } from 'next/router'
 
 const NavBar = () => {
   const [
     currentDate,
     setCurrentDate,
     currentCalendarView,
-    sidebar,
-    setSidebar,
     isDarkTheme,
     setIsDarkTheme,
+    menu,
+    setMenu,
   ] = useStore((state) => [
     state.currentDate,
     state.setCurrentDate,
     state.currentCalendarView,
-    state.sidebar,
-    state.setSidebar,
     state.isDarkTheme,
     state.setIsDarkTheme,
+    state.menu,
+    state.setMenu,
   ])
   const { data: session } = useSession()
-
-  // console.log(session)
+  const { asPath } = useRouter()
 
   const handleSetToday = () => setCurrentDate(startOfDay(new Date()))
 
@@ -63,7 +63,7 @@ const NavBar = () => {
       )}
     >
       <div
-        onClick={() => setSidebar(!sidebar)}
+        onClick={() => setMenu(!menu)}
         className="relative flex cursor-pointer items-center justify-center p-1"
       >
         <svg
@@ -93,7 +93,7 @@ const NavBar = () => {
         </p>
       </div>
 
-      {currentCalendarView !== 'None' && (
+      {asPath === '/calendar' && (
         <div className="relative z-10 flex h-full w-full flex-row gap-6">
           <div className="flex flex-row items-center justify-center gap-4">
             <Button onClick={handleSetToday}>Today</Button>

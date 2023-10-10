@@ -53,7 +53,7 @@ const Sidebar: React.FC<Props> = ({ className }) => {
     <>
       {sessionData && (
         <div
-          className={clsx('relative z-10 flex h-full shrink-0', {
+          className={clsx('relative flex h-full shrink-0', {
             'w-60 animate-sidebarExpanding': sidebar,
             'w-10 animate-sidebarShrinking':
               !sidebar && currentCalendarView === 'Month',
@@ -64,7 +64,7 @@ const Sidebar: React.FC<Props> = ({ className }) => {
           <div
             onClick={() => setSidebar(!sidebar)}
             className={clsx(
-              'absolute left-0 top-2 z-[99] flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-transform',
+              'absolute left-0 top-2 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-transform',
               {
                 'translate-x-[12.5rem]': sidebar,
                 'translate-x-1': !sidebar,
@@ -93,7 +93,7 @@ const Sidebar: React.FC<Props> = ({ className }) => {
           </div>
           <div
             className={clsx(
-              'absolute -left-60 top-0 z-50 flex h-full w-60 flex-col items-center gap-1 overflow-y-auto p-2 transition-transform duration-100',
+              'absolute -left-60 top-0 flex h-full w-60 flex-col items-center gap-1 overflow-y-auto p-2 transition-transform duration-100',
               { 'translate-x-60': sidebar, 'translate-x-0': !sidebar },
               className
             )}
