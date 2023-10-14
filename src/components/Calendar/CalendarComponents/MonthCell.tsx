@@ -49,7 +49,7 @@ const MonthCell: React.FC<Props> = ({
 
   return (
     <div className="relative flex h-fit w-max flex-col items-center justify-center gap-1">
-      <div className="flex h-fit w-full flex-row items-center justify-between pl-2 text-sm font-semibold">
+      <div className="flex h-fit w-full flex-row items-center justify-between pl-2 text-sm font-medium">
         {sidebar ? (
           <>
             {format(monthDate, 'MMMM yyyy')}

@@ -1,14 +1,12 @@
 import Head from 'next/head'
 
-import { signIn, useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import useStore from '~/store/useStore'
 import clsx from 'clsx'
 import Button from '~/components/Button'
-import MenuButton from '~/components/Menu/MenuButton'
 
 export default function Home() {
   const [isDarkTheme] = useStore((state) => [state.isDarkTheme])
-  const { data: sessionData } = useSession()
   return (
     <>
       <Head>

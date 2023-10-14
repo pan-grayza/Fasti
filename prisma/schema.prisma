@@ -69,13 +69,13 @@ model VerificationToken {
 }
 
 model Calendar {
-  id           String      @id @default(cuid())
-  calendarName String
-  dayEvents    dayEvent[]
-  timeEvents   timeEvent[]
-  hostId       String
+  id         String      @id @default(cuid())
+  name       String
+  dayEvents  dayEvent[]
+  timeEvents timeEvent[]
 
-  host User @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  host   User   @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  hostId String
 }
 
 model timeEvent {
@@ -96,30 +96,22 @@ model dayEvent {
 }
 
 model Journal {
-  id           String     @id @default(cuid())
-  calendarName String
-  dayTopics    dayTopic[]
-  hostId       String
+  id       String    @id @default(cuid())
+  name     String
+  dayNotes dayNote[]
 
-  host User @relation(fields: [hostId], references: [id], onDelete: Cascade)
-}
-
-model dayTopic {
-  id        String    @id @default(cuid())
-  date      DateTime
-  dayNotes  dayNote[]
-  journalId String
-
-  journal Journal @relation(fields: [journalId], references: [id], onDelete: Cascade)
+  host   User   @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  hostId String
 }
 
 model dayNote {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
+  date      DateTime
   name      String
   content   String
 
-  dayTopicId String
-  dayTopic   dayTopic @relation(fields: [dayTopicId], references: [id], onDelete: Cascade)
+  journal   Journal @relation(fields: [journalId], references: [id], onDelete: Cascade)
+  journalId String
 }

@@ -129,7 +129,7 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                         setSelectedCalendar(calendar)
                     }}
                   >
-                    <p>{calendar.calendarName}</p>
+                    <p>{calendar.name}</p>
                     <button
                       onClick={() => {
                         deleteCalendar.mutate({ id: calendar.id })
@@ -217,6 +217,10 @@ const Sidebar: React.FC<Props> = ({ className }) => {
                         createCalendar.mutate({
                           name: e.currentTarget.value,
                         })
+                        e.currentTarget.value = ''
+                        setIsCreatingCalendar(false)
+                      }
+                      if (e.key === 'Escape') {
                         e.currentTarget.value = ''
                         setIsCreatingCalendar(false)
                       }

@@ -262,7 +262,7 @@ const TimeEvent: React.FC<Props> = ({
               onChange={(e) => setName(e.target.value)}
               value={name}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' || e.key === 'Escape') {
                   finishUpdating()
                 }
               }}

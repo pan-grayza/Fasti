@@ -226,6 +226,10 @@ const TimeEventCreator: React.FC<Props> = ({
               if (e.key === 'Enter') {
                 finishCreating()
               }
+              if (e.key === 'Escape') {
+                setName('')
+                setCreatingEventNow(false)
+              }
             }}
             className={clsx('relative w-48 rounded p-1 focus:outline-none', {
               'bg-lightThemeSecondaryBG': !isDarkTheme,

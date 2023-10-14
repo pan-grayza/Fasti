@@ -6,6 +6,7 @@ interface Props extends React.PropsWithChildren {
   className?: React.HTMLProps<HTMLElement>['className']
   size?: 'sm' | 'md' | 'lg'
   type?: 'button' | 'reset' | 'submit' | undefined
+  disabled?: boolean
 }
 
 const Button: React.FC<Props> = ({
@@ -13,15 +14,17 @@ const Button: React.FC<Props> = ({
   className,
   size = 'sm',
   type = 'button',
+  disabled = false,
   children,
 }) => (
   <button
     type={type}
     onClick={onClick}
+    disabled={disabled}
     className={clsx(
       'rounded bg-blue-600 text-white active:bg-blue-700',
       {
-        'px-4 py-1.5 text-sm ': size === 'sm',
+        'px-4 py-1.5 text-sm': size === 'sm',
         'px-6 py-2 text-base': size === 'md',
         'px-8 py-2.5 text-lg': size === 'lg',
       },

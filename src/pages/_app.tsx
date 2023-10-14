@@ -22,7 +22,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <div
         className={clsx(
-          'relative flex h-screen w-screen flex-col font-roboto transition-colors',
+          'relative flex h-screen w-screen flex-col overflow-hidden font-roboto transition-colors',
           {
             'bg-lightThemeBG text-lightThemeText': !isDarkTheme,
             'bg-darkThemeBG text-darkThemeText': isDarkTheme,
