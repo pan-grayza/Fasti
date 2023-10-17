@@ -8,13 +8,10 @@ import Noteslist from '../JournalComponents/Noteslist'
 import CreatorModal from '../CreatorModal'
 
 const JournalSidebar = () => {
-  const [creatingWithModal, setCreatingWithModal, isDarkTheme, setMenu] =
-    useStore((state) => [
-      state.creatingWithModal,
-      state.setCreatingWithModal,
-      state.isDarkTheme,
-      state.setMenu,
-    ])
+  const [isDarkTheme, setMenu] = useStore((state) => [
+    state.isDarkTheme,
+    state.setMenu,
+  ])
   const [currentView, setCurrentView] = useState<'Journals' | 'Notes'>(
     'Journals'
   )
@@ -108,7 +105,6 @@ const JournalSidebar = () => {
           Calendar
         </button>
       </div>
-      {(creatingWithModal === 'Journal' || 'Note') && <CreatorModal />}
     </div>
   )
 }

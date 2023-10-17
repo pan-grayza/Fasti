@@ -1,18 +1,23 @@
 import clsx from 'clsx'
-import { startOfDay } from 'date-fns'
-import React, { useState } from 'react'
+import React from 'react'
 import useStore from '~/store/useStore'
 
 import { api } from '~/utils/api'
 
 const Noteslist = () => {
-  const [selectedJournal, selectedNote, setSelectedNote, isDarkTheme] =
-    useStore((state) => [
-      state.selectedJournal,
-      state.selectedNote,
-      state.setSelectedNote,
-      state.isDarkTheme,
-    ])
+  const [
+    selectedJournal,
+    selectedNote,
+    setSelectedNote,
+    setCreatingWithModal,
+    isDarkTheme,
+  ] = useStore((state) => [
+    state.selectedJournal,
+    state.selectedNote,
+    state.setSelectedNote,
+    state.setCreatingWithModal,
+    state.isDarkTheme,
+  ])
 
   //API stuff
   const { data: dayNotes, refetch: refetchDayNotes } =
@@ -24,31 +29,13 @@ const Noteslist = () => {
         },
       }
     )
-  const createDayNote = api.dayNote.create.useMutation({
-    onSuccess: () => {
-      void refetchDayNotes()
-    },
-  })
 
   const deleteDayNote = api.dayNote.delete.useMutation({
     onSuccess: () => {
       void refetchDayNotes()
     },
   })
-  // Creating Note
-  const [isCreatingDayNote, setIsCreatingDayNote] = useState(false)
-  const [name, setName] = useState('')
-  const finishCreatingDayNote = () => {
-    if (name === '') setName('Note')
-    setIsCreatingDayNote(false)
-    createDayNote.mutate({
-      date: startOfDay(new Date()),
-      journalId: selectedJournal?.id ?? '',
-      name: name,
-      content: '',
-    })
-    setName('')
-  }
+
   return (
     <div className="relative flex h-full w-full flex-col gap-2 px-1 py-2">
       <div className="relative flex w-full flex-col items-center justify-center">
@@ -56,16 +43,15 @@ const Noteslist = () => {
           className={clsx(
             'relative flex w-full items-center justify-center rounded border-2 border-dashed px-2 py-1 text-sm font-light',
             {
-              invisible: isCreatingDayNote,
               'border-lightThemeBorder': !isDarkTheme,
               'border-darkThemeBorder': isDarkTheme,
             }
           )}
-          onClick={() => setIsCreatingDayNote(true)}
+          onClick={() => setCreatingWithModal('Note')}
         >
           Create Note
         </button>
-        {isCreatingDayNote && (
+        {/* {isCreatingDayNote && (
           <div className="absolute inset-0 flex w-full flex-col px-2">
             <input
               onChange={(e) => setName(e.target.value)}
@@ -101,7 +87,7 @@ const Noteslist = () => {
               </button>
             </div>
           </div>
-        )}
+        )} */}
       </div>
       <div className="relative flex h-fit w-full flex-col gap-1 overflow-y-auto">
         {dayNotes?.map((dayNote, index) => {

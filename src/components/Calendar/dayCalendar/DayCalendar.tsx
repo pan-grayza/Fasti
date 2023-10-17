@@ -11,7 +11,7 @@ const DayCalendar = () => {
   return (
     <div className="relative flex h-full w-full flex-col">
       <div className="relative flex w-fit flex-col items-center justify-center px-16 py-4">
-        <DayCell date={currentDate} size="md" dayAbr />
+        <DayCell date={currentDate} size="lg" dayAbr />
       </div>
       <Schedule date={currentDate} />
     </div>

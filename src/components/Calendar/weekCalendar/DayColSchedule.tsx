@@ -23,8 +23,8 @@ const DayColSchedule: React.FC<Props> = ({ className }) => {
         return (
           <div
             className={clsx('relative inset-0 h-[60px] w-full border-b', {
-              'border-lightThemeBorder bg-lightThemeBG': !isDarkTheme,
-              'border-darkThemeBorder bg-darkThemeBG/10': isDarkTheme,
+              'border-lightThemeBorder bg-lightThemeDarkerBG': !isDarkTheme,
+              'border-darkThemeBorder bg-darkThemeSecondaryBG': isDarkTheme,
             })}
             key={index}
           ></div>

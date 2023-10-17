@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { useSession } from 'next-auth/react'
 import useStore from '~/store/useStore'
@@ -7,13 +7,17 @@ import clsx from 'clsx'
 
 const JournalList = () => {
   const { data: sessionData } = useSession()
-  const [selectedJournal, setSelectedJournal, isDarkTheme] = useStore(
-    (state) => [
-      state.selectedJournal,
-      state.setSelectedJournal,
-      state.isDarkTheme,
-    ]
-  )
+  const [
+    selectedJournal,
+    setSelectedJournal,
+    setCreatingWithModal,
+    isDarkTheme,
+  ] = useStore((state) => [
+    state.selectedJournal,
+    state.setSelectedJournal,
+    state.setCreatingWithModal,
+    state.isDarkTheme,
+  ])
   //API stuff
   const { data: journals, refetch: refetchJournals } =
     api.journal.getAll.useQuery(undefined, {
@@ -42,16 +46,6 @@ const JournalList = () => {
       void refetchJournals()
     },
   })
-  // Creating Journal
-  const [isCreatingJournal, setIsCreatingJournal] = useState(false)
-  const [name, setName] = useState('')
-  const finishCreatingJournal = () => {
-    if (name === '') setName('Note')
-    setIsCreatingJournal(false)
-    createJournal.mutate({
-      name: name,
-    })
-  }
   return (
     <div className="relative flex h-full w-full flex-col gap-2 px-1 py-2">
       <div className="relative z-10 flex w-full items-center justify-center">
@@ -59,48 +53,14 @@ const JournalList = () => {
           className={clsx(
             'relative flex w-full items-center justify-center rounded border-2 border-dashed px-2 py-1 text-sm font-light',
             {
-              invisible: isCreatingJournal,
               'border-lightThemeBorder': !isDarkTheme,
               'border-darkThemeBorder': isDarkTheme,
             }
           )}
-          onClick={() => setIsCreatingJournal(true)}
+          onClick={() => setCreatingWithModal('Journal')}
         >
           Create Journal
         </button>
-        {isCreatingJournal && (
-          <div className="absolute inset-0 flex w-full flex-col px-2">
-            <input
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-              autoFocus
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  finishCreatingJournal()
-                }
-              }}
-              className="relative rounded px-1"
-              type="text"
-            />
-            <div className="relative flex w-full flex-row items-start gap-2">
-              <button
-                onClick={() => {
-                  setName('')
-                  setIsCreatingJournal(false)
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  finishCreatingJournal()
-                }}
-              >
-                Create
-              </button>
-            </div>
-          </div>
-        )}
       </div>
       <div className="relative flex h-fit w-full flex-col gap-1 overflow-y-auto">
         {journals?.map((journal, index) => {

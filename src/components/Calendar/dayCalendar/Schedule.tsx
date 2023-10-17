@@ -132,8 +132,9 @@ const Schedule: React.FC<Props> = ({ className, date }) => {
             return (
               <div
                 className={clsx('relative h-[60px] w-full border-b', {
-                  'border-lightThemeBorder bg-lightThemeBG': !isDarkTheme,
-                  'border-darkThemeBorder bg-darkThemeBG/10': isDarkTheme,
+                  'border-lightThemeBorder bg-lightThemeDarkerBG': !isDarkTheme,
+                  'bg-darkThemeLigherBG border-darkThemeSecondaryBG':
+                    isDarkTheme,
                 })}
                 key={index}
               ></div>

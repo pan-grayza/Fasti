@@ -13,7 +13,6 @@ const CalendarSidebar = () => {
     setSelectedCalendar,
     currentCalendarView,
     setCurrentCalendarView,
-    creatingWithModal,
     setCreatingWithModal,
     isDarkTheme,
     setMenu,
@@ -22,7 +21,6 @@ const CalendarSidebar = () => {
     state.setSelectedCalendar,
     state.currentCalendarView,
     state.setCurrentCalendarView,
-    state.creatingWithModal,
     state.setCreatingWithModal,
     state.isDarkTheme,
     state.setMenu,
@@ -188,121 +186,38 @@ const CalendarSidebar = () => {
             )
           })}
           {/* Calendar Cretor */}
-          <div className="relative flex h-8 w-full flex-col">
-            <div
-              onClick={() => setCreatingWithModal('Calendar')}
-              className={clsx(
-                'relative flex h-8 w-full cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed px-2 py-1 transition ',
-                {
-                  'hover:lightThemeHover border-gray-700 text-gray-700':
-                    !isDarkTheme,
-                  'hover:darkThemeHover border-gray-300 text-gray-300':
-                    isDarkTheme,
-                }
-              )}
-            >
-              <div className="text-gray relative mb-1 flex items-center justify-center text-lg">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  className="h-4 w-4"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-              </div>
+          <div
+            onClick={() => setCreatingWithModal('Calendar')}
+            className={clsx(
+              'relative flex h-8 w-full cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed px-2 py-1 transition ',
+              {
+                'hover:lightThemeHover border-gray-700 text-gray-700':
+                  !isDarkTheme,
+                'hover:darkThemeHover border-gray-300 text-gray-300':
+                  isDarkTheme,
+              }
+            )}
+          >
+            <div className="text-gray relative mb-1 flex items-center justify-center text-lg">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                stroke="currentColor"
+                className="h-4 w-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
             </div>
           </div>
         </div>
       </div>
-      {creatingWithModal === 'Calendar' && (
-        <div
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setCreatingWithModal(false)
-            }
-          }}
-          className="absolute inset-0 z-10 flex h-screen w-screen flex-row items-center justify-center bg-black/50 transition"
-        >
-          <div
-            className={clsx(
-              'relative flex h-fit max-h-screen w-fit max-w-[100vw] flex-col items-center justify-center gap-4 rounded p-4 transition md:p-6',
-              {
-                'bg-lightThemeBG': !isDarkTheme,
-                'bg-darkThemeBG': isDarkTheme,
-              }
-            )}
-          >
-            <div className="relative flex h-fit w-full flex-col gap-2">
-              <p className="relative w-full">Create Calendar</p>
-              <input
-                autoFocus
-                id="newCalendarInput"
-                className={clsx(
-                  'relative inset-0 rounded border-2 px-1 py-1 focus:outline-none',
-                  {
-                    'border-zinc-500 bg-lightThemeBG text-lightThemeText focus:border-blue-600':
-                      !isDarkTheme,
-                    'border-zinc-400 bg-darkThemeBG text-darkThemeText focus:border-blue-500':
-                      isDarkTheme,
-                  }
-                )}
-                type="text"
-                placeholder="Calendar name"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    createCalendar.mutate({
-                      name: e.currentTarget.value,
-                    })
-                    e.currentTarget.value = ''
-                    setCreatingWithModal(false)
-                  }
-                  if (e.key === 'Escape') {
-                    e.currentTarget.value = ''
-                    setCreatingWithModal(false)
-                  }
-                }}
-              />
-            </div>
 
-            <div className="relative z-10 flex w-full flex-row items-center gap-2 text-white">
-              <button
-                onClick={() => {
-                  const input = document.getElementById(
-                    'newCalendarInput'
-                  ) as HTMLInputElement
-                  createCalendar.mutate({
-                    name: input.value,
-                  })
-                  input.value = ''
-                  setCreatingWithModal(false)
-                }}
-                className="relative rounded bg-blue-400 px-4 py-2 text-sm font-semibold transition active:bg-blue-500"
-              >
-                Create
-              </button>
-              <button
-                onClick={() => {
-                  const input = document.getElementById(
-                    'newCalendarInput'
-                  ) as HTMLInputElement
-                  input.value = ''
-                  setCreatingWithModal(false)
-                }}
-                className="rounded bg-red-400 px-4 py-2 text-sm font-semibold  transition active:bg-red-500"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       <div
         className={clsx('relative flex h-fit w-full flex-col px-1 pb-4 pt-2')}
       >

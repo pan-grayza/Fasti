@@ -48,8 +48,8 @@ const DayCell: React.FC<Props> = ({
           {
             'h-6 w-6': size === 'xs',
             'h-8 w-8': size === 'sm',
-            'h-12 w-12': size === 'md',
-            'h-16 w-16': size === 'lg',
+            'h-10 w-10': size === 'md',
+            'h-12 w-12': size === 'lg',
           },
           className
         )}
@@ -69,8 +69,8 @@ const DayCell: React.FC<Props> = ({
                 !isCurrentDate && !isToday && isDarkTheme,
               'h-7 w-7 text-xs': size === 'xs',
               'h-8 w-8 text-sm': size === 'sm',
-              'h-12 w-12 text-xl': size === 'md',
-              'h-16 w-16 text-2xl font-semibold': size === 'lg',
+              'h-10 w-10 text-lg': size === 'md',
+              'h-12 w-12 text-xl': size === 'lg',
             }
           )}
         >

@@ -7,9 +7,11 @@ import MenuButton from './MenuButton'
 import { useSession } from 'next-auth/react'
 import CalendarSidebar from './CalendarSidebar'
 import JournalSidebar from './JournalSidebar'
+import CreatorModal from '../CreatorModal'
 
 const Menu = () => {
-  const [isDarkTheme, menu, setMenu] = useStore((state) => [
+  const [creatingWithModal, isDarkTheme, menu, setMenu] = useStore((state) => [
+    state.creatingWithModal,
     state.isDarkTheme,
     state.menu,
     state.setMenu,
@@ -36,6 +38,9 @@ const Menu = () => {
         if (e.target === e.currentTarget) setMenu(false)
       }}
     >
+      {(creatingWithModal === 'Journal' ||
+        creatingWithModal === 'Note' ||
+        creatingWithModal === 'Calendar') && <CreatorModal />}
       <div
         className={clsx('relative h-fit w-fit transition-transform', {
           'translate-x-[0%]': menu,
