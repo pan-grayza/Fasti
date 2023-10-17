@@ -13,7 +13,7 @@ const DayCol: React.FC<Props> = ({ className, date }) => {
     <div
       className={clsx('relative flex items-center justify-center', className)}
     >
-      <div className="relative flex w-fit flex-col items-center justify-center px-16 py-4">
+      <div className="relative flex h-full w-full flex-col items-center justify-center">
         <DayCell date={date} size="md" dayAbr />
       </div>
     </div>

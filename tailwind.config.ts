@@ -26,30 +26,24 @@ export default {
         accent: 'rgb(37 99 235)', // #2563EB
       },
       animation: {
-        sidebarShrinking: 'sidebarShrinkingKeyframes 100ms ease-in-out',
-        sidebarExpanding: 'sidebarExpandingKeyframes 100ms ease-in-out',
-        svgLineAnimation: 'svgLineAnimationKeyframe 5s linear',
+        fadeIn: 'fadeInKeyframes 150ms forwards ease-out',
+        fadeOut: 'fadeOutKeyframes 150ms forwards ease-out',
       },
       keyframes: {
-        svgLineAnimationKeyframe: {
+        fadeOutKeyframes: {
+          from: {
+            opacity: '1',
+          },
           to: {
-            strokeDashOffset: '0',
+            opacity: '0',
           },
         },
-        sidebarShrinkingKeyframes: {
-          '0%': {
-            width: '15rem',
+        fadeInKeyframes: {
+          from: {
+            opacity: '0',
           },
-          '100%': {
-            width: '2rem',
-          },
-        },
-        sidebarExpandingKeyframes: {
-          '0%': {
-            width: '2rem',
-          },
-          '100%': {
-            width: '15rem',
+          to: {
+            opacity: '1',
           },
         },
       },

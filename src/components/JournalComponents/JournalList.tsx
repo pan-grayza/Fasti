@@ -102,7 +102,7 @@ const JournalList = () => {
           </div>
         )}
       </div>
-      <div className="relative flex h-fit w-full flex-col gap-1">
+      <div className="relative flex h-fit w-full flex-col gap-1 overflow-y-auto">
         {journals?.map((journal, index) => {
           return (
             <div

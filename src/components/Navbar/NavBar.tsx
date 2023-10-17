@@ -7,6 +7,7 @@ import ArrowButton from '../ArrowButton'
 import DropDown from './DropDown'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 
 const NavBar = () => {
   const [
@@ -27,6 +28,7 @@ const NavBar = () => {
     state.setMenu,
   ])
   const { data: session } = useSession()
+
   const { asPath } = useRouter()
 
   const handleSetToday = () => setCurrentDate(startOfDay(new Date()))
@@ -55,7 +57,7 @@ const NavBar = () => {
   return (
     <div
       className={clsx(
-        'relative flex h-14 w-full flex-row items-center gap-6 border-b p-4 transition-colors',
+        'relative flex h-14 w-full flex-row items-center gap-4 border-b p-4 transition-colors md:gap-6',
         {
           'border-lightThemeBorder': !isDarkTheme,
           'border-darkThemeBorder': isDarkTheme,
@@ -63,7 +65,7 @@ const NavBar = () => {
       )}
     >
       <div
-        onClick={() => setMenu(!menu)}
+        onClick={() => setMenu(true)}
         className="relative flex cursor-pointer items-center justify-center p-1"
       >
         <svg
@@ -82,7 +84,7 @@ const NavBar = () => {
         </svg>
       </div>
 
-      <div className="relative w-24">
+      <div className="hidden w-24 md:relative">
         <p
           className={clsx('text-lg font-bold tracking-wide', {
             'text-darkThemeText': isDarkTheme,
@@ -94,84 +96,53 @@ const NavBar = () => {
       </div>
 
       {asPath === '/calendar' && (
-        <div className="relative z-10 flex h-full w-full flex-row gap-6">
-          <div className="flex flex-row items-center justify-center gap-4">
+        <div className="relative z-10 flex h-full w-full flex-row items-center justify-between md:gap-6">
+          <div className="relative flex flex-row items-center justify-center gap-1 md:gap-4">
             <Button onClick={handleSetToday}>Today</Button>
             <div className="flex items-center">
               <ArrowButton onClick={() => goPrev()} direction="left" />
               <ArrowButton onClick={() => goNext()} direction="right" />
             </div>
 
-            <p className="text-lg">
-              {currentCalendarView === 'Year' && format(currentDate, 'yyyy')}
+            <p className="relative w-max text-base md:text-lg">
+              <span className="text-base">
+                {currentCalendarView === 'Year' && format(currentDate, 'yyyy')}
+              </span>
               {currentCalendarView === 'Month' &&
                 format(currentDate, 'LLLL yyyy')}
               {currentCalendarView === 'Week' &&
                 format(currentDate, 'LLLL yyyy')}
-              {currentCalendarView === 'Day' &&
-                format(currentDate, 'dd LLLL yyyy')}
+              {currentCalendarView === 'Day' && format(currentDate, 'dd LLLL')}
             </p>
+            <div className="hidden md:relative">
+              <DropDown />
+            </div>
           </div>
 
-          <DropDown />
-        </div>
-      )}
-      <button
-        onClick={() => setIsDarkTheme(!isDarkTheme)}
-        className="relative flex h-8 w-8 items-center justify-center"
-      >
-        {isDarkTheme ? (
-          // Sun
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gray-50">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="h-6 w-6 text-yellow-400"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
-              />
-            </svg>
+          <div className="relative flex items-center justify-center">
+            {!session && (
+              <div className="relative flex h-full w-full flex-row items-center justify-center gap-4">
+                <Button
+                  onClick={() =>
+                    void signIn(undefined, { callbackUrl: '/calendar' })
+                  }
+                >
+                  Sign in
+                </Button>
+              </div>
+            )}
+            {session?.user.image && (
+              <div className="relative flex h-8 w-8 shrink-0 items-center justify-center">
+                <Image
+                  width={32}
+                  height={32}
+                  src={session.user.image}
+                  alt="Picture of the user"
+                  className="rounded-full"
+                />
+              </div>
+            )}
           </div>
-        ) : (
-          // Moon
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gray-800">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="h-6 w-6 text-yellow-100"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
-              />
-            </svg>
-          </div>
-        )}
-      </button>
-
-      {!session && (
-        <div className="relative flex h-full w-full flex-row items-center justify-end gap-4">
-          <button
-            onClick={() => void signIn(undefined, { callbackUrl: '/calendar' })}
-          >
-            Sign in
-          </button>
-        </div>
-      )}
-      {session && (
-        <div className="relative flex h-full w-full flex-row items-center justify-end gap-4">
-          Signed in as {session.user?.name}
-          <button onClick={() => void signOut()}>Sign Out</button>
         </div>
       )}
     </div>

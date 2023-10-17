@@ -7,7 +7,6 @@ import DayCalendar from '~/components/Calendar/dayCalendar/DayCalendar'
 import useStore from '~/store/useStore'
 import { useSession } from 'next-auth/react'
 import { api, type RouterOutputs } from '~/utils/api'
-import Sidebar from '~/components/Calendar/CalendarComponents/Sidebar'
 
 type Calendar = RouterOutputs['calendar']['getAll'][0]
 
@@ -20,7 +19,6 @@ const Calendar = () => {
     setCurrentCalendarView,
     selectedCalendar,
     setSelectedCalendar,
-    sidebar,
   ] = useStore((state) => [
     state.currentCalendarView,
     state.setCurrentCalendarView,
@@ -54,7 +52,6 @@ const Calendar = () => {
 
   return (
     <div className="relative flex h-full w-full flex-row overflow-hidden">
-      <Sidebar />
       <div className="relative flex h-full w-full transition">
         {currentCalendarView === 'Year' && <YearCalendar />}
         {currentCalendarView === 'Month' && <MonthCalendar />}

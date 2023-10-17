@@ -70,14 +70,14 @@ const WeekCalendar = () => {
   return (
     <div className="relative flex h-full w-full flex-row">
       <div className="relative flex h-full w-full flex-col">
-        <div className="relative grid h-24 w-full grid-cols-7 pl-16">
+        <div className="relative grid h-24 w-full shrink-0 grid-cols-7 pl-12 md:pl-16">
           {Array.from({ length: 7 }).map((_, index) => {
             const date = add(startOfCurrentWeek, { days: index })
             return <DayCol key={index} date={date} />
           })}
         </div>
         <div className="relative flex h-fit w-full flex-row overflow-auto">
-          <div className="relative grid h-fit w-16 auto-rows-fr grid-cols-1 pr-2 pt-[30px]">
+          <div className="relative grid h-fit w-12 shrink-0 auto-rows-fr grid-cols-1 pr-2 pt-[30px] md:w-16">
             {Array.from({ length: 24 }).map((_, index) => {
               const time = format(
                 add(startOfCurrentWeek, { hours: index + 1 }),

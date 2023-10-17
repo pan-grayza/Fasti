@@ -28,7 +28,6 @@ export const dayNoteRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         content: z.string(),
-        date: z.date(),
         journalId: z.string(),
       })
     )
@@ -37,7 +36,6 @@ export const dayNoteRouter = createTRPCRouter({
         data: {
           name: input.name,
           content: input.content,
-          date: input.date,
           journalId: input.journalId,
         },
       })

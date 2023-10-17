@@ -20,18 +20,20 @@ const ArrowButton: React.FC<Props> = ({
 }) => {
   const [isDarkTheme] = useStore((state) => [state.isDarkTheme])
   return (
-    <div>
+    <div
+      onClick={() => onClick()}
+      className="group h-fit w-fit cursor-pointer p-1"
+    >
       <button
         disabled={disabled}
         className={clsx(
           'flex items-center justify-center rounded-full bg-gray-200/0 p-1 transition',
           {
-            'hover:bg-darkThemeHover': isDarkTheme,
-            'hover:bg-lightThemeHover': !isDarkTheme,
+            'group-hover:bg-darkThemeHover': isDarkTheme,
+            'group-hover:bg-lightThemeHover': !isDarkTheme,
           },
           className
         )}
-        onClick={() => onClick()}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

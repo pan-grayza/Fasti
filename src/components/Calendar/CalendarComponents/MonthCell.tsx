@@ -53,7 +53,7 @@ const MonthCell: React.FC<Props> = ({
         {sidebar ? (
           <>
             {format(monthDate, 'MMMM yyyy')}
-            <div className="relative flex items-center gap-2">
+            <div className="relative -mr-1 flex items-center gap-1">
               <ArrowButton
                 size={size}
                 onClick={() => goPrev()}
