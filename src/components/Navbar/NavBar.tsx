@@ -4,7 +4,6 @@ import Button from '../Button'
 import useStore from '~/store/useStore'
 import { format, sub, add, startOfDay } from 'date-fns'
 import ArrowButton from '../ArrowButton'
-import DropDown from './DropDown'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
@@ -110,9 +109,6 @@ const NavBar = () => {
                 {currentCalendarView === 'Day' &&
                   format(currentDate, 'dd LLLL')}
               </p>
-              <div className="hidden md:relative">
-                <DropDown />
-              </div>
             </div>
           </div>
         )}
