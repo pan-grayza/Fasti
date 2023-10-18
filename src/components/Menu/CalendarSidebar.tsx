@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
-import React, { useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/navigation'
 
 import useStore from '~/store/useStore'
@@ -161,7 +161,7 @@ const CalendarSidebar = () => {
                       'group-hover:visible': calendars.length > 1,
                       invisible:
                         JSON.stringify(selectedCalendar) !==
-                        JSON.stringify(calendar),
+                          JSON.stringify(calendar) || calendars.length >= 1,
                       'text-lightThemeText': !isDarkTheme,
                       'text-darkThemeText': isDarkTheme,
                     }
@@ -208,8 +208,8 @@ const CalendarSidebar = () => {
                 className="h-4 w-4"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M12 4.5v15m7.5-7.5h-15"
                 />
               </svg>

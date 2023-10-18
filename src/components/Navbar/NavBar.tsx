@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSession, signIn } from 'next-auth/react'
 import Button from '../Button'
 import useStore from '~/store/useStore'
 import { format, sub, add, startOfDay } from 'date-fns'
@@ -15,16 +15,12 @@ const NavBar = () => {
     setCurrentDate,
     currentCalendarView,
     isDarkTheme,
-    setIsDarkTheme,
-    menu,
     setMenu,
   ] = useStore((state) => [
     state.currentDate,
     state.setCurrentDate,
     state.currentCalendarView,
     state.isDarkTheme,
-    state.setIsDarkTheme,
-    state.menu,
     state.setMenu,
   ])
   const { data: session } = useSession()
@@ -98,17 +94,19 @@ const NavBar = () => {
 
         {asPath === '/calendar' && (
           <div className="relative z-10 flex h-full w-full flex-row items-center justify-between md:gap-6">
-            <div className="relative flex flex-row items-center justify-center gap-1 md:gap-4">
+            <div className="relative flex flex-row items-center justify-center gap-4">
               <Button onClick={handleSetToday}>Today</Button>
-              <div className="flex items-center">
+              <div className="hidden items-center md:flex">
                 <ArrowButton onClick={() => goPrev()} direction="left" />
                 <ArrowButton onClick={() => goNext()} direction="right" />
               </div>
 
-              <p className="relative w-max md:text-lg">
+              <p className="relative flex h-fit w-fit flex-row items-center justify-center md:text-lg">
                 {currentCalendarView === 'Year' && format(currentDate, 'yyyy')}
-                {currentCalendarView === 'Month' && format(currentDate, 'LLLL')}
-                {currentCalendarView === 'Week' && format(currentDate, 'LLLL')}
+                {currentCalendarView === 'Month' &&
+                  format(currentDate, 'LLLL yyyy')}
+                {currentCalendarView === 'Week' &&
+                  format(currentDate, 'LLLL yyyy')}
                 {currentCalendarView === 'Day' &&
                   format(currentDate, 'dd LLLL')}
               </p>

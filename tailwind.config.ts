@@ -49,5 +49,5 @@ export default {
       },
     },
   },
-  plugins: [require('tailwindcss-3d')],
+  plugins: [require('tailwindcss-3d'), require('tailwind-scrollbar-hide')],
 } satisfies Config

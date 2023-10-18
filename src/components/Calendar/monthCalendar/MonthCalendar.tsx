@@ -14,6 +14,7 @@ import DateCell from './DateCell'
 import useStore from '~/store/useStore'
 import { api } from '~/utils/api'
 import clsx from 'clsx'
+import { useEffect } from 'react'
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 interface Props {
@@ -21,12 +22,82 @@ interface Props {
 }
 
 const MonthCalendar: React.FC<Props> = ({ className }) => {
-  const [currentDate, selectedCalendar, isDarkTheme] = useStore((state) => [
+  const [currentDate, setCurrentDate] = useStore((state) => [
+    state.currentDate,
+    state.setCurrentDate,
+  ])
+
+  // Scroll handling
+
+  const onScrollEnd = () => {
+    const monthContainer = document.getElementById('monthContainer')
+    const scrollX = monthContainer?.scrollLeft
+
+    if ((scrollX ?? window.innerWidth) < window.innerWidth) {
+      setCurrentDate(sub(currentDate, { months: 1 }))
+    } else if ((scrollX ?? window.innerWidth) >= window.innerWidth * 2) {
+      setCurrentDate(add(currentDate, { months: 1 }))
+    }
+    monthContainer?.scrollTo(window.innerWidth, 0)
+  }
+
+  useEffect(() => {
+    document
+      .getElementById('monthContainer')
+      ?.addEventListener('scrollend', onScrollEnd)
+    return () => {
+      document
+        .getElementById('monthContainer')
+        ?.removeEventListener('scrollend', onScrollEnd)
+    }
+  })
+  //Date stuff
+
+  const startDate = startOfMonth(currentDate)
+  const endDate = endOfMonth(currentDate)
+  const numOfDays = differenceInDays(endDate, startDate) + 1
+
+  const prefixDays = startDate.getDay()
+  const suffixDays = 6 - endDate.getDay()
+
+  const prevMonth = sub(currentDate, { months: 1 })
+  const nextMonth = add(currentDate, { months: 1 })
+  const lastDayOfPervMonth = parseInt(format(endOfMonth(prevMonth), 'dd'))
+
+  return (
+    <div
+      className={clsx(
+        'relative flex h-full w-full flex-row items-center justify-center transition-colors',
+        className
+      )}
+    >
+      <div
+        id="monthContainer"
+        className="relative flex h-full w-[300vw] snap-x snap-mandatory flex-row overflow-x-auto scrollbar-hide"
+      >
+        {Array.from({ length: 3 }).map((elem, index) => {
+          return (
+            <div
+              key={index}
+              id={index === 1 ? 'mainMonth' : undefined}
+              className="relative h-full w-screen shrink-0 snap-center"
+            >
+              <MonthPage index={index} />
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+const MonthPage = ({ index }: { index: number }) => {
+  const [realCurrentDate, selectedCalendar, isDarkTheme] = useStore((state) => [
     state.currentDate,
     state.selectedCalendar,
     state.isDarkTheme,
   ])
-
+  const currentDate = add(realCurrentDate, { months: index - 1 })
   const startDate = startOfMonth(currentDate)
   const endDate = endOfMonth(currentDate)
   const numOfDays = differenceInDays(endDate, startDate) + 1
@@ -50,14 +121,8 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
         },
       }
     )
-
   return (
-    <div
-      className={clsx(
-        'relative flex h-full w-full flex-col transition',
-        className
-      )}
-    >
+    <div className="relative flex h-full w-full flex-col transition">
       <div className="relative grid grid-cols-7 items-center justify-center text-center">
         {days.map((day) => (
           <Cell
@@ -94,7 +159,6 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
               format(dayEvent.date, 'dd MMMM yyyy') ===
               format(date, 'dd MMMM yyyy')
           )
-          const numOfDay = index + 1
           return (
             <EventCell
               key={index}
