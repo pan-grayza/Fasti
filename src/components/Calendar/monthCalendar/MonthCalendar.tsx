@@ -51,23 +51,11 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
         ?.removeEventListener('scrollend', onScrollEnd)
     }
   })
-  //Date stuff
-
-  const startDate = startOfMonth(currentDate)
-  const endDate = endOfMonth(currentDate)
-  const numOfDays = differenceInDays(endDate, startDate) + 1
-
-  const prefixDays = startDate.getDay()
-  const suffixDays = 6 - endDate.getDay()
-
-  const prevMonth = sub(currentDate, { months: 1 })
-  const nextMonth = add(currentDate, { months: 1 })
-  const lastDayOfPervMonth = parseInt(format(endOfMonth(prevMonth), 'dd'))
 
   return (
     <div
       className={clsx(
-        'relative flex h-full w-full flex-row items-center justify-center transition-colors',
+        'relative flex h-full w-full items-center justify-center transition-colors',
         className
       )}
     >
@@ -79,7 +67,6 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
           return (
             <div
               key={index}
-              id={index === 1 ? 'mainMonth' : undefined}
               className="relative h-full w-screen shrink-0 snap-center"
             >
               <MonthPage index={index} />
