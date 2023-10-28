@@ -13,10 +13,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const [isDarkTheme, menu] = useStore((state) => [
-    state.isDarkTheme,
-    state.menu,
-  ])
+  const [isDarkTheme] = useStore((state) => [state.isDarkTheme])
 
   return (
     <SessionProvider session={session}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Schedule from './Schedule'
 import useStore from '~/store/useStore'
 import DayCell from '../CalendarComponents/DayCell'
@@ -11,18 +11,35 @@ const DayCalendar = () => {
   ])
 
   // Scroll handling
+  const scrollY = useRef<number>(0)
+
+  const calendarContainer = useRef<HTMLDivElement | null>(null)
+  const mainCalendarView = useRef<HTMLDivElement | null>(null)
+  const leftCalendarView = useRef<HTMLDivElement | null>(null)
+  const rightCalendarView = useRef<HTMLDivElement | null>(null)
 
   const onScrollEnd = () => {
-    const monthContainer = document.getElementById('calendarContainer')
-    const scrollX = monthContainer?.scrollLeft
+    const scrollX = calendarContainer?.current?.scrollLeft
 
     if ((scrollX ?? window.innerWidth) < window.innerWidth) {
       setCurrentDate(sub(currentDate, { days: 1 }))
     } else if ((scrollX ?? window.innerWidth) >= window.innerWidth * 2) {
       setCurrentDate(add(currentDate, { days: 1 }))
     }
-    monthContainer?.scrollTo(window.innerWidth, 0)
+    calendarContainer?.current?.scrollTo(window.innerWidth, 0)
   }
+
+  const onScrollY = () => {
+    scrollY.current = mainCalendarView?.current?.scrollTop ?? 0
+    if (leftCalendarView.current)
+      leftCalendarView.current.scrollTo({ top: scrollY.current })
+    if (rightCalendarView.current)
+      rightCalendarView.current.scrollTo({ top: scrollY.current })
+  }
+
+  useEffect(() => {
+    calendarContainer?.current?.scrollTo(window.innerWidth, 0)
+  }, [])
 
   useEffect(() => {
     document
@@ -37,7 +54,7 @@ const DayCalendar = () => {
   return (
     <div className="relative flex h-full w-full items-center justify-center transition-colors">
       <div
-        id="calendarContainer"
+        ref={calendarContainer}
         className="relative flex h-full w-[300vw] snap-x snap-mandatory flex-row overflow-x-auto overflow-y-hidden scrollbar-hide"
       >
         {Array.from({ length: 3 }).map((week, index) => {
@@ -53,7 +70,10 @@ const DayCalendar = () => {
                   dayAbr
                 />
               </div>
-              <Schedule date={add(currentDate, { days: index - 1 })} />
+              <Schedule
+                index={index}
+                date={add(currentDate, { days: index - 1 })}
+              />
             </div>
           )
         })}

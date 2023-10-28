@@ -14,7 +14,7 @@ import DateCell from './DateCell'
 import useStore from '~/store/useStore'
 import { api } from '~/utils/api'
 import clsx from 'clsx'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 interface Props {
@@ -28,18 +28,21 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
   ])
 
   // Scroll handling
+  const calendarContainer = useRef<HTMLDivElement | null>(null)
 
   const onScrollEnd = () => {
-    const monthContainer = document.getElementById('monthContainer')
-    const scrollX = monthContainer?.scrollLeft
+    const scrollX = calendarContainer?.current?.scrollLeft
 
     if ((scrollX ?? window.innerWidth) < window.innerWidth) {
       setCurrentDate(sub(currentDate, { months: 1 }))
     } else if ((scrollX ?? window.innerWidth) >= window.innerWidth * 2) {
       setCurrentDate(add(currentDate, { months: 1 }))
     }
-    monthContainer?.scrollTo(window.innerWidth, 0)
+    calendarContainer?.current?.scrollTo(window.innerWidth, 0)
   }
+  useEffect(() => {
+    calendarContainer?.current?.scrollTo(window.innerWidth, 0)
+  }, [])
 
   useEffect(() => {
     document
@@ -60,7 +63,7 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
       )}
     >
       <div
-        id="monthContainer"
+        ref={calendarContainer}
         className="relative flex h-full w-[300vw] snap-x snap-mandatory flex-row overflow-x-auto scrollbar-hide"
       >
         {Array.from({ length: 3 }).map((elem, index) => {

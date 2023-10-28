@@ -9,9 +9,10 @@ import TimeEventCreator from '../CalendarComponents/TimeEventCreator'
 interface Props extends React.PropsWithChildren {
   className?: string
   date: Date
+  index: number
 }
 
-const Schedule: React.FC<Props> = ({ className, date }) => {
+const Schedule: React.FC<Props> = ({ className, date, index }) => {
   //Size and position stuff
   const [dimensions, setDimensions] = useState<{
     height: number | undefined

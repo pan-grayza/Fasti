@@ -4,7 +4,11 @@
  */
 await import('./src/env.mjs')
 
+import withPWA from 'next-pwa'
+const isProduction = process.env.NODE_ENV === 'production'
+
 /** @type {import("next").NextConfig} */
+
 const config = {
   reactStrictMode: true,
   images: {
@@ -14,6 +18,12 @@ const config = {
         hostname: 'avatars.githubusercontent.com',
         port: '',
         pathname: '/u/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/a/**',
       },
     ],
   },
@@ -29,4 +39,9 @@ const config = {
   },
 }
 
-export default config
+const nextConfig = withPWA({
+  dest: 'public',
+  disable: !isProduction,
+})(config)
+
+export default nextConfig

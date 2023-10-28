@@ -23,7 +23,7 @@ export default {
         darkThemeSelected: 'rgb(59 130 246 / 0.5)', // #3b82f6/0.25
         lightThemeHover: 'rgb(212 212 216 / 0.5)', // #d4d4d8/0.5
         darkThemeHover: 'rgb(82 82 91 / 0.5)', // #a1a1aa/0.1
-        accent: 'rgb(37 99 235)', // #2563EB
+        accent: '#2563EB', // #2563EB
       },
       animation: {
         fadeIn: 'fadeInKeyframes 150ms forwards ease-out',

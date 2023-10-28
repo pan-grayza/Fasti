@@ -1,0 +1,9 @@
+{
+  "theme_color": "#2563EB",
+  "background_color": "#fafafa",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "name": "Fasti",
+  "short_name": "Fasti"
+}
