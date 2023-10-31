@@ -74,7 +74,7 @@ const WeekCalendar = () => {
   }>({ x: 0, y: 0, calendarId: selectedCalendar?.id ?? '' })
 
   // Scroll handling
-  const scrollY = useRef<number>(0)
+  const scrollY = useRef(0)
 
   const calendarContainer = useRef<HTMLDivElement | null>(null)
   const mainCalendarView = useRef<HTMLDivElement | null>(null)
@@ -129,7 +129,7 @@ const WeekCalendar = () => {
               <div className="relative flex h-full w-full flex-col">
                 {/* Decorative rectange in top left */}
                 <div
-                  className={clsx('absolute inset-0 z-10 h-24 w-12 md:w-16', {
+                  className={clsx('absolute inset-0 z-10 h-20 w-12 md:w-16', {
                     'bg-lightThemeBG': !isDarkTheme,
                     'bg-darkThemeBG': isDarkTheme,
                   })}

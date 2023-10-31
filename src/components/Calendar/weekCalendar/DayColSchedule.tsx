@@ -11,7 +11,7 @@ const DayColSchedule: React.FC<Props> = ({ className }) => {
   return (
     <div
       className={clsx(
-        'grid-rows-auto relative grid h-fit w-full auto-rows-fr grid-cols-1 border-l',
+        'grid-rows-auto pointer-events-none relative grid h-fit w-full auto-rows-fr grid-cols-1 border-l',
         {
           'border-lightThemeBorder': !isDarkTheme,
           'border-darkThemeBorder': isDarkTheme,

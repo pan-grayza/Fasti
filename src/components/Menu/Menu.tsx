@@ -58,6 +58,8 @@ const Menu = () => {
             {
               'bg-lightThemeBG': !isDarkTheme,
               'bg-darkThemeBG': isDarkTheme,
+              'translate-y-[0%]': menu,
+              'translate-y-[-100%]': !menu,
             }
           )}
         >

@@ -35,8 +35,6 @@ const Schedule: React.FC<Props> = ({ className, date, index }) => {
     }
   }, [parentGrid, dimensions])
 
-  const startOfCurrentDay = startOfDay(date)
-
   //Other states
   const [
     selectedCalendar,
@@ -77,28 +75,7 @@ const Schedule: React.FC<Props> = ({ className, date, index }) => {
   }>({ x: 0, y: 0, calendarId: selectedCalendar?.id ?? '' })
 
   return (
-    <div
-      className={clsx(
-        'relative flex h-full w-full flex-row overflow-auto',
-        className
-      )}
-    >
-      <div className="grid-rows-auto relative grid h-max w-16 auto-rows-fr grid-cols-1 pr-2 pt-[30px]">
-        {Array.from({ length: 24 }).map((_, index) => {
-          const time = format(
-            add(startOfCurrentDay, { hours: index + 1 }),
-            'h aa'
-          )
-          return (
-            <div
-              className="relative flex h-[60px] items-center justify-end text-xs"
-              key={index}
-            >
-              {time}
-            </div>
-          )
-        })}
-      </div>
+    <div className="relative flex h-full w-full flex-row overflow-auto">
       <div ref={parentGrid} className="relative h-fit w-full">
         <div
           onClick={(e) => {
@@ -128,7 +105,7 @@ const Schedule: React.FC<Props> = ({ className, date, index }) => {
             parentWidth={dimensions.width}
           />
         )}
-        <div className="relative grid h-max w-full auto-rows-fr grid-cols-1">
+        <div className="pointer-events-none relative grid h-max w-full auto-rows-fr grid-cols-1">
           {Array.from({ length: 24 }).map((_, index) => {
             return (
               <div

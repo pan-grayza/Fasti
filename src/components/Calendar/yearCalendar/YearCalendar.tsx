@@ -12,7 +12,7 @@ const YearCalendar = () => {
 
   // Scroll handling
 
-  const scrollY = useRef<number>(0)
+  const scrollY = useRef(0)
 
   const calendarContainer = useRef<HTMLDivElement | null>(null)
   const mainCalendarView = useRef<HTMLDivElement | null>(null)
