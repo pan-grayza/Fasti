@@ -108,13 +108,13 @@ const DayCalendar = () => {
   }, [])
 
   useEffect(() => {
-    document
-      .getElementById('calendarContainer')
-      ?.addEventListener('scrollend', onScrollEnd)
-    return () => {
-      document
-        .getElementById('calendarContainer')
-        ?.removeEventListener('scrollend', onScrollEnd)
+    const calendarContainerElement = calendarContainer.current
+    if (calendarContainerElement) {
+      calendarContainerElement.addEventListener('scrollend', onScrollEnd)
+
+      return () => {
+        calendarContainerElement.removeEventListener('scrollend', onScrollEnd)
+      }
     }
   })
   return (
@@ -138,7 +138,7 @@ const DayCalendar = () => {
           />
           <div
             ref={hourTimeline}
-            className="relative h-[calc(100%-80px)] w-full shrink-0 overflow-y-auto scrollbar-hide"
+            className="relative h-[calc(100%-8.5rem)] w-full shrink-0 overflow-y-auto scrollbar-hide"
           >
             <div className="grid-rows-auto relative mt-[30px] grid h-fit w-full auto-rows-fr grid-cols-1 pr-2">
               {Array.from({ length: 24 }).map((_, index) => {
@@ -189,7 +189,7 @@ const DayCalendar = () => {
                     onScroll={() => {
                       if (index === 1) onScrollY()
                     }}
-                    className="relative flex h-[calc(100%-80px)] w-full shrink-0 flex-row overflow-auto"
+                    className="relative flex h-[calc(100%-80px)] w-full shrink-0 flex-row overflow-auto scrollbar-hide"
                   >
                     <div
                       ref={parentGrid}

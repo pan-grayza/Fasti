@@ -1,4 +1,4 @@
-import { add, format, startOfWeek, sub } from 'date-fns'
+import { add, format, startOfDay, startOfWeek, sub } from 'date-fns'
 import React, { useEffect, useRef, useState } from 'react'
 
 import useStore from '~/store/useStore'
@@ -31,6 +31,7 @@ const WeekCalendar = () => {
   ])
 
   const startOfCurrentWeek = startOfWeek(currentDate)
+  const startOfCurrentDay = startOfDay(currentDate)
   // Size and position stuff
   const [dimensions, setDimensions] = useState<{
     height: number | undefined
@@ -81,6 +82,8 @@ const WeekCalendar = () => {
   const leftCalendarView = useRef<HTMLDivElement | null>(null)
   const rightCalendarView = useRef<HTMLDivElement | null>(null)
 
+  const hourTimeline = useRef<HTMLDivElement | null>(null)
+
   const onScrollEnd = () => {
     const scrollX = calendarContainer?.current?.scrollLeft
 
@@ -91,12 +94,15 @@ const WeekCalendar = () => {
     }
     calendarContainer?.current?.scrollTo(window.innerWidth, 0)
   }
+
   const onScrollY = () => {
     scrollY.current = mainCalendarView?.current?.scrollTop ?? 0
     if (leftCalendarView.current)
       leftCalendarView.current.scrollTo({ top: scrollY.current })
     if (rightCalendarView.current)
       rightCalendarView.current.scrollTo({ top: scrollY.current })
+    if (hourTimeline.current)
+      hourTimeline.current.scrollTo({ top: scrollY.current })
   }
 
   useEffect(() => {
@@ -104,13 +110,13 @@ const WeekCalendar = () => {
   }, [])
 
   useEffect(() => {
-    document
-      .getElementById('calendarContainer')
-      ?.addEventListener('scrollend', onScrollEnd)
-    return () => {
-      document
-        .getElementById('calendarContainer')
-        ?.removeEventListener('scrollend', onScrollEnd)
+    const calendarContainerElement = calendarContainer.current
+    if (calendarContainerElement) {
+      calendarContainerElement.addEventListener('scrollend', onScrollEnd)
+
+      return () => {
+        calendarContainerElement.removeEventListener('scrollend', onScrollEnd)
+      }
     }
   })
 
@@ -120,91 +126,121 @@ const WeekCalendar = () => {
         ref={calendarContainer}
         className="relative flex h-full w-[300vw] snap-x snap-mandatory flex-row overflow-x-auto overflow-y-hidden scrollbar-hide"
       >
-        {Array.from({ length: 3 }).map((week, index) => {
-          return (
-            <div
-              key={index}
-              className="relative h-full w-screen shrink-0 snap-center"
-            >
-              <div className="relative flex h-full w-full flex-col">
-                {/* Decorative rectange in top left */}
-                <div
-                  className={clsx('absolute inset-0 z-10 h-20 w-12 md:w-16', {
-                    'bg-lightThemeBG': !isDarkTheme,
-                    'bg-darkThemeBG': isDarkTheme,
-                  })}
-                />
-                <DayColumns startOfCurrentWeek={startOfCurrentWeek} />
-                <div
-                  ref={
-                    index === 1
-                      ? mainCalendarView
-                      : index === 0
-                      ? leftCalendarView
-                      : rightCalendarView
-                  }
-                  onScroll={() => {
-                    if (index === 1) onScrollY()
-                  }}
-                  className="relative flex h-full w-screen flex-row overflow-y-auto scrollbar-hide"
-                >
-                  <HourColumn startOfCurrentWeek={startOfCurrentWeek} />
-
+        <div
+          className={clsx(
+            'fixed inset-0 z-50 mt-14 flex h-full w-12 flex-col md:w-16',
+            { 'bg-lightThemeBG': !isDarkTheme, 'bg-darkThemeBG': isDarkTheme }
+          )}
+        >
+          {/* Decorative rectange in top left */}
+          <div
+            className={clsx('relative z-10 h-20 w-12 shrink-0 md:w-16', {
+              'bg-lightThemeBG': !isDarkTheme,
+              'bg-darkThemeBG': isDarkTheme,
+            })}
+          />
+          <div
+            ref={hourTimeline}
+            className="relative h-[calc(100%-8.5rem)] w-full shrink-0 overflow-y-auto scrollbar-hide"
+          >
+            <div className="grid-rows-auto relative mt-[30px] grid h-fit w-full auto-rows-fr grid-cols-1 pr-2">
+              {Array.from({ length: 24 }).map((_, index) => {
+                const time = format(
+                  add(startOfCurrentDay, { hours: index + 1 }),
+                  'h aa'
+                )
+                return (
                   <div
-                    ref={parentGrid}
-                    className="relative grid h-max w-full grid-cols-7"
-                    onClick={(e) => {
-                      e.preventDefault()
-                    }}
+                    className="relative flex h-[60px] items-center justify-end text-xs"
+                    key={index}
                   >
-                    {Array.from({ length: 7 }).map((_, index) => {
-                      return <DayColSchedule key={index} />
-                    })}
+                    {time}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+        <div className="relative flex h-full flex-row">
+          {Array.from({ length: 3 }).map((week, index) => {
+            return (
+              <div
+                key={index}
+                className="relative h-full w-screen shrink-0 snap-center pl-12 md:pl-16"
+              >
+                <div className="relative flex h-full w-full flex-col">
+                  <DayColumns startOfCurrentWeek={startOfCurrentWeek} />
+                  <div
+                    ref={
+                      index === 1
+                        ? mainCalendarView
+                        : index === 0
+                        ? leftCalendarView
+                        : rightCalendarView
+                    }
+                    onScroll={() => {
+                      if (index === 1) onScrollY()
+                    }}
+                    className="relative flex h-full w-full flex-row overflow-y-auto scrollbar-hide"
+                  >
                     <div
+                      ref={parentGrid}
+                      className="relative grid h-max w-full grid-cols-7"
                       onClick={(e) => {
-                        if (renamingEventNow || creatingEventNow) {
-                          setRenamingEventNow(false)
-                          setCreatingEventNow(false)
-                        } else {
-                          const bounds = e.currentTarget.getBoundingClientRect()
-                          setCreatingTimeEventProps({
-                            ...createTimeEventProps,
-                            x: e.clientX - bounds.left,
-                            y:
-                              e.clientY - bounds.top < 1410
-                                ? Math.round((e.clientY - bounds.top) / 15) * 15
-                                : 1410,
-                          })
-                          setCreatingEventNow(true)
-                          setRenamingEventNow(true)
-                        }
+                        e.preventDefault()
                       }}
-                      className="absolute inset-0 h-full w-full cursor-pointer"
-                    />
-                    {creatingEventNow && (
-                      <TimeEventCreator
-                        type="week"
-                        createEventProps={createTimeEventProps}
-                        parentWidth={dimensions.width}
+                    >
+                      {Array.from({ length: 7 }).map((_, index) => {
+                        return <DayColSchedule key={index} />
+                      })}
+                      <div
+                        onClick={(e) => {
+                          if (renamingEventNow || creatingEventNow) {
+                            setRenamingEventNow(false)
+                            setCreatingEventNow(false)
+                          } else {
+                            const bounds =
+                              e.currentTarget.getBoundingClientRect()
+                            setCreatingTimeEventProps({
+                              ...createTimeEventProps,
+                              x: e.clientX - bounds.left,
+                              y:
+                                e.clientY - bounds.top < 1410
+                                  ? Math.round((e.clientY - bounds.top) / 15) *
+                                    15
+                                  : 1410,
+                            })
+                            setCreatingEventNow(true)
+                            setRenamingEventNow(true)
+                          }
+                        }}
+                        className="absolute inset-0 h-full w-full cursor-pointer"
                       />
-                    )}
-                    {filteredTimeEvents?.map((event) => {
-                      return (
-                        <TimeEvent
+                      {creatingEventNow && (
+                        <TimeEventCreator
                           type="week"
-                          key={event.id}
-                          eventProps={event}
+                          createEventProps={createTimeEventProps}
                           parentWidth={dimensions.width}
-                          refetchTimeEvents={refetchTimeEvents}
                         />
-                      )
-                    })}
+                      )}
+                      {filteredTimeEvents?.map((event) => {
+                        return (
+                          <TimeEvent
+                            type="week"
+                            key={event.id}
+                            eventProps={event}
+                            parentWidth={dimensions.width}
+                            refetchTimeEvents={refetchTimeEvents}
+                          />
+                        )
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
     </div>
   )
@@ -221,7 +257,7 @@ const DayColumns = ({
   return (
     <div
       className={clsx(
-        'relative z-10 ml-12 flex h-20 w-[calc(100vw-3rem)] shrink-0 flex-col drop-shadow-sm backdrop-blur md:ml-16 md:w-[calc(100vw-4rem)]',
+        'relative z-10 flex h-20 w-full shrink-0 flex-col drop-shadow-sm backdrop-blur',
         {
           'bg-lightThemeBG/90': !isDarkTheme,
           'bg-darkThemeBG/90': isDarkTheme,
@@ -248,38 +284,6 @@ const DayColumns = ({
           return <div key={index} className="" />
         })}
       </div>
-    </div>
-  )
-}
-
-const HourColumn = ({
-  startOfCurrentWeek,
-  className,
-}: {
-  startOfCurrentWeek: Date
-  className?: React.HTMLProps<HTMLElement>['className']
-}) => {
-  return (
-    <div
-      className={clsx(
-        'relative grid h-fit w-12 shrink-0 auto-rows-fr grid-cols-1 pr-2 pt-[30px] md:w-16',
-        className
-      )}
-    >
-      {Array.from({ length: 24 }).map((_, index) => {
-        const time = format(
-          add(startOfCurrentWeek, { hours: index + 1 }),
-          'h aa'
-        )
-        return (
-          <div
-            className="relative flex h-[60px] items-center justify-end text-xs"
-            key={index}
-          >
-            {time}
-          </div>
-        )
-      })}
     </div>
   )
 }

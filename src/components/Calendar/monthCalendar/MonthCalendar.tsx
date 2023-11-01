@@ -45,13 +45,13 @@ const MonthCalendar: React.FC<Props> = ({ className }) => {
   }, [])
 
   useEffect(() => {
-    document
-      .getElementById('monthContainer')
-      ?.addEventListener('scrollend', onScrollEnd)
-    return () => {
-      document
-        .getElementById('monthContainer')
-        ?.removeEventListener('scrollend', onScrollEnd)
+    const calendarContainerElement = calendarContainer.current
+    if (calendarContainerElement) {
+      calendarContainerElement.addEventListener('scrollend', onScrollEnd)
+
+      return () => {
+        calendarContainerElement.removeEventListener('scrollend', onScrollEnd)
+      }
     }
   })
 
