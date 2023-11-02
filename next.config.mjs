@@ -4,8 +4,8 @@
  */
 await import('./src/env.mjs')
 
-import withPWA from 'next-pwa'
-const isProduction = process.env.NODE_ENV === 'production'
+// import withPWA from 'next-pwa'
+// const isProduction = process.env.NODE_ENV === 'production'
 
 /** @type {import("next").NextConfig} */
 
@@ -39,9 +39,9 @@ const config = {
   },
 }
 
-const nextConfig = withPWA({
-  dest: 'public',
-  disable: !isProduction,
-})(config)
+// const nextConfig = withPWA({
+//   dest: 'public',
+//   disable: !isProduction,
+// })(config)
 
-export default nextConfig
+export default config
