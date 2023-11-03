@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc'
-import { v4 as uuidv4 } from 'uuid'
 
 export const dayNoteRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -18,7 +17,7 @@ export const dayNoteRouter = createTRPCRouter({
       return ctx.prisma.dayNote.findMany({
         where: {
           journalId: input.journalId,
-          date: input.date,
+          createdAt: input.date,
         },
       })
     }),
