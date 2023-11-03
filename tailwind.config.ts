@@ -21,7 +21,7 @@ export default {
         darkThemeSecondaryBG: '#3f3f46',
         lightThemeSelected: 'rgb(147 197 253 / 0.5)', // #93c5fd/0.5
         darkThemeSelected: 'rgb(59 130 246 / 0.5)', // #3b82f6/0.25
-        lightThemeHover: 'rgb(212 212 216 / 0.5)', // #d4d4d8/0.5
+        lightThemeHover: 'rgb(212 212 216 / 0.25)', // #d4d4d8/0.25
         darkThemeHover: 'rgb(82 82 91 / 0.5)', // #a1a1aa/0.1
         accent: '#2563EB', // #2563EB
       },

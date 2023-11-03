@@ -1,5 +1,5 @@
-import React from 'react'
-import { useSession, signIn } from 'next-auth/react'
+import React, { useState } from 'react'
+import { useSession, signIn, signOut } from 'next-auth/react'
 import Button from '../Button'
 import useStore from '~/store/useStore'
 import { format, sub, add, startOfDay } from 'date-fns'
@@ -14,14 +14,18 @@ const NavBar = () => {
     setCurrentDate,
     currentCalendarView,
     isDarkTheme,
+    setIsDarkTheme,
     setMenu,
   ] = useStore((state) => [
     state.currentDate,
     state.setCurrentDate,
     state.currentCalendarView,
     state.isDarkTheme,
+    state.setIsDarkTheme,
     state.setMenu,
   ])
+  const [accountInfoModal, setAccountInfoModal] = useState(false)
+
   const { data: session } = useSession()
 
   const { asPath } = useRouter()
@@ -52,7 +56,7 @@ const NavBar = () => {
   return (
     <div
       className={clsx(
-        'relative flex h-14 w-full flex-row items-center justify-between gap-4 border-b p-4 transition-colors md:gap-6',
+        'relative z-20 flex h-14 w-full flex-row items-center justify-between gap-4 border-b p-4 transition-colors md:gap-6',
         {
           'border-lightThemeBorder': !isDarkTheme,
           'border-darkThemeBorder': isDarkTheme,
@@ -121,13 +125,17 @@ const NavBar = () => {
               onClick={() =>
                 void signIn(undefined, { callbackUrl: '/calendar' })
               }
+              className="relative w-max"
             >
               Sign in
             </Button>
           </div>
         )}
         {session?.user.image && (
-          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center">
+          <div
+            onClick={() => setAccountInfoModal(!accountInfoModal)}
+            className="relative flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center"
+          >
             <Image
               width={32}
               height={32}
@@ -138,6 +146,36 @@ const NavBar = () => {
           </div>
         )}
       </div>
+      {accountInfoModal && (
+        <div
+          className={clsx(
+            'z-90 absolute right-0 top-14 flex flex-col rounded p-1 drop-shadow transition',
+            {
+              'bg-darkThemeSecondaryBG': isDarkTheme,
+              'bg-lightThemeSecondaryBG': !isDarkTheme,
+            }
+          )}
+        >
+          <button
+            className={clsx('relative w-full rounded px-2 py-1', {
+              'hover:bg-darkThemeHover': isDarkTheme,
+              'hover:bg-lightThemeHover': !isDarkTheme,
+            })}
+            onClick={() => setIsDarkTheme(!isDarkTheme)}
+          >
+            Change Theme
+          </button>
+          <button
+            className={clsx('relative w-full rounded px-2 py-1 text-rose-500', {
+              'hover:bg-darkThemeHover': isDarkTheme,
+              'hover:bg-lightThemeHover': !isDarkTheme,
+            })}
+            onClick={() => void signOut()}
+          >
+            Log Out
+          </button>
+        </div>
+      )}
     </div>
   )
 }
