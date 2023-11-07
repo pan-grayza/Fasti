@@ -7,7 +7,6 @@ type Journal = RouterOutputs['journal']['getAll'][0]
 export type State = {
   // Calendar states
   currentDate: Date
-  currentCalendarView: 'Day' | 'Week' | 'Month' | 'Year' | 'None'
   renamingEventNow: boolean
   creatingEventNow: boolean
   selectedCalendar: Calendar | null
@@ -30,9 +29,6 @@ export type State = {
 type Action = {
   // Calendar states
   setCurrentDate: (currentDate: State['currentDate']) => void
-  setCurrentCalendarView: (
-    currentCalendarView: State['currentCalendarView']
-  ) => void
   setRenamingEventNow: (renamingEventNow: State['renamingEventNow']) => void
   setCreatingEventNow: (creatingEventNow: State['creatingEventNow']) => void
   setSelectedCalendar: (selectedCalendar: State['selectedCalendar']) => void
@@ -52,9 +48,6 @@ const useStore = create<State & Action>((set) => ({
   setCurrentDate: (state: State['currentDate']) =>
     set(() => ({ currentDate: state })),
   currentCalendarView: 'None',
-  setCurrentCalendarView: (state: State['currentCalendarView']) => {
-    set(() => ({ currentCalendarView: state }))
-  },
   renamingEventNow: false,
   setRenamingEventNow: (state: State['renamingEventNow']) =>
     set(() => ({ renamingEventNow: state })),

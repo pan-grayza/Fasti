@@ -1,7 +1,8 @@
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import React from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter as useNavRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 
 import useStore from '~/store/useStore'
 import { api } from '~/utils/api'
@@ -11,21 +12,19 @@ const CalendarSidebar = () => {
   const [
     selectedCalendar,
     setSelectedCalendar,
-    currentCalendarView,
-    setCurrentCalendarView,
     setCreatingWithModal,
     isDarkTheme,
     setMenu,
   ] = useStore((state) => [
     state.selectedCalendar,
     state.setSelectedCalendar,
-    state.currentCalendarView,
-    state.setCurrentCalendarView,
     state.setCreatingWithModal,
     state.isDarkTheme,
     state.setMenu,
   ])
-  const router = useRouter()
+
+  const { asPath } = useRouter()
+  const router = useNavRouter()
   const menuNavigate = (adress: string) => {
     router.push(adress)
     setMenu(false)
@@ -52,6 +51,7 @@ const CalendarSidebar = () => {
       void refetchCalendars()
     },
   })
+
   return (
     <div
       className={clsx(
@@ -69,40 +69,45 @@ const CalendarSidebar = () => {
         {/* CalendarView buttons */}
         <div className="relative flex h-fit w-full flex-col py-2">
           {Array.from({ length: 4 }).map((btn, index) => {
-            let title: typeof currentCalendarView = 'Day'
+            let title = 'day'
+            let Text = 'Day'
             switch (index) {
               case 1:
-                title = 'Week'
+                title = 'week'
+                Text = 'Week'
                 break
               case 2:
-                title = 'Month'
+                title = 'month'
+                Text = 'Month'
                 break
               case 3:
-                title = 'Year'
+                title = 'year'
+                Text = 'Year'
             }
             return (
               <button
                 key={index}
                 onClick={() => {
-                  setCurrentCalendarView(title)
+                  menuNavigate(title)
+                  console.log(title)
                   setMenu(false)
                 }}
                 className={clsx(
                   'relative flex h-fit w-full items-center rounded px-2 py-1',
                   {
                     'bg-lightThemeSelected text-blue-700':
-                      title === currentCalendarView && !isDarkTheme,
+                      title === asPath.split('/').pop() && !isDarkTheme,
                     'hover:bg-lightThemeHover':
-                      title !== currentCalendarView && !isDarkTheme,
+                      title !== asPath.split('/').pop() && !isDarkTheme,
 
                     'bg-darkThemeSelected text-blue-100':
-                      title === currentCalendarView && isDarkTheme,
+                      title === asPath.split('/').pop() && isDarkTheme,
                     'hover:bg-darkThemeHover':
-                      title !== currentCalendarView && isDarkTheme,
+                      title !== asPath.split('/').pop() && isDarkTheme,
                   }
                 )}
               >
-                {title}
+                {Text}
               </button>
             )
           })}

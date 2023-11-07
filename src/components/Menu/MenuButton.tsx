@@ -12,8 +12,8 @@ const MenuButton: React.FC<Props> = ({ name, onClick }) => {
   return (
     <button
       className={clsx(
-        'relative z-[1] flex max-w-sm p-1 text-6xl transition',
-        'before:absolute before:inset-0 before:z-[-1] before:origin-left before:transition-transform before:scale-x-0',
+        'relative z-[1] flex w-[24rem] max-w-[100%] px-2 py-1 text-6xl transition',
+        'before:absolute before:inset-0 before:z-[-1] before:origin-left before:rounded before:transition-transform before:scale-x-0',
         'hover:before:scale-x-100 focus:before:scale-x-100',
         {
           'before:bg-lightThemeSecondaryBG hover:text-darkThemeDarkerBG':

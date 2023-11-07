@@ -38,15 +38,14 @@ const TimeEventCreator: React.FC<Props> = ({
     setRenamingEventNow(true)
   }, [])
   //API stuff
-  const { data: timeEvents, refetch: refetchTimeEvents } =
-    api.timeEvent.getAll.useQuery(
-      { calendarId: createEventProps.calendarId },
-      {
-        onError: (err) => {
-          console.log(err)
-        },
-      }
-    )
+  const { refetch: refetchTimeEvents } = api.timeEvent.getAll.useQuery(
+    { calendarId: createEventProps.calendarId },
+    {
+      onError: (err) => {
+        console.log(err)
+      },
+    }
+  )
   const createTimeEvent = api.timeEvent.create.useMutation({
     onSuccess: () => {
       void refetchTimeEvents()

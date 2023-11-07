@@ -9,21 +9,14 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 
 const NavBar = () => {
-  const [
-    currentDate,
-    setCurrentDate,
-    currentCalendarView,
-    isDarkTheme,
-    setIsDarkTheme,
-    setMenu,
-  ] = useStore((state) => [
-    state.currentDate,
-    state.setCurrentDate,
-    state.currentCalendarView,
-    state.isDarkTheme,
-    state.setIsDarkTheme,
-    state.setMenu,
-  ])
+  const [currentDate, setCurrentDate, isDarkTheme, setIsDarkTheme, setMenu] =
+    useStore((state) => [
+      state.currentDate,
+      state.setCurrentDate,
+      state.isDarkTheme,
+      state.setIsDarkTheme,
+      state.setMenu,
+    ])
   const [accountInfoModal, setAccountInfoModal] = useState(false)
 
   const { data: session } = useSession()
@@ -33,26 +26,27 @@ const NavBar = () => {
   const handleSetToday = () => setCurrentDate(startOfDay(new Date()))
 
   const goPrev = () => {
-    if (currentCalendarView === 'Day')
+    if (asPath === 'calendar/day') {
       setCurrentDate(sub(currentDate, { days: 1 }))
-    if (currentCalendarView === 'Week')
+    } else if (asPath === 'calendar/week') {
       setCurrentDate(sub(currentDate, { weeks: 1 }))
-    if (currentCalendarView === 'Month')
+    } else if (asPath === 'calendar/month') {
       setCurrentDate(sub(currentDate, { months: 1 }))
-    if (currentCalendarView === 'Year')
+    } else if (asPath === 'calendar/year') {
       setCurrentDate(sub(currentDate, { years: 1 }))
+    }
   }
   const goNext = () => {
-    if (currentCalendarView === 'Day')
+    if (asPath === 'calendar/day') {
       setCurrentDate(add(currentDate, { days: 1 }))
-    if (currentCalendarView === 'Week')
+    } else if (asPath === 'calendar/week') {
       setCurrentDate(add(currentDate, { weeks: 1 }))
-    if (currentCalendarView === 'Month')
+    } else if (asPath === 'calendar/month') {
       setCurrentDate(add(currentDate, { months: 1 }))
-    if (currentCalendarView === 'Year')
+    } else if (asPath === 'calendar/year') {
       setCurrentDate(add(currentDate, { years: 1 }))
+    }
   }
-
   return (
     <div
       className={clsx(
@@ -95,7 +89,7 @@ const NavBar = () => {
           </p>
         </div>
 
-        {asPath === '/calendar' && (
+        {asPath.startsWith('/calendar') && (
           <div className="relative z-10 flex h-full w-full flex-row items-center justify-between md:gap-6">
             <div className="relative flex flex-row items-center justify-center gap-4">
               <Button onClick={handleSetToday}>Today</Button>
@@ -105,13 +99,11 @@ const NavBar = () => {
               </div>
 
               <p className="relative flex h-fit w-fit flex-row items-center justify-center md:text-lg">
-                {currentCalendarView === 'Year' && format(currentDate, 'yyyy')}
-                {currentCalendarView === 'Month' &&
+                {asPath === 'calendar/year' && format(currentDate, 'yyyy')}
+                {asPath === 'calendar/month' &&
                   format(currentDate, 'LLLL yyyy')}
-                {currentCalendarView === 'Week' &&
-                  format(currentDate, 'LLLL yyyy')}
-                {currentCalendarView === 'Day' &&
-                  format(currentDate, 'dd LLLL')}
+                {asPath === 'calendar/week' && format(currentDate, 'LLLL yyyy')}
+                {asPath === 'calendar/day' && format(currentDate, 'dd LLLL')}
               </p>
             </div>
           </div>
@@ -131,7 +123,7 @@ const NavBar = () => {
             </Button>
           </div>
         )}
-        {session?.user.image && (
+        {session?.user.image ? (
           <div
             onClick={() => setAccountInfoModal(!accountInfoModal)}
             className="relative flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center"
@@ -144,6 +136,8 @@ const NavBar = () => {
               className="rounded-full"
             />
           </div>
+        ) : (
+          <div className="relative h-8 w-8 rounded-full bg-neutral-400" />
         )}
       </div>
       {accountInfoModal && (

@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { add, getDay, startOfDay, startOfWeek } from 'date-fns'
+import { getDay } from 'date-fns'
 import { useEffect, useState } from 'react'
 import useStore from '~/store/useStore'
 
@@ -33,17 +33,16 @@ const DayEventCreator: React.FC<Props> = ({
     setRenamingEventNow(true)
     setCreatingEventNow(true)
   }, [])
-  const [colIndex, setColIndex] = useState(type === 'day' ? 0 : getDay(date))
+  const colIndex = type === 'day' ? 0 : getDay(date)
   //API stuff
-  const { data: dayEvents, refetch: refetchDayEvents } =
-    api.dayEvent.getAll.useQuery(
-      { calendarId: selectedCalendar?.id ?? '' },
-      {
-        onError: (err) => {
-          console.log(err)
-        },
-      }
-    )
+  const { refetch: refetchDayEvents } = api.dayEvent.getAll.useQuery(
+    { calendarId: selectedCalendar?.id ?? '' },
+    {
+      onError: (err) => {
+        console.log(err)
+      },
+    }
+  )
   const createDayEvent = api.dayEvent.create.useMutation({
     onSuccess: () => {
       void refetchDayEvents()

@@ -1,19 +1,20 @@
+import { add, format, startOfDay, startOfWeek, sub } from 'date-fns'
 import React, { useEffect, useRef, useState } from 'react'
-import useStore from '~/store/useStore'
-import DayCell from '../CalendarComponents/DayCell'
-import { add, format, startOfDay, sub } from 'date-fns'
-import clsx from 'clsx'
-import { api } from '~/utils/api'
-import TimeEvent from '../CalendarComponents/TimeEvent'
-import TimeEventCreator from '../CalendarComponents/TimeEventCreator'
 
-const DayCalendar = () => {
+import useStore from '~/store/useStore'
+import DayColSchedule from '../../components/Calendar/weekCalendar/DayColSchedule'
+import DayCol from '../../components/Calendar/weekCalendar/DayCol'
+import TimeEvent from '../../components/Calendar/CalendarComponents/TimeEvent'
+import TimeEventCreator from '../../components/Calendar/CalendarComponents/TimeEventCreator'
+import { api } from '~/utils/api'
+import clsx from 'clsx'
+
+const WeekCalendar = () => {
   const [
     currentDate,
     setCurrentDate,
-
-    creatingEventNow,
     selectedCalendar,
+    creatingEventNow,
     setCreatingEventNow,
     renamingEventNow,
     setRenamingEventNow,
@@ -21,24 +22,21 @@ const DayCalendar = () => {
   ] = useStore((state) => [
     state.currentDate,
     state.setCurrentDate,
-    state.creatingEventNow,
     state.selectedCalendar,
+    state.creatingEventNow,
     state.setCreatingEventNow,
     state.renamingEventNow,
     state.setRenamingEventNow,
     state.isDarkTheme,
   ])
 
+  const startOfCurrentWeek = startOfWeek(currentDate)
   const startOfCurrentDay = startOfDay(currentDate)
-
-  //Size and position stuff
+  // Size and position stuff
   const [dimensions, setDimensions] = useState<{
     height: number | undefined
     width: number | undefined
-  }>({
-    height: 0,
-    width: 0,
-  })
+  }>({ height: 0, width: 0 })
   const parentGrid = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     const resizeObserver = new ResizeObserver((event) => {
@@ -63,6 +61,11 @@ const DayCalendar = () => {
         },
       }
     )
+  const filteredTimeEvents = timeEvents?.filter(
+    (event) =>
+      format(startOfWeek(event.startTime), 'dd MMMM yyyy') ===
+      format(startOfWeek(currentDate), 'dd MMMM yyyy')
+  )
 
   // Creating Event stuff
   const [createTimeEventProps, setCreatingTimeEventProps] = useState<{
@@ -72,7 +75,6 @@ const DayCalendar = () => {
   }>({ x: 0, y: 0, calendarId: selectedCalendar?.id ?? '' })
 
   // Scroll handling
-
   const scrollY = useRef(0)
 
   const calendarContainer = useRef<HTMLDivElement | null>(null)
@@ -86,9 +88,9 @@ const DayCalendar = () => {
     const scrollX = calendarContainer?.current?.scrollLeft
 
     if ((scrollX ?? window.innerWidth) < window.innerWidth) {
-      setCurrentDate(sub(currentDate, { days: 1 }))
+      setCurrentDate(sub(currentDate, { weeks: 1 }))
     } else if ((scrollX ?? window.innerWidth) >= window.innerWidth * 2) {
-      setCurrentDate(add(currentDate, { days: 1 }))
+      setCurrentDate(add(currentDate, { weeks: 1 }))
     }
     calendarContainer?.current?.scrollTo(window.innerWidth, 0)
   }
@@ -117,11 +119,12 @@ const DayCalendar = () => {
       }
     }
   })
+
   return (
     <div className="relative flex h-full w-full items-center justify-center transition-colors">
       <div
         ref={calendarContainer}
-        className="relative flex h-full w-[300vw] snap-x snap-mandatory flex-row overflow-x-auto overflow-y-hidden scrollbar-hide "
+        className="relative flex h-full w-[300vw] snap-x snap-mandatory flex-row overflow-x-auto overflow-y-hidden scrollbar-hide"
       >
         <div
           className={clsx(
@@ -160,24 +163,13 @@ const DayCalendar = () => {
         </div>
         <div className="relative flex h-full flex-row">
           {Array.from({ length: 3 }).map((week, index) => {
-            const filteredTimeEvents = timeEvents?.filter(
-              (event) =>
-                format(event.startTime, 'dd MMMM yyyy') ===
-                format(add(currentDate, { days: index - 1 }), 'dd MMMM yyyy')
-            )
             return (
               <div
                 key={index}
-                className="relative flex h-full w-screen shrink-0 snap-center pl-12 md:pl-16"
+                className="relative h-full w-screen shrink-0 snap-center pl-12 md:pl-16"
               >
                 <div className="relative flex h-full w-full flex-col">
-                  <div className="relative flex h-20 w-full shrink-0 flex-row items-center">
-                    <DayCell
-                      date={add(currentDate, { days: index - 1 })}
-                      size="lg"
-                      dayAbr
-                    />
-                  </div>
+                  <DayColumns startOfCurrentWeek={startOfCurrentWeek} />
                   <div
                     ref={
                       index === 1
@@ -189,12 +181,18 @@ const DayCalendar = () => {
                     onScroll={() => {
                       if (index === 1) onScrollY()
                     }}
-                    className="relative flex h-[calc(100%-80px)] w-full shrink-0 flex-row overflow-auto scrollbar-hide"
+                    className="relative flex h-full w-full flex-row overflow-y-auto scrollbar-hide"
                   >
                     <div
                       ref={parentGrid}
-                      className="relative h-[1470px] w-full"
+                      className="relative grid h-max w-full grid-cols-7"
+                      onClick={(e) => {
+                        e.preventDefault()
+                      }}
                     >
+                      {Array.from({ length: 7 }).map((_, index) => {
+                        return <DayColSchedule key={index} />
+                      })}
                       <div
                         onClick={(e) => {
                           if (renamingEventNow || creatingEventNow) {
@@ -218,34 +216,17 @@ const DayCalendar = () => {
                         }}
                         className="absolute inset-0 h-full w-full cursor-pointer"
                       />
-
                       {creatingEventNow && (
                         <TimeEventCreator
+                          type="week"
                           createEventProps={createTimeEventProps}
                           parentWidth={dimensions.width}
                         />
                       )}
-                      <div className="pointer-events-none relative grid h-max w-full auto-rows-fr grid-cols-1">
-                        {Array.from({ length: 24 }).map((_, index) => {
-                          return (
-                            <div
-                              className={clsx(
-                                'relative h-[60px] w-full border-b',
-                                {
-                                  'border-lightThemeBorder bg-lightThemeDarkerBG':
-                                    !isDarkTheme,
-                                  'bg-darkThemeLigherBG border-darkThemeSecondaryBG':
-                                    isDarkTheme,
-                                }
-                              )}
-                              key={index}
-                            ></div>
-                          )
-                        })}
-                      </div>
                       {filteredTimeEvents?.map((event) => {
                         return (
                           <TimeEvent
+                            type="week"
                             key={event.id}
                             eventProps={event}
                             parentWidth={dimensions.width}
@@ -265,4 +246,46 @@ const DayCalendar = () => {
   )
 }
 
-export default DayCalendar
+const DayColumns = ({
+  startOfCurrentWeek,
+  className,
+}: {
+  startOfCurrentWeek: Date
+  className?: React.HTMLProps<HTMLElement>['className']
+}) => {
+  const [isDarkTheme] = useStore((state) => [state.isDarkTheme])
+  return (
+    <div
+      className={clsx(
+        'relative z-10 flex h-20 w-full shrink-0 flex-col drop-shadow-sm backdrop-blur',
+        {
+          'bg-lightThemeBG/90': !isDarkTheme,
+          'bg-darkThemeBG/90': isDarkTheme,
+        },
+        className
+      )}
+    >
+      <div className="relative grid h-[4.5rem] w-full shrink-0 grid-cols-7">
+        {Array.from({ length: 7 }).map((_, index) => {
+          const date = add(startOfCurrentWeek, { days: index })
+          return <DayCol key={index} date={date} />
+        })}
+      </div>
+      <div
+        className={clsx(
+          'relative grid h-2 w-full shrink-0 grid-cols-7 divide-x-[1px] divide-solid',
+          {
+            'divide-lightThemeBorder': !isDarkTheme,
+            'divide-darkThemeBorder': isDarkTheme,
+          }
+        )}
+      >
+        {Array.from({ length: 7 }).map((_, index) => {
+          return <div key={index} className="" />
+        })}
+      </div>
+    </div>
+  )
+}
+
+export default WeekCalendar

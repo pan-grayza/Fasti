@@ -1,18 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import TimeEvent from '../CalendarComponents/TimeEvent'
-import { add, format, startOfDay } from 'date-fns'
+import { format } from 'date-fns'
 import clsx from 'clsx'
 import { api } from '~/utils/api'
 import useStore from '~/store/useStore'
 import TimeEventCreator from '../CalendarComponents/TimeEventCreator'
 
-interface Props extends React.PropsWithChildren {
-  className?: string
-  date: Date
-  index: number
-}
-
-const Schedule: React.FC<Props> = ({ className, date, index }) => {
+const Schedule = ({ date }: { date: Date }) => {
   //Size and position stuff
   const [dimensions, setDimensions] = useState<{
     height: number | undefined

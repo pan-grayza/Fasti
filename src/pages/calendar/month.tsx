@@ -7,9 +7,9 @@ import {
   startOfMonth,
   sub,
 } from 'date-fns'
-import Cell from './Cell'
-import EventCell from './EventCell'
-import DateCell from './DateCell'
+import Cell from '../../components/Calendar/monthCalendar/Cell'
+import EventCell from '../../components/Calendar/monthCalendar/EventCell'
+import DateCell from '../../components/Calendar/monthCalendar/DateCell'
 
 import useStore from '~/store/useStore'
 import { api } from '~/utils/api'
