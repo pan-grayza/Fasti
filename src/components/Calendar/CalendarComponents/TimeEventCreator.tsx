@@ -19,24 +19,13 @@ const TimeEventCreator: React.FC<Props> = ({
   parentWidth = 90,
   type = 'day',
 }) => {
-  const [
-    renamingEventNow,
-    setRenamingEventNow,
-    currentDate,
-    selectedCalendar,
-    setCreatingEventNow,
-    isDarkTheme,
-  ] = useStore((state) => [
-    state.renamingEventNow,
-    state.setRenamingEventNow,
-    state.currentDate,
-    state.selectedCalendar,
-    state.setCreatingEventNow,
-    state.isDarkTheme,
-  ])
-  useEffect(() => {
-    setRenamingEventNow(true)
-  }, [])
+  const [currentDate, selectedCalendar, setCreatingWithModal, isDarkTheme] =
+    useStore((state) => [
+      state.currentDate,
+      state.selectedCalendar,
+      state.setCreatingWithModal,
+      state.isDarkTheme,
+    ])
   //API stuff
   const { refetch: refetchTimeEvents } = api.timeEvent.getAll.useQuery(
     { calendarId: createEventProps.calendarId },
@@ -108,24 +97,20 @@ const TimeEventCreator: React.FC<Props> = ({
   }, [parentWidth]) // Needs to be like that
 
   //Editing Event
-  //Renaming
-  const [isRenaming, setIsRenaming] = useState(true)
+
+  //Creating
   const [name, setName] = useState('')
 
   const finishCreating = () => {
     if (name === '') setName('Event')
-    setIsRenaming(false)
-    setRenamingEventNow(false)
     createTimeEvent.mutate({
       calendarId: selectedCalendar?.id ?? '',
       name: name,
       startTime: getDateFromPosition(),
       durationM: parseInt(size.height),
     })
-    setCreatingEventNow(false)
-  }
-  if (!renamingEventNow && isRenaming) {
-    setIsRenaming(false)
+    console.log(getDateFromPosition())
+    setCreatingWithModal(null)
   }
 
   return (
@@ -196,7 +181,7 @@ const TimeEventCreator: React.FC<Props> = ({
             <button
               onClick={() => {
                 setName('')
-                setCreatingEventNow(false)
+                setCreatingWithModal(null)
               }}
               className="relative flex items-center justify-center"
             >
@@ -227,7 +212,7 @@ const TimeEventCreator: React.FC<Props> = ({
               }
               if (e.key === 'Escape') {
                 setName('')
-                setCreatingEventNow(false)
+                setCreatingWithModal(null)
               }
             }}
             className={clsx('relative w-48 rounded p-1 focus:outline-none', {

@@ -10,12 +10,12 @@ const JournalList = () => {
   const [
     selectedJournal,
     setSelectedJournal,
-    setCreatingWithModal,
+    setEditingWithModal,
     isDarkTheme,
   ] = useStore((state) => [
     state.selectedJournal,
     state.setSelectedJournal,
-    state.setCreatingWithModal,
+    state.setEditingWithModal,
     state.isDarkTheme,
   ])
   //API stuff
@@ -57,7 +57,7 @@ const JournalList = () => {
               'border-darkThemeBorder': isDarkTheme,
             }
           )}
-          onClick={() => setCreatingWithModal('Journal')}
+          onClick={() => setEditingWithModal('Journal')}
         >
           Create Journal
         </button>

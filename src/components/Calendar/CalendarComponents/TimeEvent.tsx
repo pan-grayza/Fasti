@@ -24,19 +24,13 @@ const TimeEvent: React.FC<Props> = ({
   refetchTimeEvents,
 }) => {
   //Other states
-  const [
-    renamingEventNow,
-    setRenamingEventNow,
-    creatingEventNow,
-    setCreatingEventNow,
-    isDarkTheme,
-  ] = useStore((state) => [
-    state.renamingEventNow,
-    state.setRenamingEventNow,
-    state.creatingEventNow,
-    state.setCreatingEventNow,
-    state.isDarkTheme,
-  ])
+  const [editingWithModal, setEditingWithModal, isDarkTheme] = useStore(
+    (state) => [
+      state.editingWithModal,
+      state.setEditingWithModal,
+      state.isDarkTheme,
+    ]
+  )
   const [onMouseDownStart, setOnMouseDownStart] = useState(0)
 
   //API stuff
@@ -103,13 +97,13 @@ const TimeEvent: React.FC<Props> = ({
   useEffect(() => {
     finishUpdating()
   }, [size, position.x, position.y]) // Needs to be like that, for delete functionality
-  const [isRenaming, setIsRenaming] = useState(true)
+  const [isRenaming, setIsRenaming] = useState(false)
   const [name, setName] = useState(eventProps.name)
 
   const finishUpdating = () => {
     if (name === '') setName('Event')
     setIsRenaming(false)
-    setRenamingEventNow(false)
+    setEditingWithModal(null)
     updateTimeEvent.mutate({
       id: eventProps.id,
       calendarId: eventProps.calendarId,
@@ -119,14 +113,13 @@ const TimeEvent: React.FC<Props> = ({
     })
   }
 
-  if (!renamingEventNow && isRenaming) {
-    setIsRenaming(false)
-  }
-
   const onRename = () => {
-    if (creatingEventNow) setCreatingEventNow(false)
-    setRenamingEventNow(true)
-    setIsRenaming(true)
+    if (editingWithModal) {
+      setEditingWithModal(null)
+    } else {
+      setEditingWithModal('TimeEvent')
+      setIsRenaming(true)
+    }
   }
 
   return (
@@ -206,8 +199,8 @@ const TimeEvent: React.FC<Props> = ({
           )}
         >
           <div
-            className={clsx('relative flex flex-col gap-1 rounded  p-1', {
-              'bg-lightBG': !isDarkTheme,
+            className={clsx('relative flex flex-col gap-1 rounded p-1', {
+              'bg-lightThemeBG': !isDarkTheme,
               'bg-darkThemeBG': isDarkTheme,
             })}
           >

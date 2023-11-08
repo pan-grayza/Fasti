@@ -11,21 +11,20 @@ const DayCalendar = () => {
   const [
     currentDate,
     setCurrentDate,
-
-    creatingEventNow,
+    editingWithModal,
+    setEditingWithModal,
+    creatingWithModal,
+    setCreatingWithModal,
     selectedCalendar,
-    setCreatingEventNow,
-    renamingEventNow,
-    setRenamingEventNow,
     isDarkTheme,
   ] = useStore((state) => [
     state.currentDate,
     state.setCurrentDate,
-    state.creatingEventNow,
+    state.editingWithModal,
+    state.setEditingWithModal,
+    state.creatingWithModal,
+    state.setCreatingWithModal,
     state.selectedCalendar,
-    state.setCreatingEventNow,
-    state.renamingEventNow,
-    state.setRenamingEventNow,
     state.isDarkTheme,
   ])
 
@@ -192,34 +191,37 @@ const DayCalendar = () => {
                     className="relative flex h-[calc(100%-80px)] w-full shrink-0 flex-row overflow-auto scrollbar-hide"
                   >
                     <div
-                      ref={parentGrid}
+                      ref={index === 1 ? parentGrid : null}
                       className="relative h-[1470px] w-full"
                     >
-                      <div
-                        onClick={(e) => {
-                          if (renamingEventNow || creatingEventNow) {
-                            setRenamingEventNow(false)
-                            setCreatingEventNow(false)
-                          } else {
-                            const bounds =
-                              e.currentTarget.getBoundingClientRect()
-                            setCreatingTimeEventProps({
-                              ...createTimeEventProps,
-                              x: e.clientX - bounds.left,
-                              y:
-                                e.clientY - bounds.top < 1410
-                                  ? Math.round((e.clientY - bounds.top) / 15) *
-                                    15
-                                  : 1410,
-                            })
-                            setCreatingEventNow(true)
-                            setRenamingEventNow(true)
-                          }
-                        }}
-                        className="absolute inset-0 h-full w-full cursor-pointer"
-                      />
+                      {index === 1 && (
+                        <div
+                          onClick={(e) => {
+                            if (editingWithModal ?? creatingWithModal) {
+                              setEditingWithModal(null)
+                              setCreatingWithModal(null)
+                            } else {
+                              const bounds =
+                                e.currentTarget.getBoundingClientRect()
+                              setCreatingTimeEventProps({
+                                ...createTimeEventProps,
+                                x: e.clientX - bounds.left,
+                                y:
+                                  e.clientY - bounds.top < 1410
+                                    ? Math.round(
+                                        (e.clientY - bounds.top) / 15
+                                      ) * 15
+                                    : 1410,
+                              })
+                              console.log(bounds)
+                              setCreatingWithModal('TimeEvent')
+                            }
+                          }}
+                          className="absolute inset-0 h-full w-full cursor-pointer"
+                        />
+                      )}
 
-                      {creatingEventNow && (
+                      {creatingWithModal === 'TimeEvent' && index === 1 && (
                         <TimeEventCreator
                           createEventProps={createTimeEventProps}
                           parentWidth={dimensions.width}

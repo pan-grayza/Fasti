@@ -14,19 +14,15 @@ const WeekCalendar = () => {
     currentDate,
     setCurrentDate,
     selectedCalendar,
-    creatingEventNow,
-    setCreatingEventNow,
-    renamingEventNow,
-    setRenamingEventNow,
+    creatingWithModal,
+    setCreatingWithModal,
     isDarkTheme,
   ] = useStore((state) => [
     state.currentDate,
     state.setCurrentDate,
     state.selectedCalendar,
-    state.creatingEventNow,
-    state.setCreatingEventNow,
-    state.renamingEventNow,
-    state.setRenamingEventNow,
+    state.creatingWithModal,
+    state.setCreatingWithModal,
     state.isDarkTheme,
   ])
 
@@ -184,45 +180,44 @@ const WeekCalendar = () => {
                     className="relative flex h-full w-full flex-row overflow-y-auto scrollbar-hide"
                   >
                     <div
-                      ref={parentGrid}
+                      ref={index === 1 ? parentGrid : null}
                       className="relative grid h-max w-full grid-cols-7"
-                      onClick={(e) => {
-                        e.preventDefault()
-                      }}
                     >
                       {Array.from({ length: 7 }).map((_, index) => {
                         return <DayColSchedule key={index} />
                       })}
-                      <div
-                        onClick={(e) => {
-                          if (renamingEventNow || creatingEventNow) {
-                            setRenamingEventNow(false)
-                            setCreatingEventNow(false)
-                          } else {
-                            const bounds =
-                              e.currentTarget.getBoundingClientRect()
-                            setCreatingTimeEventProps({
-                              ...createTimeEventProps,
-                              x: e.clientX - bounds.left,
-                              y:
-                                e.clientY - bounds.top < 1410
-                                  ? Math.round((e.clientY - bounds.top) / 15) *
-                                    15
-                                  : 1410,
-                            })
-                            setCreatingEventNow(true)
-                            setRenamingEventNow(true)
-                          }
-                        }}
-                        className="absolute inset-0 h-full w-full cursor-pointer"
-                      />
-                      {creatingEventNow && (
+                      {index === 1 && (
+                        <div
+                          onClick={(e) => {
+                            if (creatingWithModal) {
+                              setCreatingWithModal(null)
+                            } else {
+                              const bounds =
+                                e.currentTarget.getBoundingClientRect()
+                              setCreatingTimeEventProps({
+                                ...createTimeEventProps,
+                                x: e.clientX - bounds.left,
+                                y:
+                                  e.clientY - bounds.top < 1410
+                                    ? Math.round(
+                                        (e.clientY - bounds.top) / 15
+                                      ) * 15
+                                    : 1410,
+                              })
+                              setCreatingWithModal('TimeEvent')
+                            }
+                          }}
+                          className="absolute inset-0 h-full w-full cursor-pointer"
+                        />
+                      )}
+                      {creatingWithModal === 'TimeEvent' && index === 1 && (
                         <TimeEventCreator
                           type="week"
                           createEventProps={createTimeEventProps}
                           parentWidth={dimensions.width}
                         />
                       )}
+
                       {filteredTimeEvents?.map((event) => {
                         return (
                           <TimeEvent

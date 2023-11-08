@@ -26,24 +26,24 @@ const NavBar = () => {
   const handleSetToday = () => setCurrentDate(startOfDay(new Date()))
 
   const goPrev = () => {
-    if (asPath === 'calendar/day') {
+    if (asPath === '/calendar/day') {
       setCurrentDate(sub(currentDate, { days: 1 }))
-    } else if (asPath === 'calendar/week') {
+    } else if (asPath === '/calendar/week') {
       setCurrentDate(sub(currentDate, { weeks: 1 }))
-    } else if (asPath === 'calendar/month') {
+    } else if (asPath === '/calendar/month') {
       setCurrentDate(sub(currentDate, { months: 1 }))
-    } else if (asPath === 'calendar/year') {
+    } else if (asPath === '/calendar/year') {
       setCurrentDate(sub(currentDate, { years: 1 }))
     }
   }
   const goNext = () => {
-    if (asPath === 'calendar/day') {
+    if (asPath === '/calendar/day') {
       setCurrentDate(add(currentDate, { days: 1 }))
-    } else if (asPath === 'calendar/week') {
+    } else if (asPath === '/calendar/week') {
       setCurrentDate(add(currentDate, { weeks: 1 }))
-    } else if (asPath === 'calendar/month') {
+    } else if (asPath === '/calendar/month') {
       setCurrentDate(add(currentDate, { months: 1 }))
-    } else if (asPath === 'calendar/year') {
+    } else if (asPath === '/calendar/year') {
       setCurrentDate(add(currentDate, { years: 1 }))
     }
   }
@@ -99,11 +99,12 @@ const NavBar = () => {
               </div>
 
               <p className="relative flex h-fit w-fit flex-row items-center justify-center md:text-lg">
-                {asPath === 'calendar/year' && format(currentDate, 'yyyy')}
-                {asPath === 'calendar/month' &&
+                {asPath === '/calendar/year' && format(currentDate, 'yyyy')}
+                {asPath === '/calendar/month' &&
                   format(currentDate, 'LLLL yyyy')}
-                {asPath === 'calendar/week' && format(currentDate, 'LLLL yyyy')}
-                {asPath === 'calendar/day' && format(currentDate, 'dd LLLL')}
+                {asPath === '/calendar/week' &&
+                  format(currentDate, 'LLLL yyyy')}
+                {asPath === '/calendar/day' && format(currentDate, 'dd LLLL')}
               </p>
             </div>
           </div>

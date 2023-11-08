@@ -16,23 +16,14 @@ const DayEventCreator: React.FC<Props> = ({
   date,
   type = 'month',
 }) => {
-  const [
-    renamingEventNow,
-    setRenamingEventNow,
-    selectedCalendar,
-    setCreatingEventNow,
-    isDarkTheme,
-  ] = useStore((state) => [
-    state.renamingEventNow,
-    state.setRenamingEventNow,
-    state.selectedCalendar,
-    state.setCreatingEventNow,
-    state.isDarkTheme,
-  ])
-  useEffect(() => {
-    setRenamingEventNow(true)
-    setCreatingEventNow(true)
-  }, [])
+  const [selectedCalendar, setCreatingWithModal, isDarkTheme] = useStore(
+    (state) => [
+      state.selectedCalendar,
+      state.setCreatingWithModal,
+      state.isDarkTheme,
+    ]
+  )
+
   const colIndex = type === 'day' ? 0 : getDay(date)
   //API stuff
   const { refetch: refetchDayEvents } = api.dayEvent.getAll.useQuery(
@@ -53,25 +44,17 @@ const DayEventCreator: React.FC<Props> = ({
 
   //Editing Event
   //Renaming
-  const [isRenaming, setIsRenaming] = useState(true)
   const [name, setName] = useState('')
 
   const finishCreating = () => {
     if (name === '') setName('Event')
-    setIsRenaming(false)
-    setRenamingEventNow(false)
     createDayEvent.mutate({
       date: date,
       calendarId: selectedCalendar?.id ?? '',
       name: name,
     })
-    setCreatingEventNow(false)
+    setCreatingWithModal(null)
   }
-
-  if (!renamingEventNow && isRenaming) {
-    setIsRenaming(false)
-  }
-
   return (
     <div
       className={clsx(
@@ -101,7 +84,7 @@ const DayEventCreator: React.FC<Props> = ({
             <button
               onClick={() => {
                 setName('')
-                setCreatingEventNow(false)
+                setCreatingWithModal(null)
               }}
               className="relative flex items-center justify-center"
             >
@@ -132,7 +115,7 @@ const DayEventCreator: React.FC<Props> = ({
               }
               if (e.key === 'Escape') {
                 setName('')
-                setCreatingEventNow(false)
+                setCreatingWithModal(null)
               }
             }}
             className={clsx('relative w-48 rounded p-1 focus:outline-none', {

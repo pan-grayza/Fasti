@@ -18,17 +18,8 @@ const Event: React.FC<Props> = ({
   type = 'month',
   refetchDayEvents,
 }) => {
-  const [
-    renamingEventNow,
-    setRenamingEventNow,
-    creatingEventNow,
-    setCreatingEventNow,
-    isDarkTheme,
-  ] = useStore((state) => [
-    state.renamingEventNow,
-    state.setRenamingEventNow,
-    state.creatingEventNow,
-    state.setCreatingEventNow,
+  const [setEditingWithModal, isDarkTheme] = useStore((state) => [
+    state.setEditingWithModal,
     state.isDarkTheme,
   ])
 
@@ -56,34 +47,26 @@ const Event: React.FC<Props> = ({
 
   //Updating event
 
-  const [isRenaming, setIsRenaming] = useState(true)
+  const [isRenaming, setIsRenaming] = useState(false)
   const [name, setName] = useState(eventProps.name)
 
   const finishUpdating = () => {
     if (name === '') setName('Event')
     setIsRenaming(false)
-    setRenamingEventNow(false)
+    setEditingWithModal(null)
     updateDayEvent.mutate({
       id: eventProps.id,
       calendarId: eventProps.calendarId,
       newName: name,
     })
   }
-  if (!renamingEventNow && isRenaming) {
-    setIsRenaming(false)
-  }
 
   const onRename = () => {
-    if (creatingEventNow) setCreatingEventNow(false)
-    setRenamingEventNow(true)
     setIsRenaming(true)
+    setEditingWithModal('DayEvent')
   }
   return (
-    <div
-      className={clsx('relative flex h-6 w-full', {
-        'z-20': isRenaming,
-      })}
-    >
+    <div className="relative z-20 flex h-6 w-full">
       <div
         onClick={onRename}
         className={clsx(

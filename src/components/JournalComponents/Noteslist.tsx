@@ -9,13 +9,13 @@ const Noteslist = () => {
     selectedJournal,
     selectedNote,
     setSelectedNote,
-    setCreatingWithModal,
+    setEditingWithModal,
     isDarkTheme,
   ] = useStore((state) => [
     state.selectedJournal,
     state.selectedNote,
     state.setSelectedNote,
-    state.setCreatingWithModal,
+    state.setEditingWithModal,
     state.isDarkTheme,
   ])
 
@@ -47,7 +47,7 @@ const Noteslist = () => {
               'border-darkThemeBorder': isDarkTheme,
             }
           )}
-          onClick={() => setCreatingWithModal('Note')}
+          onClick={() => setEditingWithModal('Note')}
         >
           Create Note
         </button>

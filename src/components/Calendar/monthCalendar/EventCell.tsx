@@ -20,21 +20,15 @@ const EventCell: React.FC<Props> = ({
   refetchDayEvents,
 }) => {
   //States
-  const [
-    setCurrentDate,
-    renamingEventNow,
-    setRenamingEventNow,
-    creatingEventNow,
-    setCreatingEventNow,
-  ] = useStore((state) => [
-    state.setCurrentDate,
-    state.renamingEventNow,
-    state.setRenamingEventNow,
-    state.creatingEventNow,
-    state.setCreatingEventNow,
-  ])
+  const [setCurrentDate, editingWithModal, setEditingWithModal] = useStore(
+    (state) => [
+      state.setCurrentDate,
+      state.editingWithModal,
+      state.setEditingWithModal,
+    ]
+  )
   const [isCreatingDayEvent, setIsCreatingDayEvent] = useState(false)
-  if (!creatingEventNow && isCreatingDayEvent) {
+  if (!editingWithModal && isCreatingDayEvent) {
     setIsCreatingDayEvent(false)
   }
 
@@ -66,14 +60,12 @@ const EventCell: React.FC<Props> = ({
       {isCreatingDayEvent && <DayEventCreator date={date} />}
       <div
         onClick={() => {
-          if (renamingEventNow || creatingEventNow) {
-            setRenamingEventNow(false)
-            setCreatingEventNow(false)
+          if (editingWithModal) {
             setIsCreatingDayEvent(false)
+            setEditingWithModal(null)
           } else {
-            setCreatingEventNow(true)
-            setRenamingEventNow(true)
             setIsCreatingDayEvent(true)
+            setEditingWithModal('DayEvent')
           }
         }}
         className="relative h-full w-full"
