@@ -213,7 +213,7 @@ const DayCalendar = () => {
                                       ) * 15
                                     : 1410,
                               })
-                              console.log(bounds)
+
                               setCreatingWithModal('TimeEvent')
                             }
                           }}

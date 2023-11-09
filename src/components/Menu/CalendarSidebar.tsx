@@ -67,7 +67,7 @@ const CalendarSidebar = () => {
       </div>
       <div className="relative flex h-full w-full flex-col items-center">
         {/* CalendarView buttons */}
-        <div className="relative flex h-fit w-full flex-col py-2">
+        <div className="relative flex h-fit w-full flex-col gap-1 py-2">
           {Array.from({ length: 4 }).map((btn, index) => {
             let title = 'day'
             let Text = 'Day'

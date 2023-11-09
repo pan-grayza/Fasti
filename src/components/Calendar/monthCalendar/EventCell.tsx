@@ -20,15 +20,24 @@ const EventCell: React.FC<Props> = ({
   refetchDayEvents,
 }) => {
   //States
-  const [setCurrentDate, editingWithModal, setEditingWithModal] = useStore(
-    (state) => [
-      state.setCurrentDate,
-      state.editingWithModal,
-      state.setEditingWithModal,
-    ]
-  )
+  const [
+    setCurrentDate,
+    editingWithModal,
+    setEditingWithModal,
+    creatingWithModal,
+    setCreatingWithModal,
+  ] = useStore((state) => [
+    state.setCurrentDate,
+    state.editingWithModal,
+    state.setEditingWithModal,
+    state.creatingWithModal,
+    state.setCreatingWithModal,
+  ])
   const [isCreatingDayEvent, setIsCreatingDayEvent] = useState(false)
-  if (!editingWithModal && isCreatingDayEvent) {
+  if (
+    (!editingWithModal && isCreatingDayEvent) ||
+    (!creatingWithModal && isCreatingDayEvent)
+  ) {
     setIsCreatingDayEvent(false)
   }
 
@@ -40,7 +49,7 @@ const EventCell: React.FC<Props> = ({
         className
       )}
     >
-      <DayCell date={date}></DayCell>
+      <DayCell date={date} />
       <div
         className={clsx('flex w-full flex-col items-center justify-center ', {
           'absolute -top-1': (filteredDayEvents?.length ?? 0) < 1,
@@ -60,12 +69,15 @@ const EventCell: React.FC<Props> = ({
       {isCreatingDayEvent && <DayEventCreator date={date} />}
       <div
         onClick={() => {
-          if (editingWithModal) {
+          if (editingWithModal ?? creatingWithModal) {
             setIsCreatingDayEvent(false)
             setEditingWithModal(null)
+            setCreatingWithModal(null)
           } else {
+            console.log('Creating...')
             setIsCreatingDayEvent(true)
             setEditingWithModal('DayEvent')
+            setCreatingWithModal('DayEvent')
           }
         }}
         className="relative h-full w-full"
