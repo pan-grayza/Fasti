@@ -5,13 +5,17 @@ import { api } from '~/utils/api'
 
 const CreatorModal = () => {
   // States
-  const [selectedJournal, editingWithModal, setEditingWithModal, isDarkTheme] =
-    useStore((state) => [
-      state.selectedJournal,
-      state.editingWithModal,
-      state.setEditingWithModal,
-      state.isDarkTheme,
-    ])
+  const [
+    selectedJournal,
+    creatingWithModal,
+    setCreatingWithModal,
+    isDarkTheme,
+  ] = useStore((state) => [
+    state.selectedJournal,
+    state.creatingWithModal,
+    state.setCreatingWithModal,
+    state.isDarkTheme,
+  ])
 
   const [name, setName] = useState('')
 
@@ -56,31 +60,31 @@ const CreatorModal = () => {
 
   // Creating stuff
   const finishCreate = () => {
-    if (name === '') setName(editingWithModal ?? '')
-    if (editingWithModal === 'Journal') {
+    if (name === '') setName(creatingWithModal ?? '')
+    if (creatingWithModal === 'Journal') {
       createJournal.mutate({
         name: name,
       })
-    } else if (editingWithModal === 'Note') {
+    } else if (creatingWithModal === 'Note') {
       createNote.mutate({
         name: name,
         content: '',
         journalId: selectedJournal?.id ?? '',
       })
-    } else if (editingWithModal === 'Calendar') {
+    } else if (creatingWithModal === 'Calendar') {
       createCalendar.mutate({
         name: name,
       })
     }
     setName('')
-    setEditingWithModal(null)
+    setCreatingWithModal(null)
   }
   return (
     <div
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           setName('')
-          setEditingWithModal(null)
+          setCreatingWithModal(null)
         }
       }}
       className="absolute inset-0 z-10 flex h-screen w-screen flex-row items-center justify-center bg-black/50 transition"
@@ -95,7 +99,7 @@ const CreatorModal = () => {
         )}
       >
         <div className="relative flex h-fit w-full flex-col gap-2">
-          <p className="relative w-full">Create {editingWithModal}</p>
+          <p className="relative w-full">Create {creatingWithModal}</p>
           <input
             autoFocus
             onChange={(e) => setName(e.currentTarget.value)}
@@ -109,13 +113,13 @@ const CreatorModal = () => {
               }
             )}
             type="text"
-            placeholder={editingWithModal + ' name'}
+            placeholder={creatingWithModal + ' name'}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 finishCreate()
               } else if (e.key === 'Escape') {
                 setName('')
-                setEditingWithModal(null)
+                setCreatingWithModal(null)
               }
             }}
           />
@@ -133,7 +137,7 @@ const CreatorModal = () => {
           <button
             onClick={() => {
               setName('')
-              setEditingWithModal(null)
+              setCreatingWithModal(null)
             }}
             className="rounded bg-red-400 px-4 py-2 text-sm font-semibold  transition active:bg-red-500"
           >

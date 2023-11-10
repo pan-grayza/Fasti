@@ -1,7 +1,6 @@
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import React from 'react'
-import { useRouter as useNavRouter } from 'next/navigation'
 import { useRouter } from 'next/router'
 
 import useStore from '~/store/useStore'
@@ -23,10 +22,9 @@ const CalendarSidebar = () => {
     state.setMenu,
   ])
 
-  const { asPath } = useRouter()
-  const router = useNavRouter()
+  const router = useRouter()
   const menuNavigate = (adress: string) => {
-    router.push(adress)
+    void router.push(adress)
     setMenu(false)
   }
 
@@ -88,22 +86,21 @@ const CalendarSidebar = () => {
               <button
                 key={index}
                 onClick={() => {
-                  menuNavigate(title)
-                  console.log(title)
+                  menuNavigate(`/calendar/${title}`)
                   setMenu(false)
                 }}
                 className={clsx(
                   'relative flex h-fit w-full items-center rounded px-2 py-1',
                   {
                     'bg-lightThemeSelected text-blue-700':
-                      title === asPath.split('/').pop() && !isDarkTheme,
+                      title === router.asPath.split('/').pop() && !isDarkTheme,
                     'hover:bg-lightThemeHover':
-                      title !== asPath.split('/').pop() && !isDarkTheme,
+                      title !== router.asPath.split('/').pop() && !isDarkTheme,
 
                     'bg-darkThemeSelected text-blue-100':
-                      title === asPath.split('/').pop() && isDarkTheme,
+                      title === router.asPath.split('/').pop() && isDarkTheme,
                     'hover:bg-darkThemeHover':
-                      title !== asPath.split('/').pop() && isDarkTheme,
+                      title !== router.asPath.split('/').pop() && isDarkTheme,
                   }
                 )}
               >

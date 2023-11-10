@@ -124,7 +124,7 @@ const NavBar = () => {
             </Button>
           </div>
         )}
-        {session?.user.image ? (
+        {session?.user.image && (
           <div
             onClick={() => setAccountInfoModal(!accountInfoModal)}
             className="relative flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center"
@@ -137,8 +137,9 @@ const NavBar = () => {
               className="rounded-full"
             />
           </div>
-        ) : (
-          <div className="relative h-8 w-8 rounded-full bg-neutral-400" />
+        )}
+        {session?.user && !session?.user.image && (
+          <div className="relative h-8 w-8 shrink-0 rounded-full bg-neutral-400" />
         )}
       </div>
       {accountInfoModal && (
